@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>ENAE Infographic Builder</title>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet" />
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <style>
   /* ============================================
@@ -70,11 +70,11 @@
      ENAE BRAND TOKENS & STYLE GUIDE COMPLIANCE
      ============================================ */
   :root {
-    --bg-darker:       #050508;
-    --bg-dark:         #0b0c0f;
-    --bg-panel:        rgba(12, 13, 17, 0.75);
-    --border-dark:     rgba(255, 255, 255, 0.035);
-    --border-hover:    rgba(255, 255, 255, 0.08);
+    --bg-darker:       #060709;
+    --bg-dark:         #0c0d12;
+    --bg-panel:        rgba(12, 14, 20, 0.78);
+    --border-dark:     rgba(255, 255, 255, 0.05);
+    --border-hover:    rgba(255, 255, 255, 0.12);
     
     /* ENAE BRAND COLORS */
     --enae-red:        #b81d33;
@@ -93,12 +93,12 @@
     --color-fondo:     #0E0E0E;
     
     /* TYPOGRAPHY */
-    --font-display:    'SF UI Display', -apple-system, sans-serif;
-    --font-sans:       'Open Sans', sans-serif;
+    --font-display:    'Outfit', 'SF UI Display', -apple-system, sans-serif;
+    --font-sans:       'Plus Jakarta Sans', 'Open Sans', sans-serif;
 
-    --text-primary:    #f5f6fa;
-    --text-secondary:  #8e93a6;
-    --text-muted:      #525765;
+    --text-primary:    #f8fafc;
+    --text-secondary:  #94a3b8;
+    --text-muted:      #64748b;
     
     --radius-lg: 16px;
     --radius-md: 10px;
@@ -122,7 +122,7 @@
   /* ── TOP BAR ── */
   .topbar {
     background: var(--bg-dark);
-    padding: 12px 24px;
+    padding: 14px 28px;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -130,6 +130,7 @@
     flex-shrink: 0;
     position: relative;
     z-index: 100;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
   }
   .topbar-logo {
     display: flex;
@@ -137,24 +138,24 @@
     gap: 12px;
   }
   .topbar-logo svg {
-    height: 22px;
+    height: 24px;
     width: auto;
     color: var(--text-primary);
     transition: var(--transition);
   }
   .topbar-logo svg:hover {
     transform: translateY(-1px);
-    filter: drop-shadow(0 0 8px rgba(184, 29, 51, 0.4));
+    filter: drop-shadow(0 0 10px rgba(184, 29, 51, 0.45));
   }
   .topbar-title {
     color: var(--text-secondary);
     font-family: var(--font-display);
-    font-size: 10.5px;
+    font-size: 11px;
     font-weight: 700;
     letter-spacing: 2px;
     text-transform: uppercase;
-    background: rgba(255,255,255,0.02);
-    padding: 5px 12px;
+    background: rgba(255, 255, 255, 0.03);
+    padding: 6px 14px;
     border-radius: 30px;
     border: 1px solid var(--border-dark);
   }
@@ -179,58 +180,62 @@
     flex-shrink: 0;
     border-right: 1px solid var(--border-dark);
     z-index: 10;
+    box-shadow: 8px 0 32px rgba(0, 0, 0, 0.15);
+    height: 100%;
+    max-height: 100%;
   }
   .panel-tabs {
     display: flex;
-    background: rgba(0,0,0,0.3);
+    background: rgba(0, 0, 0, 0.35);
     border-bottom: 1px solid var(--border-dark);
-    padding: 6px;
-    gap: 4px;
+    padding: 8px;
+    gap: 6px;
   }
   .panel-tab {
     flex: 1;
-    padding: 8px 4px;
+    padding: 10px 4px;
     font-family: var(--font-display);
     font-size: 11px;
     font-weight: 700;
-    letter-spacing: 1.2px;
+    letter-spacing: 1px;
     text-transform: uppercase;
     color: var(--text-secondary);
     cursor: pointer;
-    border: none;
+    border: 1px solid transparent;
     background: none;
-    border-radius: 8px;
+    border-radius: var(--radius-md);
     transition: var(--transition);
   }
   .panel-tab:hover {
     color: var(--text-primary);
-    background: rgba(255,255,255,0.02);
+    background: rgba(255, 255, 255, 0.03);
   }
   .panel-tab.active {
     color: var(--text-primary);
-    background: rgba(255,255,255,0.06);
-    box-shadow: inset 0 1px 0 rgba(255,255,255,0.1), 0 1px 3px rgba(0,0,0,0.2);
+    background: linear-gradient(135deg, rgba(184, 29, 51, 0.15) 0%, rgba(184, 29, 51, 0.04) 100%);
+    border: 1px solid rgba(184, 29, 51, 0.3);
+    box-shadow: 0 4px 12px rgba(184, 29, 51, 0.1);
   }
   .panel-body {
     flex: 1;
     overflow-y: auto;
-    padding: 20px;
+    padding: 22px;
   }
   .panel-body::-webkit-scrollbar { width: 4px; }
   .panel-body::-webkit-scrollbar-track { background: transparent; }
-  .panel-body::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.05); border-radius: 2px; }
-  .panel-body::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.15); }
+  .panel-body::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.08); border-radius: 2px; }
+  .panel-body::-webkit-scrollbar-thumb:hover { background: rgba(255, 255, 255, 0.2); }
 
   /* Tab sections */
-  .tab-section { display: none; animation: fadeIn 0.2s cubic-bezier(0.16, 1, 0.3, 1); }
+  .tab-section { display: none; animation: fadeIn 0.24s cubic-bezier(0.16, 1, 0.3, 1); }
   .tab-section.active { display: block; }
   @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(2px); }
+    from { opacity: 0; transform: translateY(3px); }
     to { opacity: 1; transform: translateY(0); }
   }
 
   /* Form elements */
-  .field-group { margin-bottom: 16px; }
+  .field-group { margin-bottom: 18px; }
   .field-label {
     font-family: var(--font-display);
     font-size: 10px;
@@ -238,36 +243,37 @@
     letter-spacing: 1.8px;
     text-transform: uppercase;
     color: var(--text-secondary);
-    margin-bottom: 6px;
+    margin-bottom: 8px;
     display: block;
-    opacity: 0.85;
+    opacity: 0.9;
   }
   .field-input, .field-select, .field-textarea {
     width: 100%;
-    background: rgba(0,0,0,0.25);
+    background: rgba(0, 0, 0, 0.35);
     border: 1px solid var(--border-dark);
     border-radius: var(--radius-md);
     color: var(--text-primary);
     font-family: var(--font-sans);
     font-size: 12.5px;
-    padding: 8px 12px;
+    padding: 10px 14px;
     outline: none;
     transition: var(--transition);
   }
   .field-input:focus, .field-select:focus, .field-textarea:focus {
     border-color: var(--enae-red);
-    box-shadow: 0 0 0 3px rgba(184, 29, 51, 0.15);
-    background: rgba(0,0,0,0.4);
+    box-shadow: 0 0 0 3px rgba(184, 29, 51, 0.2);
+    background: rgba(0, 0, 0, 0.5);
   }
-  .field-textarea { resize: vertical; min-height: 70px; }
-  .field-select { cursor: pointer; appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%238e93a6'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 10px center; background-size: 12px; padding-right: 28px; }
+  .field-textarea { resize: vertical; min-height: 75px; }
+  .field-select { cursor: pointer; appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%2394a3b8'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 12px center; background-size: 12px; padding-right: 32px; }
+
 
   /* Color picker row */
   .color-row {
     display: grid;
     grid-template-columns: repeat(5, 1fr);
-    gap: 6px;
-    margin-top: 6px;
+    gap: 8px;
+    margin-top: 8px;
   }
   .color-swatch {
     aspect-ratio: 1;
@@ -276,39 +282,40 @@
     border: 2px solid transparent;
     transition: var(--transition);
     position: relative;
-    box-shadow: 0 1px 4px rgba(0,0,0,0.4);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
   }
-  .color-swatch:hover { transform: scale(1.05); }
+  .color-swatch:hover { transform: translateY(-2px) scale(1.05); }
   .color-swatch.selected { 
     border-color: var(--text-primary); 
-    transform: scale(1.02);
-    box-shadow: 0 0 0 2px var(--enae-red);
+    transform: translateY(-1px) scale(1.03);
+    box-shadow: 0 0 0 2px var(--enae-red), 0 8px 16px rgba(184, 29, 51, 0.35);
   }
 
   /* Section header inside panel */
   .section-head {
     font-family: var(--font-display);
-    font-size: 10px;
+    font-size: 10.5px;
     font-weight: 700;
-    letter-spacing: 2.2px;
+    letter-spacing: 2px;
     text-transform: uppercase;
     color: var(--text-primary);
-    opacity: 0.9;
-    margin: 24px 0 12px;
+    opacity: 0.95;
+    margin: 26px 0 14px;
     padding-left: 10px;
     border-left: 2px solid var(--color-oro);
+    text-shadow: 0 0 10px rgba(235, 200, 68, 0.15);
   }
 
   /* Block items list */
-  .block-list { display: flex; flex-direction: column; gap: 6px; }
+  .block-list { display: flex; flex-direction: column; gap: 8px; }
   .block-item {
     background: rgba(255, 255, 255, 0.015);
     border: 1px solid var(--border-dark);
     border-radius: var(--radius-md);
-    padding: 8px 12px;
+    padding: 10px 14px;
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 12px;
     cursor: pointer;
     transition: var(--transition);
     font-size: 12.5px;
@@ -316,63 +323,77 @@
     color: var(--text-secondary);
   }
   .block-item:hover { 
-    border-color: rgba(255,255,255,0.1); 
-    background: rgba(255,255,255,0.035); 
+    border-color: rgba(255, 255, 255, 0.1); 
+    background: rgba(255, 255, 255, 0.04); 
     color: var(--text-primary);
-    transform: translateX(2px);
+    transform: translateX(4px);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.03), 0 4px 12px rgba(0, 0, 0, 0.2);
   }
-  .block-icon { font-size: 14px; flex-shrink: 0; }
+  .block-icon { font-size: 16px; flex-shrink: 0; color: var(--color-oro); }
+  .material-symbols-outlined {
+    font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    display: inline-block;
+    vertical-align: middle;
+  }
 
   /* Stacked items in canvas list */
   .element-row {
-    background: rgba(0,0,0,0.2);
+    background: rgba(0, 0, 0, 0.25);
     border: 1px solid var(--border-dark);
     border-radius: var(--radius-md);
-    padding: 8px 12px;
+    padding: 10px 14px;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin-bottom: 5px;
+    margin-bottom: 6px;
     font-size: 12.5px;
     color: var(--text-secondary);
     cursor: pointer;
     transition: var(--transition);
   }
-  .element-row:hover { border-color: var(--border-hover); background: rgba(0,0,0,0.3); }
+  .element-row:hover { border-color: var(--border-hover); background: rgba(0, 0, 0, 0.35); }
   .element-row.selected { 
     border-color: var(--color-oro); 
-    background: rgba(235,200,68,0.04);
+    background: rgba(235, 200, 68, 0.05);
     color: var(--text-primary); 
+    box-shadow: 0 4px 14px rgba(235, 200, 68, 0.05);
   }
-  .element-actions { display: flex; gap: 4px; }
+  .element-actions { display: flex; gap: 6px; }
   .el-btn {
-    background: rgba(255,255,255,0.02);
+    background: rgba(255, 255, 255, 0.02);
     border: 1px solid var(--border-dark);
     color: var(--text-secondary);
     cursor: pointer;
-    font-size: 10px;
-    width: 20px;
-    height: 20px;
+    width: 24px;
+    height: 24px;
     display: flex;
     align-items: center;
     justify-content: center;
-    border-radius: var(--radius-sm);
+    border-radius: 50%;
     transition: var(--transition);
   }
-  .el-btn:hover { color: var(--text-primary); border-color: var(--enae-red); background: rgba(184,29,51,0.2); }
+  .el-btn:hover { 
+    color: var(--text-primary); 
+    border-color: var(--enae-red); 
+    background: rgba(184, 29, 51, 0.2); 
+    transform: scale(1.05);
+  }
+  .el-btn span {
+    font-size: 14px;
+  }
 
   /* ── CANVAS AREA ── */
   .canvas-area {
     flex: 1;
     background-color: var(--bg-darker);
     background-image: radial-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px);
-    background-size: 20px 20px;
+    background-size: 24px 24px;
     display: flex;
     flex-direction: column;
     align-items: center;
     overflow: auto;
-    padding: 24px;
-    gap: 16px;
+    padding: 32px;
+    gap: 20px;
     position: relative;
   }
   .canvas-area::before {
@@ -381,9 +402,9 @@
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    width: 800px;
-    height: 800px;
-    background: radial-gradient(circle, rgba(184, 29, 51, 0.025) 0%, rgba(235, 200, 68, 0.008) 50%, transparent 100%);
+    width: 900px;
+    height: 900px;
+    background: radial-gradient(circle, rgba(184, 29, 51, 0.035) 0%, rgba(235, 200, 68, 0.012) 50%, transparent 100%);
     pointer-events: none;
     z-index: 1;
   }
@@ -391,56 +412,63 @@
   .canvas-toolbar {
     display: flex;
     align-items: center;
-    gap: 10px;
-    background: var(--bg-panel);
+    gap: 8px;
+    background: rgba(12, 14, 20, 0.85);
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
-    border: 1px solid var(--border-dark);
-    border-radius: 30px;
-    padding: 8px 16px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 40px;
+    padding: 6px 16px;
     flex-shrink: 0;
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.03);
     z-index: 20;
   }
   .ct-label {
     font-family: var(--font-display);
     font-size: 10px;
-    color: var(--text-muted);
+    color: var(--text-secondary);
     font-weight: 700;
-    letter-spacing: 1.2px;
+    letter-spacing: 1.5px;
     text-transform: uppercase;
     margin-right: 4px;
   }
   .ct-btn {
-    background: rgba(255,255,255,0.02);
-    border: 1px solid var(--border-dark);
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.05);
     color: var(--text-secondary);
-    padding: 6px 12px;
-    font-size: 11.5px;
+    padding: 6px 14px;
+    font-size: 12px;
     font-family: var(--font-sans);
     font-weight: 600;
     border-radius: 30px;
     cursor: pointer;
     transition: var(--transition);
     letter-spacing: 0.2px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
   }
-  .ct-btn:hover { background: rgba(255,255,255,0.06); color: var(--text-primary); border-color: var(--border-hover); }
+  .ct-btn:hover { 
+    background: rgba(255, 255, 255, 0.08); 
+    color: var(--text-primary); 
+    border-color: rgba(255, 255, 255, 0.15); 
+    transform: translateY(-1px);
+  }
   .ct-btn.primary {
     background: linear-gradient(135deg, var(--enae-red) 0%, #d8243c 100%);
     border-color: var(--enae-red);
     color: var(--color-blanco);
     box-shadow: 0 4px 14px rgba(184, 29, 51, 0.35);
   }
-  .ct-btn.primary:hover { transform: translateY(-1px); filter: brightness(1.1); }
+  .ct-btn.primary:hover { transform: translateY(-1px); filter: brightness(1.1); box-shadow: 0 6px 20px rgba(184, 29, 51, 0.45); }
   .ct-sep { width: 1px; height: 18px; background: var(--border-dark); }
-
 
   #canvas-wrapper {
     position: relative;
     flex-shrink: 0;
-    box-shadow: 0 20px 80px rgba(0,0,0,0.85);
+    box-shadow: 0 30px 100px rgba(0, 0, 0, 0.85);
     border-radius: var(--radius-sm);
-    transition: transform 0.2s cubic-bezier(0.1, 0.8, 0.2, 1);
+    transition: transform 0.24s cubic-bezier(0.16, 1, 0.3, 1);
   }
 
   /* ── INFOGRAPHIC CANVAS ── */
@@ -456,7 +484,7 @@
   .el-selected-ring {
     outline: 1.5px solid var(--color-oro);
     outline-offset: 4px;
-    box-shadow: 0 0 0 1px rgba(0,0,0,0.5), 0 8px 24px rgba(235, 200, 68, 0.15);
+    box-shadow: 0 0 0 1px rgba(0,0,0,0.5), 0 8px 32px rgba(235, 200, 68, 0.25);
   }
 
   /* ── ELEMENTS ── */
@@ -515,33 +543,35 @@
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    padding: 24px 28px;
-    border-radius: 8px;
-    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.35);
+    padding: 26px 30px;
+    border-radius: var(--radius-md);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.45);
+    border: 1px solid rgba(255, 255, 255, 0.04);
+    background: linear-gradient(145deg, rgba(255, 255, 255, 0.01) 0%, rgba(0, 0, 0, 0.2) 100%);
   }
   .el-stat-number {
     font-family: var(--font-display);
-    font-weight: 900;
-    font-size: 64px;
+    font-weight: 800;
+    font-size: 68px;
     line-height: 0.9;
-    letter-spacing: -1px;
+    letter-spacing: -1.5px;
   }
   .el-stat-label {
     font-family: var(--font-display);
-    font-size: 11px;
+    font-size: 11.5px;
     font-weight: 700;
     letter-spacing: 2px;
     text-transform: uppercase;
-    margin-top: 8px;
-    opacity: 0.75;
+    margin-top: 10px;
+    opacity: 0.8;
   }
   .el-stat-desc {
     font-family: var(--font-sans);
-    font-size: 13px;
+    font-size: 13.5px;
     font-weight: 300;
-    margin-top: 10px;
-    line-height: 1.4;
-    opacity: 0.6;
+    margin-top: 12px;
+    line-height: 1.45;
+    opacity: 0.65;
   }
 
   /* DIVIDER */
@@ -549,119 +579,141 @@
   .el-divider-v { height: 100%; width: 3px; }
 
   /* BULLET LIST */
-  .el-bullet-list { list-style: none; padding: 18px 24px; border-radius: 8px; }
+  .el-bullet-list { 
+    list-style: none; 
+    padding: 20px 26px; 
+    border-radius: var(--radius-md); 
+    border: 1px solid rgba(255, 255, 255, 0.03);
+    background: rgba(255, 255, 255, 0.01);
+  }
   .el-bullet-list li {
-    padding: 6px 0 6px 20px;
+    padding: 8px 0 8px 24px;
     position: relative;
     font-family: var(--font-sans);
-    font-size: 14px;
-    line-height: 1.4;
+    font-size: 14.5px;
+    line-height: 1.45;
     font-weight: 400;
   }
   .el-bullet-list li::before {
     content: '';
     position: absolute;
     left: 0;
-    top: 13px;
-    width: 6px;
-    height: 6px;
+    top: 16px;
+    width: 7px;
+    height: 7px;
     border-radius: 50%;
-    background: var(--enae-red);
+    background: var(--color-oro);
+    box-shadow: 0 0 10px var(--color-oro);
   }
 
   /* ICON STAT ROW */
   .el-icon-stat {
     display: flex;
     align-items: center;
-    gap: 16px;
-    padding: 16px 20px;
-    border-radius: 8px;
+    gap: 18px;
+    padding: 18px 22px;
+    border-radius: var(--radius-md);
+    border: 1px solid rgba(255, 255, 255, 0.04);
+    background: linear-gradient(145deg, rgba(255, 255, 255, 0.01) 0%, rgba(0, 0, 0, 0.15) 100%);
   }
   .el-icon-stat .icon-box {
-    width: 48px;
-    height: 48px;
+    width: 52px;
+    height: 52px;
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: 24px;
     flex-shrink: 0;
-    border-radius: 6px;
+    border-radius: var(--radius-sm);
+    border: 1px solid rgba(235, 200, 68, 0.3);
+    box-shadow: 0 4px 12px rgba(184, 29, 51, 0.15);
   }
   .el-icon-stat .icon-val {
     font-family: var(--font-display);
-    font-weight: 900;
-    font-size: 32px;
+    font-weight: 800;
+    font-size: 34px;
     line-height: 0.95;
   }
   .el-icon-stat .icon-lbl {
     font-family: var(--font-display);
     font-size: 10px;
     font-weight: 700;
-    letter-spacing: 1.5px;
+    letter-spacing: 1.8px;
     text-transform: uppercase;
-    opacity: 0.7;
-    margin-top: 2px;
+    opacity: 0.75;
+    margin-top: 3px;
   }
 
   /* PROGRESS BAR (Style Guide Compliant: thin lines) */
-  .el-progress-block { padding: 18px 24px; border-radius: 8px; }
+  .el-progress-block { 
+    padding: 20px 26px; 
+    border-radius: var(--radius-md); 
+    border: 1px solid rgba(255, 255, 255, 0.03);
+    background: rgba(255, 255, 255, 0.01);
+  }
   .el-progress-title {
     font-family: var(--font-display);
-    font-size: 12px;
+    font-size: 12.5px;
     font-weight: 600;
-    margin-bottom: 8px;
-    opacity: 0.8;
+    margin-bottom: 10px;
+    opacity: 0.85;
+    letter-spacing: 0.3px;
   }
   .el-progress-track {
-    height: 5px; /* Thin visual style */
+    height: 4px; /* Even thinner and cleaner style */
     border-radius: 3px;
     overflow: hidden;
-    background: rgba(255,255,255,0.08);
-    margin-bottom: 8px;
+    background: rgba(255, 255, 255, 0.08);
+    margin-bottom: 10px;
   }
   .el-progress-fill {
     height: 100%;
     border-radius: 3px;
     transition: width 0.3s;
+    box-shadow: 0 0 10px rgba(184, 29, 51, 0.45);
   }
   .el-progress-label {
     font-family: var(--font-sans);
     font-size: 11px;
-    opacity: 0.55;
+    opacity: 0.6;
     display: flex;
     justify-content: space-between;
     margin-top: -6px;
-    margin-bottom: 12px;
+    margin-bottom: 14px;
   }
 
   /* QUOTE */
   .el-quote-block {
-    padding: 24px 28px 24px 36px;
+    padding: 28px 32px 28px 44px;
     position: relative;
-    border-radius: 8px;
+    border-radius: var(--radius-md);
+    border: 1px solid rgba(255, 255, 255, 0.04);
+    background: linear-gradient(145deg, rgba(255, 255, 255, 0.015) 0%, rgba(0, 0, 0, 0.15) 100%);
   }
   .el-quote-block::before {
     content: '“';
     position: absolute;
-    left: 10px;
-    top: 8px;
-    font-size: 64px;
+    left: 14px;
+    top: 14px;
+    font-size: 72px;
     font-family: var(--font-display);
     font-weight: 900;
-    opacity: 0.15;
+    color: var(--color-oro);
+    opacity: 0.25;
     line-height: 1;
+    text-shadow: 0 0 15px rgba(235, 200, 68, 0.4);
   }
   .el-quote-text {
     font-family: var(--font-sans);
-    font-size: 16px;
+    font-size: 16.5px;
     font-weight: 300;
     font-style: italic;
-    line-height: 1.5;
-    margin-bottom: 12px;
+    line-height: 1.55;
+    margin-bottom: 14px;
   }
   .el-quote-author {
     font-family: var(--font-display);
-    font-size: 11px;
+    font-size: 11.5px;
     font-weight: 700;
     letter-spacing: 2px;
     text-transform: uppercase;
@@ -708,6 +760,8 @@
     border-left: 1px solid var(--border-dark);
     box-shadow: -4px 0 24px rgba(0,0,0,0.3);
     z-index: 10;
+    height: 100%;
+    max-height: 100%;
   }
   .props-panel::-webkit-scrollbar { width: 4px; }
   .props-panel::-webkit-scrollbar-track { background: transparent; }
@@ -791,6 +845,57 @@
     background: rgba(231, 76, 60, 0.2); 
     border-color: var(--color-coral);
     transform: translateY(1px);
+  }
+
+  /* Visual Icon Picker Styling */
+  .icon-picker-grid {
+    scrollbar-width: thin;
+  }
+  .icon-picker-grid::-webkit-scrollbar { width: 3px; }
+  .icon-picker-grid::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.08); border-radius: 1px; }
+
+  .icon-picker-swatch {
+    background: rgba(255, 255, 255, 0.015);
+    border: 1px solid var(--border-dark);
+    border-radius: var(--radius-sm);
+    padding: 8px 4px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: var(--transition);
+  }
+  .icon-picker-swatch:hover {
+    background: rgba(255, 255, 255, 0.04);
+    border-color: rgba(255, 255, 255, 0.15);
+    transform: translateY(-1px);
+  }
+  .icon-picker-swatch.selected {
+    background: rgba(184, 29, 51, 0.12);
+    border-color: var(--enae-red);
+    box-shadow: 0 0 10px rgba(184, 29, 51, 0.35);
+  }
+  .icon-picker-swatch.selected span.material-symbols-outlined {
+    color: var(--color-oro);
+  }
+  .icon-picker-swatch span.material-symbols-outlined {
+    font-size: 20px;
+    color: var(--text-secondary);
+    transition: var(--transition);
+  }
+  .icon-swatch-lbl {
+    font-size: 7.5px;
+    color: var(--text-muted);
+    font-family: var(--font-sans);
+    margin-top: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.2px;
+    text-align: center;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    width: 100%;
   }
 
   /* Custom Slider Styling */
@@ -880,39 +985,49 @@
   .templates-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 10px;
+    gap: 12px;
   }
   .tpl-card {
-    background: rgba(0,0,0,0.2);
+    background: rgba(0, 0, 0, 0.3);
     border: 1px solid var(--border-dark);
     border-radius: var(--radius-md);
     overflow: hidden;
     cursor: pointer;
     transition: var(--transition);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   }
   .tpl-card:hover { 
     border-color: var(--enae-red); 
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+    transform: translateY(-3px);
+    box-shadow: 0 10px 24px rgba(184, 29, 51, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  }
+  .tpl-card:hover .tpl-preview span {
+    color: var(--color-oro);
+    transform: scale(1.1);
   }
   .tpl-preview {
-    height: 80px;
+    height: 85px;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 24px;
-    background: rgba(255,255,255,0.01);
+    background: linear-gradient(135deg, rgba(184, 29, 51, 0.06) 0%, rgba(235, 200, 68, 0.02) 100%);
+  }
+  .tpl-preview span {
+    font-size: 26px;
+    color: var(--text-secondary);
+    transition: var(--transition);
   }
   .tpl-name {
-    padding: 8px;
+    padding: 10px 6px;
     font-family: var(--font-display);
-    font-size: 11px;
+    font-size: 10.5px;
     font-weight: 700;
     color: var(--text-secondary);
     border-top: 1px solid var(--border-dark);
     text-align: center;
-    letter-spacing: 1px;
+    letter-spacing: 1.2px;
     text-transform: uppercase;
+    background: rgba(0,0,0,0.15);
   }
 
   /* Info Banner component custom styling */
@@ -1055,36 +1170,36 @@
       <div class="tab-section active" id="tab-blocks">
         <div class="section-head">Tipografía</div>
         <div class="block-list">
-          <div class="block-item" onclick="addElement('heading')"><span class="block-icon">𝗛</span> Título principal</div>
-          <div class="block-item" onclick="addElement('subheading')"><span class="block-icon">𝗦</span> Subtítulo</div>
-          <div class="block-item" onclick="addElement('body')"><span class="block-icon">¶</span> Texto cuerpo</div>
-          <div class="block-item" onclick="addElement('label')"><span class="block-icon">𝗟</span> Etiqueta / Label</div>
+          <div class="block-item" onclick="addElement('heading')"><span class="block-icon material-symbols-outlined">title</span> Título principal</div>
+          <div class="block-item" onclick="addElement('subheading')"><span class="block-icon material-symbols-outlined">subtitles</span> Subtítulo</div>
+          <div class="block-item" onclick="addElement('body')"><span class="block-icon material-symbols-outlined">notes</span> Texto cuerpo</div>
+          <div class="block-item" onclick="addElement('label')"><span class="block-icon material-symbols-outlined">label</span> Etiqueta / Label</div>
         </div>
 
         <div class="section-head">Datos & Stats</div>
         <div class="block-list">
-          <div class="block-item" onclick="addElement('stat')"><span class="block-icon">📊</span> Bloque de cifra</div>
-          <div class="block-item" onclick="addElement('iconstat')"><span class="block-icon">🏷</span> Icono + dato</div>
-          <div class="block-item" onclick="addElement('progress')"><span class="block-icon">▬</span> Barra de progreso</div>
-          <div class="block-item" onclick="addElement('bulletlist')"><span class="block-icon">≡</span> Lista de puntos</div>
-          <div class="block-item" onclick="addElement('barchart')"><span class="block-icon">📊</span> Gráfico de barras</div>
-          <div class="block-item" onclick="addElement('donutchart')"><span class="block-icon">🌿</span> Medidor concéntrico</div>
-          <div class="block-item" onclick="addElement('radarchart')"><span class="block-icon">🕸</span> Radar competencias</div>
-          <div class="block-item" onclick="addElement('table')"><span class="block-icon">▦</span> Tabla de métricas</div>
+          <div class="block-item" onclick="addElement('stat')"><span class="block-icon material-symbols-outlined">analytics</span> Bloque de cifra</div>
+          <div class="block-item" onclick="addElement('iconstat')"><span class="block-icon material-symbols-outlined">badge</span> Icono + dato</div>
+          <div class="block-item" onclick="addElement('progress')"><span class="block-icon material-symbols-outlined">linear_scale</span> Barra de progreso</div>
+          <div class="block-item" onclick="addElement('bulletlist')"><span class="block-icon material-symbols-outlined">format_list_bulleted</span> Lista de puntos</div>
+          <div class="block-item" onclick="addElement('barchart')"><span class="block-icon material-symbols-outlined">bar_chart</span> Gráfico de barras</div>
+          <div class="block-item" onclick="addElement('donutchart')"><span class="block-icon material-symbols-outlined">donut_large</span> Medidor concéntrico</div>
+          <div class="block-item" onclick="addElement('radarchart')"><span class="block-icon material-symbols-outlined">radar</span> Radar competencias</div>
+          <div class="block-item" onclick="addElement('table')"><span class="block-icon material-symbols-outlined">table_chart</span> Tabla de métricas</div>
         </div>
 
         <div class="section-head">Estructurales</div>
         <div class="block-list">
-          <div class="block-item" onclick="addElement('accentbar')"><span class="block-icon">▌</span> Barra de acento</div>
-          <div class="block-item" onclick="addElement('divider')"><span class="block-icon">─</span> Divisor horizontal</div>
-          <div class="block-item" onclick="addElement('quote')"><span class="block-icon">❝</span> Cita destacada</div>
-          <div class="block-item" onclick="addElement('logo')"><span class="block-icon">🅴</span> Logo ENAE</div>
+          <div class="block-item" onclick="addElement('accentbar')"><span class="block-icon material-symbols-outlined">view_week</span> Barra de acento</div>
+          <div class="block-item" onclick="addElement('divider')"><span class="block-icon material-symbols-outlined">horizontal_rule</span> Divisor horizontal</div>
+          <div class="block-item" onclick="addElement('quote')"><span class="block-icon material-symbols-outlined">format_quote</span> Cita destacada</div>
+          <div class="block-item" onclick="addElement('logo')"><span class="block-icon material-symbols-outlined">branding_watermark</span> Logo ENAE</div>
         </div>
 
         <div class="section-head">Formas</div>
         <div class="block-list">
-          <div class="block-item" onclick="addElement('rect')"><span class="block-icon">▪</span> Rectángulo</div>
-          <div class="block-item" onclick="addElement('circle')"><span class="block-icon">●</span> Círculo</div>
+          <div class="block-item" onclick="addElement('rect')"><span class="block-icon material-symbols-outlined">rectangle</span> Rectángulo</div>
+          <div class="block-item" onclick="addElement('circle')"><span class="block-icon material-symbols-outlined">circle</span> Círculo</div>
         </div>
       </div>
 
@@ -1093,39 +1208,39 @@
         <div class="section-head">Plantillas ENAE</div>
         <div class="templates-grid">
           <div class="tpl-card" onclick="loadTemplate('cover')">
-            <div class="tpl-preview" style="background:#0E0E0E;color:#EBC844">🎯</div>
+            <div class="tpl-preview" style="background:#0E0E0E;color:#EBC844"><span class="material-symbols-outlined">star</span></div>
             <div class="tpl-name">Portada</div>
           </div>
           <div class="tpl-card" onclick="loadTemplate('stat4')">
-            <div class="tpl-preview" style="background:#1E1E1E;color:#EBC844">📊</div>
+            <div class="tpl-preview" style="background:#1E1E1E;color:#EBC844"><span class="material-symbols-outlined">dashboard</span></div>
             <div class="tpl-name">4 KPIs</div>
           </div>
           <div class="tpl-card" onclick="loadTemplate('list')">
-            <div class="tpl-preview" style="background:#1E1E1E;color:#3498DB">≡</div>
+            <div class="tpl-preview" style="background:#1E1E1E;color:#3498DB"><span class="material-symbols-outlined">list_alt</span></div>
             <div class="tpl-name">Lista + dato</div>
           </div>
           <div class="tpl-card" onclick="loadTemplate('progress3')">
-            <div class="tpl-preview" style="background:#1E1E1E;color:#2ECC71">▬▬▬</div>
+            <div class="tpl-preview" style="background:#1E1E1E;color:#2ECC71"><span class="material-symbols-outlined">data_exploration</span></div>
             <div class="tpl-name">Barras %</div>
           </div>
           <div class="tpl-card" onclick="loadTemplate('quote')">
-            <div class="tpl-preview" style="background:#1E1E1E;color:#EBC844">❝</div>
+            <div class="tpl-preview" style="background:#1E1E1E;color:#EBC844"><span class="material-symbols-outlined">format_quote</span></div>
             <div class="tpl-name">Cita</div>
           </div>
           <div class="tpl-card" onclick="loadTemplate('dashboard_financial')">
-            <div class="tpl-preview" style="background:#1E1E1E;color:#EBC844">💳</div>
+            <div class="tpl-preview" style="background:#1E1E1E;color:#EBC844"><span class="material-symbols-outlined">payments</span></div>
             <div class="tpl-name">Dashboard</div>
           </div>
           <div class="tpl-card" onclick="loadTemplate('scorecard_esg')">
-            <div class="tpl-preview" style="background:#1E1E1E;color:#2ECC71">🌿</div>
+            <div class="tpl-preview" style="background:#1E1E1E;color:#2ECC71"><span class="material-symbols-outlined">eco</span></div>
             <div class="tpl-name">Scorecard ESG</div>
           </div>
           <div class="tpl-card" onclick="loadTemplate('competence_radar')">
-            <div class="tpl-preview" style="background:#1E1E1E;color:#3498DB">🕸</div>
+            <div class="tpl-preview" style="background:#1E1E1E;color:#3498DB"><span class="material-symbols-outlined">radar</span></div>
             <div class="tpl-name">Radar Líder</div>
           </div>
           <div class="tpl-card" onclick="clearCanvas()">
-            <div class="tpl-preview" style="background:#0E0E0E;color:#808080">✕</div>
+            <div class="tpl-preview" style="background:#0E0E0E;color:#808080"><span class="material-symbols-outlined">delete_sweep</span></div>
             <div class="tpl-name">Limpiar</div>
           </div>
         </div>
@@ -1184,14 +1299,14 @@
   <div class="canvas-area">
     <div class="canvas-toolbar">
       <span class="ct-label">Zoom</span>
-      <button class="ct-btn" onclick="zoom(-0.1)">−</button>
-      <span id="zoom-label" style="color:#ccc;font-size:12px;min-width:38px;text-align:center">100%</span>
-      <button class="ct-btn" onclick="zoom(+0.1)">+</button>
+      <button class="ct-btn" onclick="zoom(-0.1)" style="padding: 6px 8px;"><span class="material-symbols-outlined" style="font-size: 16px;">remove</span></button>
+      <span id="zoom-label" style="color:var(--text-primary);font-size:12px;min-width:38px;text-align:center;font-weight:700">100%</span>
+      <button class="ct-btn" onclick="zoom(+0.1)" style="padding: 6px 8px;"><span class="material-symbols-outlined" style="font-size: 16px;">add</span></button>
       <div class="ct-sep"></div>
-      <button class="ct-btn" onclick="deselectAll()">Deselect</button>
-      <button class="ct-btn" onclick="deleteSelected()">🗑 Eliminar</button>
+      <button class="ct-btn" onclick="deselectAll()"><span class="material-symbols-outlined" style="font-size: 16px;">select_off</span>Deseleccionar</button>
+      <button class="ct-btn" onclick="deleteSelected()"><span class="material-symbols-outlined" style="font-size: 16px;color:var(--color-coral)">delete</span>Eliminar</button>
       <div class="ct-sep"></div>
-      <button class="ct-btn primary" onclick="document.getElementById('export-overlay').classList.add('show')">⬇ Exportar</button>
+      <button class="ct-btn primary" onclick="document.getElementById('export-overlay').classList.add('show')"><span class="material-symbols-outlined" style="font-size: 16px;">download</span>Exportar</button>
     </div>
 
     <div id="canvas-wrapper">
@@ -1219,28 +1334,28 @@
     <div class="overlay-sub">Elige el formato de salida</div>
     <div class="export-options">
       <div class="export-opt" onclick="exportPNG()">
-        <div class="export-opt-icon">🖼</div>
+        <div class="export-opt-icon"><span class="material-symbols-outlined">image</span></div>
         <div class="export-opt-info">
           <div class="export-opt-name">PNG — Alta resolución</div>
           <div class="export-opt-desc">Imagen de alta calidad, ideal para impresión digital</div>
         </div>
       </div>
       <div class="export-opt" onclick="exportSVG()">
-        <div class="export-opt-icon">✏️</div>
+        <div class="export-opt-icon"><span class="material-symbols-outlined">edit_document</span></div>
         <div class="export-opt-info">
           <div class="export-opt-name">SVG — Vectorial</div>
           <div class="export-opt-desc">Formato vectorial editable, escalable sin pérdida</div>
         </div>
       </div>
       <div class="export-opt" onclick="exportHTML()">
-        <div class="export-opt-icon">🌐</div>
+        <div class="export-opt-icon"><span class="material-symbols-outlined">language</span></div>
         <div class="export-opt-info">
           <div class="export-opt-name">HTML — Web embebible</div>
           <div class="export-opt-desc">Listo para insertar en web o email</div>
         </div>
       </div>
       <div class="export-opt" onclick="exportJSON()">
-        <div class="export-opt-icon">💾</div>
+        <div class="export-opt-icon"><span class="material-symbols-outlined">save</span></div>
         <div class="export-opt-info">
           <div class="export-opt-name">JSON — Guardar proyecto</div>
           <div class="export-opt-desc">Guarda y recupera tu diseño más tarde</div>
@@ -1252,6 +1367,65 @@
 </div>
 
 <script>
+// ============================================================
+//  CURATED PREMIUM ICONS
+// ============================================================
+const curatedIcons = [
+  // Academic & Achievements
+  { name: 'school', label: 'Academia' },
+  { name: 'menu_book', label: 'Libro' },
+  { name: 'history_edu', label: 'Título' },
+  { name: 'workspace_premium', label: 'Premio' },
+  { name: 'emoji_events', label: 'Trofeo' },
+  { name: 'military_tech', label: 'Medalla' },
+  
+  // Finance & Business
+  { name: 'business_center', label: 'Maletín' },
+  { name: 'payments', label: 'Pagos' },
+  { name: 'account_balance', label: 'Banco' },
+  { name: 'trending_up', label: 'Subida' },
+  { name: 'insights', label: 'Gráfico' },
+  { name: 'pie_chart', label: 'Tarta' },
+  
+  // Technology & Operations
+  { name: 'computer', label: 'PC' },
+  { name: 'database', label: 'Datos' },
+  { name: 'dns', label: 'Servidor' },
+  { name: 'settings', label: 'Tuerca' },
+  { name: 'lightbulb', label: 'Idea' },
+  { name: 'speed', label: 'Velocidad' },
+  
+  // Earth & Sustainable
+  { name: 'eco', label: 'Eco' },
+  { name: 'language', label: 'Planeta' },
+  { name: 'public', label: 'Global' },
+  { name: 'co2', label: 'CO2' },
+  
+  // People & Office
+  { name: 'groups', label: 'Grupo' },
+  { name: 'person', label: 'Persona' },
+  { name: 'support_agent', label: 'Soporte' },
+  { name: 'schedule', label: 'Tiempo' },
+  { name: 'location_on', label: 'Mapa' },
+  { name: 'forum', label: 'Foro' }
+];
+
+function filterIconPicker(query) {
+  const container = document.getElementById('picker-grid-container');
+  if (!container) return;
+  const items = container.querySelectorAll('.icon-picker-swatch');
+  const q = query.toLowerCase().trim();
+  items.forEach(item => {
+    const label = item.getAttribute('title').toLowerCase();
+    const name = item.querySelector('span.material-symbols-outlined').textContent.toLowerCase();
+    if (label.includes(q) || name.includes(q)) {
+      item.style.display = 'flex';
+    } else {
+      item.style.display = 'none';
+    }
+  });
+}
+
 // ============================================================
 //  STATE
 // ============================================================
@@ -1348,7 +1522,7 @@ function defaultsFor(type) {
     body:       { text: 'Texto descriptivo. Añade aquí la información que quieras comunicar de forma clara y directa.', fontSize: 14, color: '#808080', bg: 'transparent', w: 320, h: 100 },
     label:      { text: 'ETIQUETA · ENAE', fontSize: 11, color: '#EBC844', bg: 'transparent', h: 40 },
     stat:       { number: '94%', label: 'SATISFACCIÓN', desc: 'de los alumnos recomendarían ENAE', color: '#F5F5F4', bg: '#1E1E1E', accent: '#EBC844', w: 220, h: 160 },
-    iconstat:   { icon: '🎓', value: '1.200', label: 'ALUMNOS', color: '#F5F5F4', bg: '#1E1E1E', w: 220, h: 90 },
+    iconstat:   { icon: 'school', value: '1.200', label: 'ALUMNOS', color: '#F5F5F4', bg: '#1E1E1E', w: 220, h: 90 },
     progress:   { items: [['Satisfacción',92],['Empleabilidad',88]], color: '#F5F5F4', bg: '#1E1E1E', accent: '#3498DB', w: 300, h: 150 },
     bulletlist: { items: ['Punto clave uno','Punto clave dos','Punto clave tres'], color: '#F5F5F4', bg: '#1E1E1E', w: 280, h: 130 },
     accentbar:  { color: '#EBC844', bg: '#EBC844', w: 6, h: 100, x: 40, y: cy },
@@ -1429,7 +1603,7 @@ function buildHTML(el) {
 
     case 'iconstat': return `
       <div class="el-icon-stat" style="background:${el.bg};width:100%;height:100%">
-        <div class="icon-box" style="background:rgba(169,24,49,0.4)">${el.icon}</div>
+        <div class="icon-box" style="background:rgba(184,29,51,0.25)"><span class="material-symbols-outlined" style="font-size:24px;color:var(--color-oro)">${el.icon}</span></div>
         <div class="icon-info">
           <div class="icon-val" style="color:${el.color}">${el.value}</div>
           <div class="icon-lbl" style="color:${el.color}">${el.label}</div>
@@ -1548,18 +1722,24 @@ function buildHTML(el) {
 
     case 'barchart': {
       const bars = (el.items||[]).map(([name, val]) => `
-        <div class="el-barchart-col" style="display:flex;flex-direction:column;align-items:center;height:100%;flex:1;max-width:44px;position:relative">
-          <div class="el-barchart-val" style="color:${el.color};font-size:10px;font-weight:700;margin-bottom:4px;font-family:var(--font-sans)">${val}%</div>
-          <div class="el-barchart-track" style="background:rgba(255,255,255,0.06);width:8px;height:calc(100% - 34px);border-radius:4px;position:relative;display:flex;align-items:flex-end">
-            <div class="el-barchart-fill" style="background:${el.accent};width:100%;height:${val}%;border-radius:4px;box-shadow:0 0 8px ${el.accent}80"></div>
+        <div class="el-barchart-col" style="display:flex;flex-direction:column;align-items:center;height:100%;flex:1;max-width:44px;position:relative;z-index:2">
+          <div class="el-barchart-val" style="color:${el.color};font-size:10px;font-weight:700;margin-bottom:4px;font-family:var(--font-display)">${val}%</div>
+          <div class="el-barchart-track" style="background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.02);width:10px;height:calc(100% - 34px);border-radius:6px;position:relative;display:flex;align-items:flex-end;overflow:hidden">
+            <div class="el-barchart-fill" style="background:linear-gradient(180deg, ${el.accent} 0%, ${el.accent}b0 100%);width:100%;height:${val}%;border-radius:6px;box-shadow:0 4px 12px ${el.accent}50, inset 0 1px 0 rgba(255,255,255,0.2)"></div>
           </div>
-          <div class="el-barchart-label" style="color:${el.color};font-size:10px;margin-top:6px;font-weight:600;font-family:var(--font-sans);opacity:0.8;text-transform:uppercase">${name}</div>
+          <div class="el-barchart-label" style="color:${el.color};font-size:9.5px;margin-top:6px;font-weight:700;font-family:var(--font-sans);opacity:0.75;text-transform:uppercase;letter-spacing:0.5px">${name}</div>
         </div>
       `).join('');
       return `
-      <div class="el-barchart-block" style="background:${el.bg};width:100%;height:100%;padding:14px;box-sizing:border-box;display:flex;flex-direction:column;justify-content:space-between;border-radius:4px;border:1px solid var(--border-dark)">
-        <div class="el-barchart-title" style="color:${el.color};font-family:var(--font-display);font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:8px">${el.title}</div>
-        <div class="el-barchart-container" style="display:flex;align-items:flex-end;justify-content:space-around;height:calc(100% - 24px);width:100%">
+      <div class="el-barchart-block" style="background:${el.bg};width:100%;height:100%;padding:18px;box-sizing:border-box;display:flex;flex-direction:column;justify-content:space-between;border-radius:var(--radius-md);border:1px solid rgba(255,255,255,0.04);box-shadow:0 8px 32px rgba(0,0,0,0.3)">
+        <div class="el-barchart-title" style="color:${el.color};font-family:var(--font-display);font-size:11.5px;font-weight:700;letter-spacing:1.8px;text-transform:uppercase;margin-bottom:8px">${el.title}</div>
+        <div class="el-barchart-container" style="display:flex;align-items:flex-end;justify-content:space-around;height:calc(100% - 24px);width:100%;position:relative;padding-bottom:4px">
+          <!-- Grid lines background -->
+          <div style="position:absolute;inset:15px 0 20px 0;display:flex;flex-direction:column;justify-content:space-between;pointer-events:none;opacity:0.25;z-index:1">
+            <div style="border-bottom:1px dashed rgba(255,255,255,0.08);width:100%"></div>
+            <div style="border-bottom:1px dashed rgba(255,255,255,0.08);width:100%"></div>
+            <div style="border-bottom:1px dashed rgba(255,255,255,0.08);width:100%"></div>
+          </div>
           ${bars}
         </div>
       </div>`;
@@ -1574,33 +1754,33 @@ function buildHTML(el) {
       const val2 = items[1] ? items[1][1] : 0;
       const val3 = items[2] ? items[2][1] : 0;
       const rows = items.map(([name, val, col]) => `
-        <div style="display:flex;align-items:center;justify-content:space-between;color:${el.color}">
-          <div style="display:flex;align-items:center;gap:6px">
-            <span style="width:6px;height:6px;border-radius:50%;background:${col}"></span>
-            <span style="opacity:0.8;font-weight:500">${name.toUpperCase()}</span>
+        <div style="display:flex;align-items:center;justify-content:space-between;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.04);border-radius:var(--radius-sm);padding:6px 12px;color:${el.color}">
+          <div style="display:flex;align-items:center;gap:8px">
+            <span style="width:8px;height:8px;border-radius:50%;background:${col};box-shadow:0 0 8px ${col}aa"></span>
+            <span style="opacity:0.85;font-weight:700;font-size:9.5px;letter-spacing:0.5px">${name.toUpperCase()}</span>
           </div>
-          <span style="font-weight:700">${val}/100</span>
+          <span style="font-weight:700;font-family:var(--font-display);font-size:11px">${val}/100</span>
         </div>
       `).join('');
 
       return `
-      <div class="el-donutchart-block" style="background:${el.bg};width:100%;height:100%;padding:16px;box-sizing:border-box;display:flex;flex-direction:column;align-items:center;justify-content:space-between;border-radius:4px;border:1px solid var(--border-dark)">
-        <div class="el-donutchart-title" style="color:${el.color};font-family:var(--font-display);font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;width:100%;text-align:center">${el.title}</div>
+      <div class="el-donutchart-block" style="background:${el.bg};width:100%;height:100%;padding:18px;box-sizing:border-box;display:flex;flex-direction:column;align-items:center;justify-content:space-between;border-radius:var(--radius-md);border:1px solid rgba(255,255,255,0.04);box-shadow:0 8px 32px rgba(0,0,0,0.3)">
+        <div class="el-donutchart-title" style="color:${el.color};font-family:var(--font-display);font-size:11.5px;font-weight:700;letter-spacing:1.8px;text-transform:uppercase;width:100%;text-align:center">${el.title}</div>
         <div style="position:relative;width:100%;height:140px;display:flex;align-items:center;justify-content:center;margin-top:10px">
           <svg viewBox="0 0 200 115" style="width:180px;height:100%">
-            <path d="M 20 100 A 80 80 0 0 1 180 100" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="8" stroke-linecap="round"/>
-            <path d="M 40 100 A 60 60 0 0 1 160 100" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="8" stroke-linecap="round"/>
-            <path d="M 60 100 A 40 40 0 0 1 140 100" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="8" stroke-linecap="round"/>
-            <path d="M 20 100 A 80 80 0 0 1 180 100" fill="none" stroke="${col1}" stroke-width="8" stroke-linecap="round" stroke-dasharray="251.3" stroke-dashoffset="${251.3 * (1 - val1/100)}"/>
-            <path d="M 40 100 A 60 60 0 0 1 160 100" fill="none" stroke="${col2}" stroke-width="8" stroke-linecap="round" stroke-dasharray="188.5" stroke-dashoffset="${188.5 * (1 - val2/100)}"/>
-            <path d="M 60 100 A 40 40 0 0 1 140 100" fill="none" stroke="${col3}" stroke-width="8" stroke-linecap="round" stroke-dasharray="125.7" stroke-dashoffset="${125.7 * (1 - val3/100)}"/>
+            <path d="M 20 100 A 80 80 0 0 1 180 100" fill="none" stroke="rgba(255,255,255,0.04)" stroke-width="10" stroke-linecap="round"/>
+            <path d="M 40 100 A 60 60 0 0 1 160 100" fill="none" stroke="rgba(255,255,255,0.04)" stroke-width="10" stroke-linecap="round"/>
+            <path d="M 60 100 A 40 40 0 0 1 140 100" fill="none" stroke="rgba(255,255,255,0.04)" stroke-width="10" stroke-linecap="round"/>
+            <path d="M 20 100 A 80 80 0 0 1 180 100" fill="none" stroke="${col1}" stroke-width="10" stroke-linecap="round" stroke-dasharray="251.3" stroke-dashoffset="${251.3 * (1 - val1/100)}" style="filter:drop-shadow(0 2px 4px ${col1}40)"/>
+            <path d="M 40 100 A 60 60 0 0 1 160 100" fill="none" stroke="${col2}" stroke-width="10" stroke-linecap="round" stroke-dasharray="188.5" stroke-dashoffset="${188.5 * (1 - val2/100)}" style="filter:drop-shadow(0 2px 4px ${col2}40)"/>
+            <path d="M 60 100 A 40 40 0 0 1 140 100" fill="none" stroke="${col3}" stroke-width="10" stroke-linecap="round" stroke-dasharray="125.7" stroke-dashoffset="${125.7 * (1 - val3/100)}" style="filter:drop-shadow(0 2px 4px ${col3}40)"/>
           </svg>
-          <div style="position:absolute;bottom:10px;text-align:center">
-            <div style="font-family:var(--font-display);font-size:32px;font-weight:900;color:${el.color};line-height:1">${el.value}</div>
-            <div style="font-family:var(--font-sans);font-size:9px;color:${el.color};letter-spacing:1px;opacity:0.6;margin-top:2px">PROMEDIO</div>
+          <div style="position:absolute;bottom:8px;text-align:center">
+            <div style="font-family:var(--font-display);font-size:34px;font-weight:900;color:${el.color};line-height:1;text-shadow:0 0 12px rgba(255,255,255,0.1)">${el.value}</div>
+            <div style="font-family:var(--font-sans);font-size:9px;color:${el.color};letter-spacing:1.5px;opacity:0.55;font-weight:600;margin-top:4px">PROMEDIO</div>
           </div>
         </div>
-        <div style="display:flex;flex-direction:column;gap:5px;width:100%;font-size:10px;font-family:var(--font-sans);margin-top:10px;border-top:1px solid var(--border-dark);padding-top:8px">
+        <div style="display:flex;flex-direction:column;gap:6px;width:100%;font-size:10px;font-family:var(--font-sans);margin-top:10px;border-top:1px solid rgba(255,255,255,0.06);padding-top:10px">
           ${rows}
         </div>
       </div>`;
@@ -1616,45 +1796,57 @@ function buildHTML(el) {
           const angle = (i * 360 / axesCount - 90) * Math.PI / 180;
           pts.push(`${cx + r * pct * Math.cos(angle)},${cy + r * pct * Math.sin(angle)}`);
         }
-        return `<polygon points="${pts.join(' ')}" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>`;
+        return `<polygon points="${pts.join(' ')}" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="0.8"/>`;
       }).join('');
 
       const spokes = [];
       for(let i=0; i<axesCount; i++) {
         const angle = (i * 360 / axesCount - 90) * Math.PI / 180;
-        spokes.push(`<line x1="${cx}" y1="${cy}" x2="${cx + r * Math.cos(angle)}" y2="${cy + r * Math.sin(angle)}" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>`);
+        spokes.push(`<line x1="${cx}" y1="${cy}" x2="${cx + r * Math.cos(angle)}" y2="${cy + r * Math.sin(angle)}" stroke="rgba(255,255,255,0.08)" stroke-width="0.8"/>`);
       }
 
       const ptsENAE = [];
       const ptsAvg = [];
       const labels = [];
+      const vertexDots = [];
+      
       (el.items||[]).forEach(([name, valENAE, valAvg], i) => {
         const angle = (i * 360 / axesCount - 90) * Math.PI / 180;
-        ptsENAE.push(`${cx + r * (valENAE/100) * Math.cos(angle)},${cy + r * (valENAE/100) * Math.sin(angle)}`);
-        ptsAvg.push(`${cx + r * (valAvg/100) * Math.cos(angle)},${cy + r * (valAvg/100) * Math.sin(angle)}`);
+        const xENAE = cx + r * (valENAE/100) * Math.cos(angle);
+        const yENAE = cy + r * (valENAE/100) * Math.sin(angle);
+        const xAvg = cx + r * (valAvg/100) * Math.cos(angle);
+        const yAvg = cy + r * (valAvg/100) * Math.sin(angle);
         
-        const lx = cx + (r + 14) * Math.cos(angle);
-        const ly = cy + (r + 8) * Math.sin(angle);
+        ptsENAE.push(`${xENAE},${yENAE}`);
+        ptsAvg.push(`${xAvg},${yAvg}`);
+        
+        // Dynamic vertex dots
+        vertexDots.push(`<circle cx="${xENAE}" cy="${yENAE}" r="3" fill="#b81d33" stroke="#ffffff" stroke-width="0.8" style="filter:drop-shadow(0 0 3px rgba(184,29,51,0.8))"/>`);
+        vertexDots.push(`<circle cx="${xAvg}" cy="${yAvg}" r="2" fill="#EBC844" style="filter:drop-shadow(0 0 2px rgba(235,200,68,0.6))"/>`);
+
+        const lx = cx + (r + 15) * Math.cos(angle);
+        const ly = cy + (r + 9) * Math.sin(angle);
         
         let anchor = "middle";
         if (Math.cos(angle) > 0.1) anchor = "start";
         else if (Math.cos(angle) < -0.1) anchor = "end";
         
-        labels.push(`<text x="${lx}" y="${ly + 3}" fill="${el.color}" font-size="6.5" font-weight="700" font-family="var(--font-sans)" text-anchor="${anchor}" opacity="0.8">${name}</text>`);
+        labels.push(`<text x="${lx}" y="${ly + 3}" fill="${el.color}" font-size="6.5" font-weight="700" font-family="var(--font-display)" text-anchor="${anchor}" opacity="0.85">${name.toUpperCase()}</text>`);
       });
 
-      const polyENAE = `<polygon points="${ptsENAE.join(' ')}" fill="rgba(52,152,219,0.2)" stroke="#3498DB" stroke-width="1.5"/>`;
-      const polyAvg = `<polygon points="${ptsAvg.join(' ')}" fill="rgba(231,76,60,0.15)" stroke="#E74C3C" stroke-width="1.2" stroke-dasharray="2,2"/>`;
+      const polyENAE = `<polygon points="${ptsENAE.join(' ')}" fill="rgba(184,29,51,0.24)" stroke="#b81d33" stroke-width="2" style="filter:drop-shadow(0 0 6px rgba(184,29,51,0.3))"/>`;
+      const polyAvg = `<polygon points="${ptsAvg.join(' ')}" fill="rgba(235,200,68,0.08)" stroke="#EBC844" stroke-width="1.2" stroke-dasharray="3,3"/>`;
 
       return `
-      <div class="el-radarchart-block" style="background:${el.bg};width:100%;height:100%;padding:14px;box-sizing:border-box;display:flex;flex-direction:column;align-items:center;border-radius:4px;border:1px solid var(--border-dark)">
-        <div class="el-radarchart-title" style="color:${el.color};font-family:var(--font-display);font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;width:100%;text-align:center">${el.title}</div>
+      <div class="el-radarchart-block" style="background:${el.bg};width:100%;height:100%;padding:18px;box-sizing:border-box;display:flex;flex-direction:column;align-items:center;border-radius:var(--radius-md);border:1px solid rgba(255,255,255,0.04);box-shadow:0 8px 32px rgba(0,0,0,0.3)">
+        <div class="el-radarchart-title" style="color:${el.color};font-family:var(--font-display);font-size:11.5px;font-weight:700;letter-spacing:1.8px;text-transform:uppercase;width:100%;text-align:center">${el.title}</div>
         <div style="width:100%;height:calc(100% - 24px);display:flex;align-items:center;justify-content:center">
           <svg viewBox="0 0 200 200" style="width:100%;height:100%">
             ${grids}
             ${spokes}
             ${polyAvg}
             ${polyENAE}
+            ${vertexDots.join('')}
             ${labels.join('')}
           </svg>
         </div>
@@ -1662,17 +1854,19 @@ function buildHTML(el) {
     }
 
     case 'table': {
-      const headers = (el.headers||[]).map(h => `<th style="color:${el.accent};font-family:var(--font-display);font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase;padding:6px 4px;border-bottom:1px solid var(--border-dark)">${h}</th>`).join('');
-      const rows = (el.rows||[]).map(row => `
-        <tr style="border-bottom:1px solid rgba(255,255,255,0.04)">
-          <td style="color:${el.color};font-weight:600;padding:8px 4px">${row[0]}</td>
-          <td style="color:${(row[1]||'').startsWith('-') ? '#E74C3C' : '#2ECC71'};font-weight:700;padding:8px 4px">${row[1]}</td>
-          <td style="color:${el.color};font-weight:700;text-align:right;padding:8px 4px">${row[2]}</td>
+      const headers = (el.headers||[]).map(h => `<th style="color:#EBC844;font-family:var(--font-display);font-size:9.5px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;padding:8px 6px;border-bottom:1px solid rgba(255,255,255,0.08)">${h}</th>`).join('');
+      const rows = (el.rows||[]).map((row, idx) => `
+        <tr style="border-bottom:1px solid rgba(255,255,255,0.03);background:${idx % 2 === 1 ? 'rgba(255,255,255,0.01)' : 'transparent'}">
+          <td style="color:${el.color};font-weight:600;padding:10px 6px;font-family:var(--font-sans);font-size:11px">${row[0]}</td>
+          <td style="padding:10px 6px">
+            <span style="background:${(row[1]||'').startsWith('-') ? 'rgba(231,76,60,0.1)' : 'rgba(46,204,113,0.1)'};color:${(row[1]||'').startsWith('-') ? '#E74C3C' : '#2ECC71'};font-weight:700;padding:2px 8px;border-radius:10px;font-size:9.5px;border:1px solid ${(row[1]||'').startsWith('-') ? 'rgba(231,76,60,0.15)' : 'rgba(46,204,113,0.15)'};font-family:var(--font-display)">${row[1]}</span>
+          </td>
+          <td style="color:${el.color};font-weight:700;text-align:right;padding:10px 6px;font-family:var(--font-display);font-size:11.5px">${row[2]}</td>
         </tr>
       `).join('');
       return `
-      <div class="el-table-block" style="background:${el.bg};width:100%;height:100%;padding:14px;box-sizing:border-box;display:flex;flex-direction:column;border-radius:4px;border:1px solid var(--border-dark);overflow:hidden">
-        <div style="font-family:var(--font-display);font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:${el.color};margin-bottom:8px">${el.title}</div>
+      <div class="el-table-block" style="background:${el.bg};width:100%;height:100%;padding:18px;box-sizing:border-box;display:flex;flex-direction:column;border-radius:var(--radius-md);border:1px solid rgba(255,255,255,0.04);box-shadow:0 8px 32px rgba(0,0,0,0.3);overflow:hidden">
+        <div style="font-family:var(--font-display);font-size:11.5px;font-weight:700;letter-spacing:1.8px;text-transform:uppercase;color:${el.color};margin-bottom:10px">${el.title}</div>
         <table style="width:100%;border-collapse:collapse;font-family:var(--font-sans);font-size:11px;text-align:left">
           <thead>
             <tr>${headers}</tr>
@@ -1826,8 +2020,45 @@ function renderProps(id) {
     `;
   }
   if (el.type === 'iconstat') {
+    const activeIcon = el.icon || 'school';
+    
+    // Icon grid rendering
+    let iconGridHTML = curatedIcons.map(icon => `
+      <div class="icon-picker-swatch ${activeIcon === icon.name ? 'selected' : ''}" 
+           title="${icon.label}" 
+           onclick="updateProp(${id},'icon','${icon.name}');rerender(${id});renderProps(${id})">
+        <span class="material-symbols-outlined">${icon.name}</span>
+        <span class="icon-swatch-lbl">${icon.label}</span>
+      </div>
+    `).join('');
+
     html += `
-    <div class="prop-row"><label class="prop-label">Emoji / Icono</label><input class="prop-input" type="text" value="${el.icon||''}" oninput="updateProp(${id},'icon',this.value);rerender(${id})"></div>
+    <div class="prop-row">
+      <label class="prop-label">Icono ENAE</label>
+      <div style="background:rgba(0,0,0,0.3);border:1px solid var(--border-dark);border-radius:var(--radius-md);padding:12px;margin-bottom:8px">
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px">
+          <div style="width:42px;height:42px;border-radius:var(--radius-sm);background:rgba(184,29,51,0.12);border:1px solid rgba(184,29,51,0.25);display:flex;align-items:center;justify-content:center;box-shadow:0 4px 10px rgba(0,0,0,0.15)">
+            <span class="material-symbols-outlined" style="font-size:24px;color:var(--color-oro)">${activeIcon}</span>
+          </div>
+          <div>
+            <div style="font-size:13px;font-weight:700;color:var(--text-primary);font-family:var(--font-display);text-transform:capitalize">${activeIcon.replace('_',' ')}</div>
+            <div style="font-size:9px;color:var(--text-muted);text-transform:uppercase;letter-spacing:1px;font-weight:600">Icono Seleccionado</div>
+          </div>
+        </div>
+        
+        <!-- Search bar for icons -->
+        <input class="prop-input" type="text" id="icon-search-input" placeholder="🔍 Buscar icono..." style="margin-bottom:10px;padding:8px 10px;font-size:11px;background:rgba(0,0,0,0.5)" oninput="filterIconPicker(this.value)">
+
+        <!-- Curated Grid -->
+        <div class="icon-picker-grid" id="picker-grid-container" style="display:grid;grid-template-columns:repeat(4,1fr);gap:6px;max-height:140px;overflow-y:auto;padding-right:4px">
+          ${iconGridHTML}
+        </div>
+      </div>
+      <div class="prop-row">
+        <label class="prop-label" style="font-size:9px;margin-bottom:4px">O ingresa un nombre personalizado de Material Symbol</label>
+        <input class="prop-input" type="text" value="${activeIcon}" oninput="updateProp(${id},'icon',this.value);rerender(${id});this.closest('.prop-row').previousElementSibling.querySelector('span.material-symbols-outlined').textContent=this.value" style="font-size:12px;padding:8px 10px">
+      </div>
+    </div>
     <div class="prop-row"><label class="prop-label">Valor</label><input class="prop-input" type="text" value="${el.value||''}" oninput="updateProp(${id},'value',this.value);rerender(${id})"></div>
     <div class="prop-row"><label class="prop-label">Label</label><input class="prop-input" type="text" value="${el.label||''}" oninput="updateProp(${id},'label',this.value);rerender(${id})"></div>
     <div class="prop-row"><label class="prop-label">Color texto</label><input type="color" class="prop-color-input" value="${toHex(el.color)}" oninput="updateProp(${id},'color',this.value);rerender(${id})"></div>
@@ -1963,7 +2194,7 @@ function renderProps(id) {
   }
 
 
-  html += `<button class="prop-delete-btn" onclick="deleteSelected()">🗑 Eliminar elemento</button>`;
+  html += `<button class="prop-delete-btn" onclick="deleteSelected()" style="display:flex;align-items:center;justify-content:center;gap:6px"><span class="material-symbols-outlined" style="font-size:16px">delete</span>Eliminar elemento</button>`;
   p.innerHTML = html;
 }
 
@@ -2064,14 +2295,14 @@ function updateTableHeaderItem(id, col, val) {
 // ============================================================
 function refreshLayers() {
   const list = document.getElementById('layers-list');
-  if (!elements.length) { list.innerHTML = '<p style="font-size:12px;color:#555;padding:10px 0">No hay elementos.</p>'; return; }
+  if (!elements.length) { list.innerHTML = '<p style="font-size:12px;color:var(--text-muted);padding:14px 0;text-align:center">No hay elementos.</p>'; return; }
   list.innerHTML = [...elements].reverse().map(el => `
     <div class="element-row ${el.id === selectedId ? 'selected' : ''}" onclick="selectElement(${el.id})">
-      <span>${el.type} #${el.id}</span>
+      <span style="font-family:var(--font-display);font-weight:600;font-size:12px;text-transform:capitalize">${el.type} <span style="color:var(--text-muted);font-weight:400;font-size:11px">#${el.id}</span></span>
       <div class="element-actions">
-        <button class="el-btn" title="Subir" onclick="event.stopPropagation();layerUp(${el.id})">↑</button>
-        <button class="el-btn" title="Bajar" onclick="event.stopPropagation();layerDown(${el.id})">↓</button>
-        <button class="el-btn" title="Eliminar" onclick="event.stopPropagation();removeEl(${el.id})">✕</button>
+        <button class="el-btn" title="Subir nivel" onclick="event.stopPropagation();layerUp(${el.id})"><span class="material-symbols-outlined">arrow_upward</span></button>
+        <button class="el-btn" title="Bajar nivel" onclick="event.stopPropagation();layerDown(${el.id})"><span class="material-symbols-outlined">arrow_downward</span></button>
+        <button class="el-btn" title="Eliminar" onclick="event.stopPropagation();removeEl(${el.id})" style="border-color:rgba(231,76,60,0.15);color:var(--color-coral)"><span class="material-symbols-outlined">delete</span></button>
       </div>
     </div>`).join('');
 }
@@ -2251,6 +2482,7 @@ function exportSVG() {
 
   let svgContent = `<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}" viewBox="0 0 ${w} ${h}">`;
   svgContent += `<defs><style>
+    @import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200');
     @font-face {
       font-family: 'Open Sans';
       src: local('Open Sans'), local('OpenSans');
@@ -2258,6 +2490,23 @@ function exportSVG() {
     @font-face {
       font-family: 'SF UI Display';
       src: local('SF UI Display'), local('SFUIDisplay');
+    }
+    .material-symbols-outlined {
+      font-family: 'Material Symbols Outlined';
+      font-weight: normal;
+      font-style: normal;
+      font-size: 24px;
+      display: inline-block;
+      line-height: 1;
+      text-transform: none;
+      letter-spacing: normal;
+      word-wrap: normal;
+      white-space: nowrap;
+      direction: ltr;
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
+      -moz-osx-font-smoothing: grayscale;
+      font-feature-settings: 'liga';
     }
   </style></defs>`;
   svgContent += `<rect width="${w}" height="${h}" fill="${canvasBg}"/>`;
@@ -2380,7 +2629,14 @@ function exportHTML() {
   deselectAll();
   const inf = document.getElementById('infographic');
   const snapshot = inf.outerHTML;
-  const fullHTML = `<!DOCTYPE html><html><head><meta charset="UTF-8"><style>
+  const fullHTML = `<!DOCTYPE html><html><head><meta charset="UTF-8">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+  <style>
+  .material-symbols-outlined {
+    font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    display: inline-block;
+    vertical-align: middle;
+  }
   @font-face {
     font-family: 'Open Sans';
     src: url('src/fonts/Open%20Sans/OpenSans.ttf') format('truetype');
@@ -2437,32 +2693,32 @@ function exportHTML() {
     font-style: normal;
   }
 
-  body{margin:0;background:#111;display:flex;align-items:center;justify-content:center;min-height:100vh}
+  body{margin:0;background:#060709;display:flex;align-items:center;justify-content:center;min-height:100vh}
   .inf-element{position:absolute}
   .el-heading{font-family:'SF UI Display',sans-serif;font-weight:900;text-transform:uppercase;line-height:1.05}
   .el-subheading{font-family:'Open Sans',sans-serif;font-weight:300;line-height:1.3}
   .el-body-text{font-family:'Open Sans',sans-serif;font-weight:400;line-height:1.55}
   .el-label-text{font-family:'SF UI Display',sans-serif;font-weight:700;letter-spacing:2px;text-transform:uppercase}
-  .el-stat-block{display:flex;flex-direction:column;align-items:flex-start;padding:16px 20px}
-  .el-stat-number{font-family:'SF UI Display',sans-serif;font-weight:900;font-size:56px;line-height:1}
-  .el-stat-label{font-family:'SF UI Display',sans-serif;font-size:12px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;margin-top:4px;opacity:.8}
-  .el-stat-desc{font-family:'Open Sans',sans-serif;font-size:13px;font-weight:300;margin-top:8px;line-height:1.4}
-  .el-bullet-list{list-style:none;padding:12px 16px}
-  .el-bullet-list li{font-family:'Open Sans',sans-serif;padding:5px 0 5px 18px;position:relative;font-size:14px;line-height:1.4}
-  .el-bullet-list li::before{content:'';position:absolute;left:0;top:12px;width:8px;height:8px;border-radius:50%;background:#a91831}
-  .el-progress-block{padding:10px 14px}
-  .el-progress-title{font-family:'SF UI Display',sans-serif;font-size:13px;font-weight:700;margin-bottom:8px;text-transform:uppercase}
-  .el-progress-track{height:10px;border-radius:5px;overflow:hidden;background:rgba(255,255,255,.15);margin-bottom:4px}
-  .el-progress-fill{height:100%;border-radius:5px}
-  .el-progress-label{font-family:'Open Sans',sans-serif;font-size:11px;opacity:.7;display:flex;justify-content:space-between;margin-bottom:8px}
-  .el-quote-block{padding:18px 20px 18px 28px;position:relative}
-  .el-quote-block::before{content:'"';position:absolute;left:8px;top:4px;font-size:60px;font-family:'SF UI Display',sans-serif;font-weight:900;opacity:.25;line-height:1}
-  .el-quote-text{font-family:'Open Sans',sans-serif;font-size:15px;font-weight:300;font-style:italic;line-height:1.5;margin-bottom:10px}
-  .el-quote-author{font-family:'SF UI Display',sans-serif;font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase}
-  .el-icon-stat{display:flex;align-items:center;gap:12px;padding:12px 16px}
-  .el-icon-stat .icon-box{width:44px;height:44px;display:flex;align-items:center;justify-content:center;font-size:22px;border-radius:3px}
-  .el-icon-stat .icon-val{font-family:'SF UI Display',sans-serif;font-weight:900;font-size:28px;line-height:1}
-  .el-icon-stat .icon-lbl{font-family:'SF UI Display',sans-serif;font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;opacity:.8}
+  .el-stat-block { display: flex; flex-direction: column; align-items: flex-start; padding: 26px 30px; border-radius: 10px; box-shadow: 0 12px 40px rgba(0, 0, 0, 0.45); border: 1px solid rgba(255, 255, 255, 0.04); background: linear-gradient(145deg, rgba(255, 255, 255, 0.01) 0%, rgba(0, 0, 0, 0.2) 100%); }
+  .el-stat-number { font-family: 'SF UI Display', sans-serif; font-weight: 800; font-size: 68px; line-height: 0.9; letter-spacing: -1.5px; }
+  .el-stat-label { font-family: 'SF UI Display', sans-serif; font-size: 11.5px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; margin-top: 10px; opacity: 0.8; }
+  .el-stat-desc { font-family: 'Open Sans', sans-serif; font-size: 13.5px; font-weight: 300; margin-top: 12px; line-height: 1.45; opacity: 0.65; }
+  .el-bullet-list { list-style: none; padding: 20px 26px; border-radius: 10px; border: 1px solid rgba(255, 255, 255, 0.03); background: rgba(255, 255, 255, 0.01); }
+  .el-bullet-list li { font-family: 'Open Sans', sans-serif; padding: 8px 0 8px 24px; position: relative; font-size: 14.5px; line-height: 1.45; }
+  .el-bullet-list li::before { content: ''; position: absolute; left: 0; top: 16px; width: 7px; height: 7px; border-radius: 50%; background: #EBC844; box-shadow: 0 0 10px #EBC844; }
+  .el-progress-block { padding: 20px 26px; border-radius: 10px; border: 1px solid rgba(255, 255, 255, 0.03); background: rgba(255, 255, 255, 0.01); }
+  .el-progress-title { font-family: 'SF UI Display', sans-serif; font-size: 12.5px; font-weight: 600; margin-bottom: 10px; opacity: 0.85; letter-spacing: 0.3px; }
+  .el-progress-track { height: 4px; border-radius: 3px; overflow: hidden; background: rgba(255, 255, 255, 0.08); margin-bottom: 10px; }
+  .el-progress-fill { height: 100%; border-radius: 3px; box-shadow: 0 0 10px rgba(184, 29, 51, 0.45); }
+  .el-progress-label { font-family: 'Open Sans', sans-serif; font-size: 11px; opacity: 0.6; display: flex; justify-content: space-between; margin-top: -6px; margin-bottom: 14px; }
+  .el-quote-block { padding: 28px 32px 28px 44px; position: relative; border-radius: 10px; border: 1px solid rgba(255, 255, 255, 0.04); background: linear-gradient(145deg, rgba(255, 255, 255, 0.015) 0%, rgba(0, 0, 0, 0.15) 100%); }
+  .el-quote-block::before { content: '“'; position: absolute; left: 14px; top: 14px; font-size: 72px; font-family: 'SF UI Display', sans-serif; font-weight: 900; color: #EBC844; opacity: 0.25; line-height: 1; text-shadow: 0 0 15px rgba(235, 200, 68, 0.4); }
+  .el-quote-text { font-family: 'Open Sans', sans-serif; font-size: 16.5px; font-weight: 300; font-style: italic; line-height: 1.55; margin-bottom: 14px; }
+  .el-quote-author { font-family: 'SF UI Display', sans-serif; font-size: 11.5px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; }
+  .el-icon-stat { display: flex; align-items: center; gap: 18px; padding: 18px 22px; border-radius: 10px; border: 1px solid rgba(255, 255, 255, 0.04); background: linear-gradient(145deg, rgba(255, 255, 255, 0.01) 0%, rgba(0, 0, 0, 0.15) 100%); }
+  .el-icon-stat .icon-box { width: 52px; height: 52px; display: flex; align-items: center; justify-content: center; font-size: 24px; border-radius: 6px; border: 1px solid rgba(235, 200, 68, 0.3); box-shadow: 0 4px 12px rgba(184, 29, 51, 0.15); }
+  .el-icon-stat .icon-val { font-family: 'SF UI Display', sans-serif; font-weight: 800; font-size: 34px; line-height: 0.95; }
+  .el-icon-stat .icon-lbl { font-family: 'SF UI Display', sans-serif; font-size: 10px; font-weight: 700; letter-spacing: 1.8px; text-transform: uppercase; opacity: 0.75; margin-top: 3px; }
   .el-logo-block{display:flex;align-items:center;justify-content:center;flex-direction:column;gap:4px;padding:16px}
   .el-logo-enae{font-family:'SF UI Display',sans-serif;font-weight:900;font-size:48px;letter-spacing:4px;line-height:1}
   .el-logo-sub{font-family:'SF UI Display',sans-serif;font-size:11px;font-weight:700;letter-spacing:3px;text-transform:uppercase}
