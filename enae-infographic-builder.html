@@ -4,78 +4,159 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>ENAE Infographic Builder</title>
-<link href="https://fonts.googleapis.com/css2?family=Barlow:ital,wght@0,300;0,400;0,600;0,700;0,900;1,700&family=Barlow+Condensed:wght@300;400;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <style>
   /* ============================================
-     ENAE BRAND TOKENS
-     Primary:   #a91831  (Pantone 7627C)
-     Dark:      #202221  (Pantone 419C)
-     Light:     #dee5ec  (Pantone 656C)
-     Font:      SF UI Display → Barlow (closest web match)
-  ============================================ */
+     LOCAL BRAND FONTS LOADING (from src/fonts)
+     ============================================ */
+  @font-face {
+    font-family: 'Open Sans';
+    src: url('src/fonts/Open%20Sans/OpenSans.ttf') format('truetype');
+    font-weight: 400;
+    font-style: normal;
+  }
+  @font-face {
+    font-family: 'Open Sans';
+    src: url('src/fonts/Open%20Sans/OpenSans-Bold.ttf') format('truetype');
+    font-weight: 700;
+    font-style: normal;
+  }
+  @font-face {
+    font-family: 'Open Sans';
+    src: url('src/fonts/Open%20Sans/OpenSans-Light.ttf') format('truetype');
+    font-weight: 300;
+    font-style: normal;
+  }
+  @font-face {
+    font-family: 'Open Sans';
+    src: url('src/fonts/Open%20Sans/OpenSans-ExtraBold.ttf') format('truetype');
+    font-weight: 800;
+    font-style: normal;
+  }
+
+  @font-face {
+    font-family: 'SF UI Display';
+    src: url('src/fonts/SF%20UI%20Display/SFUIDisplay-Regular.otf') format('opentype');
+    font-weight: 400;
+    font-style: normal;
+  }
+  @font-face {
+    font-family: 'SF UI Display';
+    src: url('src/fonts/SF%20UI%20Display/SFUIDisplay-Bold.otf') format('opentype');
+    font-weight: 700;
+    font-style: normal;
+  }
+  @font-face {
+    font-family: 'SF UI Display';
+    src: url('src/fonts/SF%20UI%20Display/SFUIDisplay-Light.otf') format('opentype');
+    font-weight: 300;
+    font-style: normal;
+  }
+  @font-face {
+    font-family: 'SF UI Display';
+    src: url('src/fonts/SF%20UI%20Display/SFUIDisplay-Thin.otf') format('opentype');
+    font-weight: 200;
+    font-style: normal;
+  }
+  @font-face {
+    font-family: 'SF UI Display';
+    src: url('src/fonts/SF%20UI%20Display/SFUIDisplay-Ultralight.otf') format('opentype');
+    font-weight: 100;
+    font-style: normal;
+  }
+
+  /* ============================================
+     ENAE BRAND TOKENS & STYLE GUIDE COMPLIANCE
+     ============================================ */
   :root {
-    --enae-red:    #a91831;
-    --enae-red-dark: #8a1228;
-    --enae-dark:   #202221;
-    --enae-light:  #dee5ec;
-    --enae-white:  #ffffff;
-    --enae-gray:   #6b7280;
-    --enae-gray-light: #f4f6f8;
-    --radius: 4px;
+    --bg-darker:       #050508;
+    --bg-dark:         #0b0c0f;
+    --bg-panel:        rgba(12, 13, 17, 0.75);
+    --border-dark:     rgba(255, 255, 255, 0.035);
+    --border-hover:    rgba(255, 255, 255, 0.08);
+    
+    /* ENAE BRAND COLORS */
+    --enae-red:        #b81d33;
+    --enae-red-hover:  #d8243c;
+    --enae-gold:       #EBC844;
+    
+    /* STYLE GUIDE CHROMATIC PALETTE */
+    --color-oro:       #EBC844;
+    --color-coral:     #E74C3C;
+    --color-azul:      #3498DB;
+    --color-verde:     #2ECC71;
+    --color-rosa:      #9B59B6;
+    --color-blanco:    #F5F5F4;
+    --color-gris:      #808080;
+    --color-card:      #1E1E1E;
+    --color-fondo:     #0E0E0E;
+    
+    /* TYPOGRAPHY */
+    --font-display:    'SF UI Display', -apple-system, sans-serif;
+    --font-sans:       'Open Sans', sans-serif;
+
+    --text-primary:    #f5f6fa;
+    --text-secondary:  #8e93a6;
+    --text-muted:      #525765;
+    
+    --radius-lg: 16px;
+    --radius-md: 10px;
+    --radius-sm: 6px;
+    --transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
   }
 
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
   body {
-    font-family: 'Barlow', sans-serif;
-    background: #1a1a1a;
-    color: var(--enae-dark);
+    font-family: var(--font-sans);
+    background: var(--bg-darker);
+    color: var(--text-primary);
     min-height: 100vh;
     display: flex;
     flex-direction: column;
+    overflow: hidden;
+    -webkit-font-smoothing: antialiased;
   }
 
   /* ── TOP BAR ── */
   .topbar {
-    background: var(--enae-dark);
+    background: var(--bg-dark);
     padding: 12px 24px;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    border-bottom: 3px solid var(--enae-red);
+    border-bottom: 1px solid var(--border-dark);
     flex-shrink: 0;
+    position: relative;
+    z-index: 100;
   }
   .topbar-logo {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 12px;
   }
-  .logo-mark {
-    font-family: 'Barlow Condensed', sans-serif;
-    font-weight: 900;
-    font-size: 22px;
-    color: var(--enae-white);
-    letter-spacing: 2px;
+  .topbar-logo svg {
+    height: 22px;
+    width: auto;
+    color: var(--text-primary);
+    transition: var(--transition);
   }
-  .logo-mark span {
-    color: var(--enae-red);
-  }
-  .logo-sub {
-    font-size: 9px;
-    color: var(--enae-light);
-    letter-spacing: 1.5px;
-    text-transform: uppercase;
-    border-left: 2px solid var(--enae-red);
-    padding-left: 8px;
-    line-height: 1.3;
+  .topbar-logo svg:hover {
+    transform: translateY(-1px);
+    filter: drop-shadow(0 0 8px rgba(184, 29, 51, 0.4));
   }
   .topbar-title {
-    color: var(--enae-light);
-    font-size: 13px;
-    font-weight: 300;
-    letter-spacing: 1px;
+    color: var(--text-secondary);
+    font-family: var(--font-display);
+    font-size: 10.5px;
+    font-weight: 700;
+    letter-spacing: 2px;
     text-transform: uppercase;
+    background: rgba(255,255,255,0.02);
+    padding: 5px 12px;
+    border-radius: 30px;
+    border: 1px solid var(--border-dark);
   }
 
   /* ── MAIN LAYOUT ── */
@@ -83,214 +164,283 @@
     flex: 1;
     display: flex;
     overflow: hidden;
-    height: calc(100vh - 55px);
+    height: calc(100vh - 56px);
   }
 
-  /* ── LEFT PANEL ── */
+  /* ── PANEL (LEFT & RIGHT SIDEBARS) ── */
   .panel {
     width: 320px;
-    background: #252525;
+    background: var(--bg-panel);
+    backdrop-filter: blur(25px);
+    -webkit-backdrop-filter: blur(25px);
     display: flex;
     flex-direction: column;
     overflow: hidden;
     flex-shrink: 0;
+    border-right: 1px solid var(--border-dark);
+    z-index: 10;
   }
   .panel-tabs {
     display: flex;
-    background: #1e1e1e;
-    border-bottom: 1px solid #333;
+    background: rgba(0,0,0,0.3);
+    border-bottom: 1px solid var(--border-dark);
+    padding: 6px;
+    gap: 4px;
   }
   .panel-tab {
     flex: 1;
-    padding: 10px 6px;
+    padding: 8px 4px;
+    font-family: var(--font-display);
     font-size: 11px;
-    font-weight: 600;
-    letter-spacing: 0.8px;
+    font-weight: 700;
+    letter-spacing: 1.2px;
     text-transform: uppercase;
-    color: #888;
+    color: var(--text-secondary);
     cursor: pointer;
     border: none;
     background: none;
-    transition: all .2s;
-    border-bottom: 2px solid transparent;
+    border-radius: 8px;
+    transition: var(--transition);
+  }
+  .panel-tab:hover {
+    color: var(--text-primary);
+    background: rgba(255,255,255,0.02);
   }
   .panel-tab.active {
-    color: var(--enae-white);
-    border-bottom-color: var(--enae-red);
+    color: var(--text-primary);
+    background: rgba(255,255,255,0.06);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.1), 0 1px 3px rgba(0,0,0,0.2);
   }
   .panel-body {
     flex: 1;
     overflow-y: auto;
-    padding: 16px;
+    padding: 20px;
   }
   .panel-body::-webkit-scrollbar { width: 4px; }
-  .panel-body::-webkit-scrollbar-track { background: #1e1e1e; }
-  .panel-body::-webkit-scrollbar-thumb { background: #444; border-radius: 2px; }
+  .panel-body::-webkit-scrollbar-track { background: transparent; }
+  .panel-body::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.05); border-radius: 2px; }
+  .panel-body::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.15); }
 
   /* Tab sections */
-  .tab-section { display: none; }
+  .tab-section { display: none; animation: fadeIn 0.2s cubic-bezier(0.16, 1, 0.3, 1); }
   .tab-section.active { display: block; }
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(2px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
 
   /* Form elements */
   .field-group { margin-bottom: 16px; }
   .field-label {
+    font-family: var(--font-display);
     font-size: 10px;
     font-weight: 700;
-    letter-spacing: 1px;
+    letter-spacing: 1.8px;
     text-transform: uppercase;
-    color: #aaa;
+    color: var(--text-secondary);
     margin-bottom: 6px;
     display: block;
+    opacity: 0.85;
   }
   .field-input, .field-select, .field-textarea {
     width: 100%;
-    background: #1e1e1e;
-    border: 1px solid #3a3a3a;
-    border-radius: var(--radius);
-    color: var(--enae-white);
-    font-family: 'Barlow', sans-serif;
-    font-size: 13px;
-    padding: 8px 10px;
+    background: rgba(0,0,0,0.25);
+    border: 1px solid var(--border-dark);
+    border-radius: var(--radius-md);
+    color: var(--text-primary);
+    font-family: var(--font-sans);
+    font-size: 12.5px;
+    padding: 8px 12px;
     outline: none;
-    transition: border-color .2s;
+    transition: var(--transition);
   }
   .field-input:focus, .field-select:focus, .field-textarea:focus {
     border-color: var(--enae-red);
+    box-shadow: 0 0 0 3px rgba(184, 29, 51, 0.15);
+    background: rgba(0,0,0,0.4);
   }
   .field-textarea { resize: vertical; min-height: 70px; }
-  .field-select { cursor: pointer; }
+  .field-select { cursor: pointer; appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%238e93a6'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 10px center; background-size: 12px; padding-right: 28px; }
 
   /* Color picker row */
   .color-row {
-    display: flex;
-    gap: 8px;
-    flex-wrap: wrap;
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 6px;
     margin-top: 6px;
   }
   .color-swatch {
-    width: 28px;
-    height: 28px;
-    border-radius: 3px;
+    aspect-ratio: 1;
+    border-radius: var(--radius-sm);
     cursor: pointer;
     border: 2px solid transparent;
-    transition: transform .15s, border-color .15s;
+    transition: var(--transition);
+    position: relative;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.4);
   }
-  .color-swatch:hover { transform: scale(1.1); }
-  .color-swatch.selected { border-color: var(--enae-white); }
+  .color-swatch:hover { transform: scale(1.05); }
+  .color-swatch.selected { 
+    border-color: var(--text-primary); 
+    transform: scale(1.02);
+    box-shadow: 0 0 0 2px var(--enae-red);
+  }
 
   /* Section header inside panel */
   .section-head {
+    font-family: var(--font-display);
     font-size: 10px;
     font-weight: 700;
-    letter-spacing: 1.5px;
+    letter-spacing: 2.2px;
     text-transform: uppercase;
-    color: var(--enae-red);
-    margin: 16px 0 10px;
-    padding-bottom: 4px;
-    border-bottom: 1px solid #333;
+    color: var(--text-primary);
+    opacity: 0.9;
+    margin: 24px 0 12px;
+    padding-left: 10px;
+    border-left: 2px solid var(--color-oro);
   }
 
   /* Block items list */
   .block-list { display: flex; flex-direction: column; gap: 6px; }
   .block-item {
-    background: #1e1e1e;
-    border: 1px solid #333;
-    border-radius: var(--radius);
-    padding: 8px 10px;
+    background: rgba(255, 255, 255, 0.015);
+    border: 1px solid var(--border-dark);
+    border-radius: var(--radius-md);
+    padding: 8px 12px;
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 10px;
     cursor: pointer;
-    transition: border-color .2s, background .2s;
-    font-size: 12px;
-    color: #ccc;
+    transition: var(--transition);
+    font-size: 12.5px;
+    font-weight: 600;
+    color: var(--text-secondary);
   }
-  .block-item:hover { border-color: var(--enae-red); background: #2a2020; color: var(--enae-white); }
-  .block-icon { font-size: 16px; flex-shrink: 0; }
+  .block-item:hover { 
+    border-color: rgba(255,255,255,0.1); 
+    background: rgba(255,255,255,0.035); 
+    color: var(--text-primary);
+    transform: translateX(2px);
+  }
+  .block-icon { font-size: 14px; flex-shrink: 0; }
 
   /* Stacked items in canvas list */
   .element-row {
-    background: #1e1e1e;
-    border: 1px solid #333;
-    border-radius: var(--radius);
-    padding: 8px 10px;
+    background: rgba(0,0,0,0.2);
+    border: 1px solid var(--border-dark);
+    border-radius: var(--radius-md);
+    padding: 8px 12px;
     display: flex;
     align-items: center;
     justify-content: space-between;
     margin-bottom: 5px;
-    font-size: 12px;
-    color: #bbb;
+    font-size: 12.5px;
+    color: var(--text-secondary);
     cursor: pointer;
+    transition: var(--transition);
   }
-  .element-row.selected { border-color: var(--enae-red); color: var(--enae-white); }
+  .element-row:hover { border-color: var(--border-hover); background: rgba(0,0,0,0.3); }
+  .element-row.selected { 
+    border-color: var(--color-oro); 
+    background: rgba(235,200,68,0.04);
+    color: var(--text-primary); 
+  }
   .element-actions { display: flex; gap: 4px; }
   .el-btn {
-    background: none;
-    border: none;
-    color: #888;
+    background: rgba(255,255,255,0.02);
+    border: 1px solid var(--border-dark);
+    color: var(--text-secondary);
     cursor: pointer;
-    font-size: 13px;
-    padding: 2px 4px;
-    border-radius: 2px;
-    transition: color .15s;
+    font-size: 10px;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--radius-sm);
+    transition: var(--transition);
   }
-  .el-btn:hover { color: var(--enae-red); }
+  .el-btn:hover { color: var(--text-primary); border-color: var(--enae-red); background: rgba(184,29,51,0.2); }
 
   /* ── CANVAS AREA ── */
   .canvas-area {
     flex: 1;
-    background: #111;
+    background-color: var(--bg-darker);
+    background-image: radial-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+    background-size: 20px 20px;
     display: flex;
     flex-direction: column;
     align-items: center;
     overflow: auto;
     padding: 24px;
     gap: 16px;
+    position: relative;
+  }
+  .canvas-area::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 800px;
+    height: 800px;
+    background: radial-gradient(circle, rgba(184, 29, 51, 0.025) 0%, rgba(235, 200, 68, 0.008) 50%, transparent 100%);
+    pointer-events: none;
+    z-index: 1;
   }
 
   .canvas-toolbar {
     display: flex;
     align-items: center;
     gap: 10px;
-    background: #252525;
-    border-radius: 6px;
-    padding: 8px 14px;
+    background: var(--bg-panel);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid var(--border-dark);
+    border-radius: 30px;
+    padding: 8px 16px;
     flex-shrink: 0;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
+    z-index: 20;
   }
   .ct-label {
-    font-size: 11px;
-    color: #888;
-    font-weight: 600;
-    letter-spacing: 0.8px;
+    font-family: var(--font-display);
+    font-size: 10px;
+    color: var(--text-muted);
+    font-weight: 700;
+    letter-spacing: 1.2px;
     text-transform: uppercase;
     margin-right: 4px;
   }
   .ct-btn {
-    background: #333;
-    border: 1px solid #444;
-    color: #ccc;
+    background: rgba(255,255,255,0.02);
+    border: 1px solid var(--border-dark);
+    color: var(--text-secondary);
     padding: 6px 12px;
-    font-size: 12px;
-    font-family: 'Barlow', sans-serif;
-    border-radius: 3px;
-    cursor: pointer;
-    transition: all .15s;
+    font-size: 11.5px;
+    font-family: var(--font-sans);
     font-weight: 600;
-    letter-spacing: 0.5px;
+    border-radius: 30px;
+    cursor: pointer;
+    transition: var(--transition);
+    letter-spacing: 0.2px;
   }
-  .ct-btn:hover { background: #444; color: #fff; }
+  .ct-btn:hover { background: rgba(255,255,255,0.06); color: var(--text-primary); border-color: var(--border-hover); }
   .ct-btn.primary {
-    background: var(--enae-red);
+    background: linear-gradient(135deg, var(--enae-red) 0%, #d8243c 100%);
     border-color: var(--enae-red);
-    color: #fff;
+    color: var(--color-blanco);
+    box-shadow: 0 4px 14px rgba(184, 29, 51, 0.35);
   }
-  .ct-btn.primary:hover { background: var(--enae-red-dark); }
-  .ct-sep { width: 1px; height: 22px; background: #444; }
+  .ct-btn.primary:hover { transform: translateY(-1px); filter: brightness(1.1); }
+  .ct-sep { width: 1px; height: 18px; background: var(--border-dark); }
+
 
   #canvas-wrapper {
     position: relative;
     flex-shrink: 0;
-    box-shadow: 0 8px 40px rgba(0,0,0,.6);
+    box-shadow: 0 20px 80px rgba(0,0,0,0.85);
+    border-radius: var(--radius-sm);
+    transition: transform 0.2s cubic-bezier(0.1, 0.8, 0.2, 1);
   }
 
   /* ── INFOGRAPHIC CANVAS ── */
@@ -298,101 +448,112 @@
     position: relative;
     overflow: hidden;
     user-select: none;
-    font-family: 'Barlow', sans-serif;
+    font-family: var(--font-sans);
+    transition: background-color 0.3s;
   }
 
   /* Selection outline */
   .el-selected-ring {
-    outline: 2px dashed var(--enae-red);
-    outline-offset: 2px;
+    outline: 1.5px solid var(--color-oro);
+    outline-offset: 4px;
+    box-shadow: 0 0 0 1px rgba(0,0,0,0.5), 0 8px 24px rgba(235, 200, 68, 0.15);
   }
 
   /* ── ELEMENTS ── */
   .inf-element {
     position: absolute;
     cursor: move;
+    transition: opacity 0.2s;
   }
   .inf-element:hover .element-handle { opacity: 1; }
 
   /* Resize handle */
   .resize-handle {
     position: absolute;
-    bottom: -5px;
-    right: -5px;
-    width: 12px;
-    height: 12px;
-    background: var(--enae-red);
+    bottom: -6px;
+    right: -6px;
+    width: 14px;
+    height: 14px;
+    background: var(--color-oro);
+    border: 2px solid var(--color-fondo);
     border-radius: 50%;
     cursor: se-resize;
-    z-index: 10;
+    z-index: 100;
     display: none;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.4);
   }
   .inf-element.selected .resize-handle { display: block; }
 
-  /* TEXT elements */
+  /* TYPOGRAPHY IN CANVASES */
   .el-heading {
-    font-family: 'Barlow Condensed', sans-serif;
+    font-family: var(--font-display);
     font-weight: 900;
-    line-height: 1.05;
+    line-height: 0.95;
     text-transform: uppercase;
+    letter-spacing: -1px;
   }
   .el-subheading {
-    font-family: 'Barlow', sans-serif;
+    font-family: var(--font-sans);
     font-weight: 300;
-    line-height: 1.3;
+    line-height: 1.25;
+    letter-spacing: -0.2px;
   }
   .el-body-text {
-    font-family: 'Barlow', sans-serif;
+    font-family: var(--font-sans);
     font-weight: 400;
-    line-height: 1.55;
+    line-height: 1.5;
   }
   .el-label-text {
-    font-family: 'Barlow Condensed', sans-serif;
+    font-family: var(--font-display);
     font-weight: 700;
     letter-spacing: 2px;
     text-transform: uppercase;
   }
 
-  /* STAT BLOCK */
+  /* STAT BLOCK (Style Guide Compliant) */
   .el-stat-block {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    padding: 16px 20px;
+    padding: 24px 28px;
+    border-radius: 8px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.35);
   }
   .el-stat-number {
-    font-family: 'Barlow Condensed', sans-serif;
+    font-family: var(--font-display);
     font-weight: 900;
-    font-size: 56px;
-    line-height: 1;
+    font-size: 64px;
+    line-height: 0.9;
+    letter-spacing: -1px;
   }
   .el-stat-label {
-    font-size: 12px;
-    font-weight: 600;
-    letter-spacing: 1.5px;
+    font-family: var(--font-display);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 2px;
     text-transform: uppercase;
-    margin-top: 4px;
-    opacity: .8;
+    margin-top: 8px;
+    opacity: 0.75;
   }
   .el-stat-desc {
+    font-family: var(--font-sans);
     font-size: 13px;
     font-weight: 300;
-    margin-top: 8px;
+    margin-top: 10px;
     line-height: 1.4;
+    opacity: 0.6;
   }
 
   /* DIVIDER */
   .el-divider-h { width: 100%; border: none; }
   .el-divider-v { height: 100%; width: 3px; }
 
-  /* ACCENT BAR */
-  .el-accent-bar {}
-
   /* BULLET LIST */
-  .el-bullet-list { list-style: none; padding: 12px 16px; }
+  .el-bullet-list { list-style: none; padding: 18px 24px; border-radius: 8px; }
   .el-bullet-list li {
-    padding: 5px 0 5px 18px;
+    padding: 6px 0 6px 20px;
     position: relative;
+    font-family: var(--font-sans);
     font-size: 14px;
     line-height: 1.4;
     font-weight: 400;
@@ -401,9 +562,9 @@
     content: '';
     position: absolute;
     left: 0;
-    top: 12px;
-    width: 8px;
-    height: 8px;
+    top: 13px;
+    width: 6px;
+    height: 6px;
     border-radius: 50%;
     background: var(--enae-red);
   }
@@ -412,91 +573,97 @@
   .el-icon-stat {
     display: flex;
     align-items: center;
-    gap: 12px;
-    padding: 12px 16px;
+    gap: 16px;
+    padding: 16px 20px;
+    border-radius: 8px;
   }
   .el-icon-stat .icon-box {
-    width: 44px;
-    height: 44px;
+    width: 48px;
+    height: 48px;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 22px;
+    font-size: 24px;
     flex-shrink: 0;
-    border-radius: 3px;
+    border-radius: 6px;
   }
-  .el-icon-stat .icon-info {}
   .el-icon-stat .icon-val {
-    font-family: 'Barlow Condensed', sans-serif;
+    font-family: var(--font-display);
     font-weight: 900;
-    font-size: 28px;
-    line-height: 1;
+    font-size: 32px;
+    line-height: 0.95;
   }
   .el-icon-stat .icon-lbl {
-    font-size: 11px;
+    font-family: var(--font-display);
+    font-size: 10px;
     font-weight: 700;
-    letter-spacing: 1px;
+    letter-spacing: 1.5px;
     text-transform: uppercase;
-    opacity: .8;
+    opacity: 0.7;
+    margin-top: 2px;
   }
 
-  /* PROGRESS BAR */
-  .el-progress-block { padding: 10px 14px; }
+  /* PROGRESS BAR (Style Guide Compliant: thin lines) */
+  .el-progress-block { padding: 18px 24px; border-radius: 8px; }
   .el-progress-title {
-    font-size: 13px;
-    font-weight: 700;
+    font-family: var(--font-display);
+    font-size: 12px;
+    font-weight: 600;
     margin-bottom: 8px;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
+    opacity: 0.8;
   }
   .el-progress-track {
-    height: 10px;
-    border-radius: 5px;
+    height: 5px; /* Thin visual style */
+    border-radius: 3px;
     overflow: hidden;
-    background: rgba(255,255,255,.15);
-    margin-bottom: 10px;
+    background: rgba(255,255,255,0.08);
+    margin-bottom: 8px;
   }
   .el-progress-fill {
     height: 100%;
-    border-radius: 5px;
-    transition: width .3s;
+    border-radius: 3px;
+    transition: width 0.3s;
   }
   .el-progress-label {
+    font-family: var(--font-sans);
     font-size: 11px;
-    opacity: .7;
+    opacity: 0.55;
     display: flex;
     justify-content: space-between;
     margin-top: -6px;
-    margin-bottom: 8px;
+    margin-bottom: 12px;
   }
 
   /* QUOTE */
   .el-quote-block {
-    padding: 18px 20px 18px 28px;
+    padding: 24px 28px 24px 36px;
     position: relative;
+    border-radius: 8px;
   }
   .el-quote-block::before {
-    content: '"';
+    content: '“';
     position: absolute;
-    left: 8px;
-    top: 4px;
-    font-size: 60px;
-    font-family: 'Barlow Condensed', sans-serif;
+    left: 10px;
+    top: 8px;
+    font-size: 64px;
+    font-family: var(--font-display);
     font-weight: 900;
-    opacity: .25;
+    opacity: 0.15;
     line-height: 1;
   }
   .el-quote-text {
-    font-size: 15px;
+    font-family: var(--font-sans);
+    font-size: 16px;
     font-weight: 300;
     font-style: italic;
     line-height: 1.5;
-    margin-bottom: 10px;
+    margin-bottom: 12px;
   }
   .el-quote-author {
+    font-family: var(--font-display);
     font-size: 11px;
     font-weight: 700;
-    letter-spacing: 1.5px;
+    letter-spacing: 2px;
     text-transform: uppercase;
   }
 
@@ -505,143 +672,144 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    flex-direction: column;
-    gap: 4px;
     padding: 16px;
+    color: var(--text-primary);
   }
-  .el-logo-enae {
-    font-family: 'Barlow Condensed', sans-serif;
-    font-weight: 900;
-    font-size: 48px;
-    letter-spacing: 4px;
-    line-height: 1;
+  .el-logo-block svg {
+    width: 100%;
+    height: auto;
+    display: block;
+    max-height: 100%;
+    color: inherit;
   }
-  .el-logo-sub {
-    font-size: 11px;
-    font-weight: 700;
-    letter-spacing: 3px;
-    text-transform: uppercase;
-  }
-  .el-logo-bar {
-    width: 40px;
-    height: 3px;
-    margin-top: 4px;
-    align-self: flex-end;
-  }
-
-  /* SHAPE elements */
-  .el-shape-rect {}
-  .el-shape-triangle {
-    width: 0 !important;
-    height: 0 !important;
-  }
-  .el-shape-circle { border-radius: 50%; }
 
   /* WATERMARK (ghost ENAE behind) */
   .canvas-watermark {
     position: absolute;
-    font-family: 'Barlow Condensed', sans-serif;
+    font-family: var(--font-display);
     font-weight: 900;
-    letter-spacing: 8px;
-    opacity: .04;
+    letter-spacing: 12px;
+    opacity: .03;
     pointer-events: none;
     user-select: none;
     color: inherit;
+    line-height: 1;
   }
 
   /* ── RIGHT PROPS PANEL ── */
   .props-panel {
-    width: 240px;
-    background: #252525;
+    width: 250px;
+    background: var(--bg-panel);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
     overflow-y: auto;
-    padding: 14px;
+    padding: 20px 16px;
     flex-shrink: 0;
-    border-left: 1px solid #333;
+    border-left: 1px solid var(--border-dark);
+    box-shadow: -4px 0 24px rgba(0,0,0,0.3);
+    z-index: 10;
   }
   .props-panel::-webkit-scrollbar { width: 4px; }
-  .props-panel::-webkit-scrollbar-track { background: #1e1e1e; }
-  .props-panel::-webkit-scrollbar-thumb { background: #444; border-radius: 2px; }
+  .props-panel::-webkit-scrollbar-track { background: transparent; }
+  .props-panel::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 2px; }
 
   .props-title {
-    font-size: 10px;
+    font-family: var(--font-display);
+    font-size: 11px;
     font-weight: 700;
-    letter-spacing: 1.5px;
+    letter-spacing: 2px;
     text-transform: uppercase;
     color: var(--enae-red);
-    margin-bottom: 12px;
-    padding-bottom: 6px;
-    border-bottom: 1px solid #333;
+    margin-bottom: 16px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--border-dark);
   }
   .props-empty {
     font-size: 12px;
-    color: #555;
+    color: var(--text-muted);
     text-align: center;
-    padding: 30px 0;
+    padding: 40px 10px;
     line-height: 1.6;
+    font-weight: 500;
   }
   .prop-row {
-    margin-bottom: 12px;
+    margin-bottom: 14px;
   }
   .prop-label {
+    font-family: var(--font-display);
     font-size: 10px;
     font-weight: 700;
-    letter-spacing: 0.8px;
+    letter-spacing: 1.2px;
     text-transform: uppercase;
-    color: #888;
+    color: var(--text-secondary);
     display: block;
-    margin-bottom: 5px;
+    margin-bottom: 6px;
   }
   .prop-input, .prop-select {
     width: 100%;
-    background: #1e1e1e;
-    border: 1px solid #3a3a3a;
-    border-radius: var(--radius);
-    color: var(--enae-white);
-    font-family: 'Barlow', sans-serif;
+    background: rgba(0,0,0,0.35);
+    border: 1px solid var(--border-dark);
+    border-radius: var(--radius-md);
+    color: var(--text-primary);
+    font-family: var(--font-sans);
     font-size: 12px;
-    padding: 6px 8px;
+    padding: 8px 10px;
     outline: none;
+    transition: var(--transition);
   }
-  .prop-input:focus, .prop-select:focus { border-color: var(--enae-red); }
+  .prop-input:focus, .prop-select:focus { 
+    border-color: var(--enae-red); 
+    background: rgba(0,0,0,0.5);
+  }
   .prop-row-2 { display: flex; gap: 8px; }
   .prop-row-2 .prop-row { flex: 1; margin-bottom: 0; }
   .prop-color-input {
     width: 100%;
-    height: 32px;
-    border: 1px solid #3a3a3a;
-    border-radius: var(--radius);
+    height: 34px;
+    border: 1px solid var(--border-dark);
+    border-radius: var(--radius-md);
     padding: 2px;
-    background: #1e1e1e;
+    background: rgba(0,0,0,0.3);
     cursor: pointer;
   }
   .prop-delete-btn {
     width: 100%;
-    background: #3a1818;
-    border: 1px solid #6b2020;
-    color: #ff8080;
-    padding: 7px;
-    border-radius: var(--radius);
+    background: rgba(231, 76, 60, 0.08);
+    border: 1px solid rgba(231, 76, 60, 0.25);
+    color: var(--color-coral);
+    padding: 10px;
+    border-radius: var(--radius-md);
+    font-family: var(--font-sans);
     font-size: 12px;
-    font-weight: 700;
+    font-weight: 600;
     letter-spacing: 0.5px;
     cursor: pointer;
-    margin-top: 16px;
-    transition: background .15s;
-    font-family: 'Barlow', sans-serif;
+    margin-top: 20px;
+    transition: var(--transition);
   }
-  .prop-delete-btn:hover { background: #5a2020; }
+  .prop-delete-btn:hover { 
+    background: rgba(231, 76, 60, 0.2); 
+    border-color: var(--color-coral);
+    transform: translateY(1px);
+  }
 
-  /* Slider */
+  /* Custom Slider Styling */
   input[type=range] {
     width: 100%;
     accent-color: var(--enae-red);
+    background: rgba(255,255,255,0.08);
+    height: 6px;
+    border-radius: 3px;
+    outline: none;
   }
 
   /* ── EXPORT OVERLAY ── */
   .overlay {
     position: fixed;
     inset: 0;
-    background: rgba(0,0,0,.7);
+    background: rgba(0,0,0,0.85);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
     display: none;
     align-items: center;
     justify-content: center;
@@ -649,94 +817,139 @@
   }
   .overlay.show { display: flex; }
   .overlay-box {
-    background: #252525;
-    border: 1px solid #444;
-    border-radius: 8px;
-    padding: 28px 32px;
-    min-width: 340px;
+    background: var(--bg-panel);
+    border: 1px solid var(--border-dark);
+    border-radius: var(--radius-lg);
+    padding: 32px;
+    min-width: 360px;
     max-width: 480px;
+    box-shadow: 0 24px 64px rgba(0,0,0,0.8);
+    animation: zoomIn 0.25s cubic-bezier(0.1, 0.8, 0.25, 1);
+  }
+  @keyframes zoomIn {
+    from { opacity: 0; transform: scale(0.95); }
+    to { opacity: 1; transform: scale(1); }
   }
   .overlay-title {
-    font-family: 'Barlow Condensed', sans-serif;
+    font-family: var(--font-display);
     font-weight: 900;
-    font-size: 22px;
-    color: var(--enae-white);
+    font-size: 24px;
+    color: var(--text-primary);
     text-transform: uppercase;
     letter-spacing: 2px;
-    margin-bottom: 4px;
+    margin-bottom: 6px;
   }
-  .overlay-sub { font-size: 12px; color: #888; margin-bottom: 20px; }
-  .export-options { display: flex; flex-direction: column; gap: 10px; }
+  .overlay-sub { font-size: 13px; color: var(--text-secondary); margin-bottom: 24px; }
+  .export-options { display: flex; flex-direction: column; gap: 12px; }
   .export-opt {
-    background: #1e1e1e;
-    border: 1px solid #3a3a3a;
-    border-radius: 5px;
-    padding: 12px 16px;
+    background: rgba(255,255,255,0.02);
+    border: 1px solid var(--border-dark);
+    border-radius: var(--radius-md);
+    padding: 14px 18px;
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 16px;
     cursor: pointer;
-    transition: border-color .2s;
+    transition: var(--transition);
   }
-  .export-opt:hover { border-color: var(--enae-red); }
-  .export-opt-icon { font-size: 22px; }
-  .export-opt-info {}
-  .export-opt-name { font-size: 14px; font-weight: 700; color: var(--enae-white); }
-  .export-opt-desc { font-size: 11px; color: #888; margin-top: 2px; }
+  .export-opt:hover { 
+    border-color: var(--enae-red); 
+    background: rgba(169, 24, 49, 0.05);
+    transform: translateY(-2px);
+  }
+  .export-opt-icon { font-size: 24px; }
+  .export-opt-name { font-size: 14px; font-weight: 600; color: var(--text-primary); }
+  .export-opt-desc { font-size: 11px; color: var(--text-muted); margin-top: 3px; }
   .overlay-close {
     width: 100%;
-    margin-top: 16px;
+    margin-top: 20px;
     background: none;
-    border: 1px solid #444;
-    color: #888;
-    padding: 8px;
-    border-radius: var(--radius);
+    border: 1px solid var(--border-dark);
+    color: var(--text-secondary);
+    padding: 10px;
+    border-radius: var(--radius-md);
     cursor: pointer;
     font-size: 12px;
-    font-family: 'Barlow', sans-serif;
-    transition: border-color .15s, color .15s;
+    font-family: var(--font-sans);
+    font-weight: 500;
+    transition: var(--transition);
   }
-  .overlay-close:hover { border-color: #666; color: #ccc; }
+  .overlay-close:hover { border-color: var(--border-hover); color: var(--text-primary); }
 
   /* Templates grid */
   .templates-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 8px;
+    gap: 10px;
   }
   .tpl-card {
-    background: #1e1e1e;
-    border: 1px solid #333;
-    border-radius: 4px;
+    background: rgba(0,0,0,0.2);
+    border: 1px solid var(--border-dark);
+    border-radius: var(--radius-md);
     overflow: hidden;
     cursor: pointer;
-    transition: border-color .2s;
+    transition: var(--transition);
   }
-  .tpl-card:hover { border-color: var(--enae-red); }
+  .tpl-card:hover { 
+    border-color: var(--enae-red); 
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+  }
   .tpl-preview {
-    height: 70px;
+    height: 80px;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 22px;
+    font-size: 24px;
+    background: rgba(255,255,255,0.01);
   }
   .tpl-name {
-    padding: 6px 8px;
+    padding: 8px;
+    font-family: var(--font-display);
     font-size: 11px;
-    font-weight: 600;
-    color: #ccc;
-    border-top: 1px solid #2a2a2a;
+    font-weight: 700;
+    color: var(--text-secondary);
+    border-top: 1px solid var(--border-dark);
     text-align: center;
-    letter-spacing: 0.5px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
   }
 
-  /* Tooltip */
-  [title] { position: relative; }
+  /* Info Banner component custom styling */
+  .el-info-banner {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 16px 20px;
+    border-radius: 8px;
+    background: rgba(52, 152, 219, 0.08);
+    border: 1px solid rgba(52, 152, 219, 0.2);
+  }
+  .info-icon-circle {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: var(--color-azul);
+    color: var(--color-blanco);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-sans);
+    font-weight: 800;
+    font-size: 16px;
+    flex-shrink: 0;
+  }
+  .info-banner-text {
+    font-family: var(--font-sans);
+    font-size: 13px;
+    font-weight: 400;
+    line-height: 1.45;
+  }
 
-  /* Scrollbar */
-  .canvas-area::-webkit-scrollbar { width: 6px; height: 6px; }
-  .canvas-area::-webkit-scrollbar-track { background: #111; }
-  .canvas-area::-webkit-scrollbar-thumb { background: #333; border-radius: 3px; }
+  /* Scrollbars globally */
+  ::-webkit-scrollbar { width: 6px; height: 6px; }
+  ::-webkit-scrollbar-track { background: var(--bg-darker); }
+  ::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.08); border-radius: 3px; }
 </style>
 </head>
 <body>
@@ -744,8 +957,82 @@
 <!-- TOP BAR -->
 <div class="topbar">
   <div class="topbar-logo">
-    <div class="logo-mark">EN<span>AE</span></div>
-    <div class="logo-sub">International<br>Business School</div>
+    <svg id="Capa_2" data-name="Capa 2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 113.65 43.88" style="width: 110px; height: auto;">
+      <defs>
+        <style>
+          .svg-logo-cls-1 { fill: none; }
+          .svg-logo-cls-2 { clip-path: url(#svg-logo-clip-1); }
+          .svg-logo-cls-3 { clip-path: url(#svg-logo-clip-3); }
+          .svg-logo-cls-4 { clip-path: url(#svg-logo-clip-4); }
+          .svg-logo-cls-5 { clip-path: url(#svg-logo-clip-2); }
+          .svg-logo-cls-6 { fill: currentColor; }
+          .svg-logo-cls-7 { clip-path: url(#svg-logo-clip); }
+        </style>
+        <clipPath id="svg-logo-clip">
+          <rect class="svg-logo-cls-1" width="113.65" height="43.88"/>
+        </clipPath>
+        <clipPath id="svg-logo-clip-1">
+          <rect class="svg-logo-cls-1" width="113.65" height="43.88"/>
+        </clipPath>
+        <clipPath id="svg-logo-clip-2">
+          <rect class="svg-logo-cls-1" width="113.65" height="43.88"/>
+        </clipPath>
+        <clipPath id="svg-logo-clip-3">
+          <rect class="svg-logo-cls-1" width="113.65" height="43.88"/>
+        </clipPath>
+        <clipPath id="svg-logo-clip-4">
+          <rect class="svg-logo-cls-1" width="113.65" height="43.88"/>
+        </clipPath>
+      </defs>
+      <g id="Capa_1-2" data-name="Capa 1">
+        <g>
+          <rect class="svg-logo-cls-6" x=".3" y="39.43" width="1.03" height="4.36"/>
+          <g class="svg-logo-cls-7">
+            <path class="svg-logo-cls-6" d="M3.98,40.38c-.47,0-.8.24-.97.69h-.02v-.63h-.95v3.36h.99v-1.9c0-.39.21-.65.53-.65s.51.23.51.63v1.92h.99v-2.15c0-.8-.39-1.27-1.08-1.27"/>
+            <path class="svg-logo-cls-6" d="M6.93,39.69h-.99v.75h-.41v.8h.41v1.66c0,.66.31.93,1.11.93.19,0,.34-.02.43-.05v-.76s-.12.01-.21.01c-.24,0-.36-.12-.36-.35v-1.44h.56v-.8h-.56v-.75h.01Z"/>
+            <path class="svg-logo-cls-6" d="M8.93,41.74c.02-.36.27-.62.58-.62s.56.24.58.62h-1.16ZM9.5,40.37c-.94,0-1.54.69-1.54,1.78s.59,1.74,1.57,1.74c.8,0,1.38-.45,1.48-1.14h-.89c-.07.23-.29.37-.57.37-.37,0-.63-.28-.63-.69v-.07h2.1v-.3c0-1.03-.59-1.68-1.52-1.68h0Z"/>
+            <path class="svg-logo-cls-6" d="M12.55,41.07h-.02v-.63h-.95v3.36h.99v-1.78c0-.47.23-.74.65-.74.12,0,.24.02.33.06v-.92c-.07-.02-.16-.05-.25-.05-.36,0-.62.23-.74.68h0Z"/>
+            <path class="svg-logo-cls-6" d="M15.95,40.38c-.47,0-.8.24-.97.69h-.02v-.63h-.95v3.36h.99v-1.9c0-.39.21-.65.53-.65s.51.23.51.63v1.92h.99v-2.15c0-.8-.39-1.27-1.08-1.27Z"/>
+            <path class="svg-logo-cls-6" d="M19.52,42.59c0,.3-.27.52-.59.52-.25,0-.42-.13-.42-.35s.16-.34.44-.36l.57-.05v.23h.01ZM19.11,40.37c-.83,0-1.39.45-1.41,1.14h.89c.02-.21.21-.36.47-.36s.46.14.46.42v.19l-.73.05c-.81.05-1.26.4-1.26,1.03s.47,1.02,1.05,1.02c.38,0,.75-.19.92-.53h.02v.48h.95v-2.31c0-.68-.54-1.14-1.38-1.14h0Z"/>
+            <path class="svg-logo-cls-6" d="M22.38,39.69h-.99v.75h-.41v.8h.41v1.66c0,.66.31.93,1.11.93.19,0,.34-.02.44-.05v-.76s-.12.01-.2.01c-.24,0-.36-.12-.36-.35v-1.44h.56v-.8h-.56v-.75h.01Z"/>
+            <path class="svg-logo-cls-6" d="M24.02,39.1c-.28,0-.51.23-.51.53s.23.53.51.53.51-.22.51-.53-.23-.53-.51-.53"/>
+          </g>
+          <rect class="svg-logo-cls-6" x="23.52" y="40.44" width=".99" height="3.36"/>
+          <g class="svg-logo-cls-2">
+            <path class="svg-logo-cls-6" d="M26.67,43.09c-.36,0-.58-.35-.58-.97s.22-.97.58-.97.58.36.58.97-.22.97-.58.97M26.67,40.37c-.97,0-1.58.67-1.58,1.75s.61,1.75,1.58,1.75,1.58-.64,1.58-1.75-.62-1.75-1.58-1.75"/>
+            <path class="svg-logo-cls-6" d="M30.74,40.38c-.47,0-.8.24-.97.69h-.02v-.63h-.95v3.36h.99v-1.9c0-.39.21-.65.53-.65s.51.23.51.63v1.92h.99v-2.15c0-.8-.39-1.27-1.08-1.27"/>
+            <path class="svg-logo-cls-6" d="M34.32,42.59c0,.3-.27.52-.59.52-.25,0-.42-.13-.42-.35s.16-.34.43-.36l.57-.05v.23h.01ZM33.91,40.37c-.83,0-1.39.45-1.41,1.14h.89c.02-.21.21-.36.47-.36s.46.14.46.42v.19l-.73.05c-.81.05-1.26.4-1.26,1.03s.47,1.02,1.05,1.02c.38,0,.75-.19.92-.53h.02v.48h.96v-2.31c0-.68-.54-1.14-1.38-1.14h0Z"/>
+          </g>
+          <rect class="svg-logo-cls-6" x="35.95" y="39.22" width=".99" height="4.58"/>
+          <g class="svg-logo-cls-5">
+            <path class="svg-logo-cls-6" d="M40.62,43.02h-.62v-1.12h.62c.42,0,.67.2.67.56s-.24.57-.65.57h-.01ZM40,40.23h.59c.34,0,.54.18.54.48s-.22.51-.59.51h-.54v-.99ZM41.34,41.5v-.02c.45-.07.79-.46.79-.94,0-.68-.48-1.09-1.27-1.09h-1.89v4.36h1.93c.86,0,1.4-.5,1.4-1.26,0-.58-.44-1.02-.98-1.05h.01Z"/>
+            <path class="svg-logo-cls-6" d="M44.87,42.34c0,.39-.21.65-.52.65s-.52-.22-.52-.63v-1.92h-.99v2.16c0,.8.47,1.27,1.14,1.27.47,0,.76-.25.91-.69h.02v.64h.97v-3.36h-.99v1.9-.02Z"/>
+            <path class="svg-logo-cls-6" d="M48.4,41.82l-.64-.14c-.24-.05-.36-.14-.36-.29,0-.18.17-.3.41-.3.29,0,.47.16.47.4h.91c0-.69-.53-1.13-1.37-1.13s-1.38.42-1.38,1.09c0,.51.33.86.93.99l.58.13c.25.06.34.13.34.28,0,.18-.17.29-.45.29-.3,0-.5-.14-.52-.4h-.96c.04.69.57,1.12,1.46,1.12s1.44-.45,1.44-1.14c0-.51-.27-.79-.88-.92h.01Z"/>
+            <path class="svg-logo-cls-6" d="M50.31,39.1c-.28,0-.51.23-.51.53s.23.53.51.53.51-.22.51-.53-.23-.53-.51-.53"/>
+          </g>
+          <rect class="svg-logo-cls-6" x="49.82" y="40.44" width=".99" height="3.36"/>
+          <g class="svg-logo-cls-3">
+            <path class="svg-logo-cls-6" d="M53.41,40.38c-.47,0-.8.24-.97.69h-.02v-.63h-.96v3.36h.99v-1.9c0-.39.21-.65.53-.65s.51.23.51.63v1.92h.99v-2.15c0-.8-.39-1.27-1.08-1.27"/>
+            <path class="svg-logo-cls-6" d="M56.01,41.74c.02-.36.27-.62.58-.62s.56.24.58.62h-1.16ZM56.58,40.37c-.94,0-1.54.69-1.54,1.78s.59,1.74,1.57,1.74c.8,0,1.38-.45,1.47-1.14h-.89c-.07.23-.29.37-.57.37-.37,0-.63-.28-.63-.69v-.07h2.1v-.3c0-1.03-.59-1.68-1.52-1.68h0Z"/>
+            <path class="svg-logo-cls-6" d="M60.54,41.82l-.64-.14c-.24-.05-.36-.14-.36-.29,0-.18.17-.3.41-.3.29,0,.47.16.47.4h.91c0-.69-.53-1.13-1.37-1.13s-1.38.42-1.38,1.09c0,.51.33.86.93.99l.58.13c.25.06.34.13.34.28,0,.18-.17.29-.45.29-.3,0-.5-.14-.52-.4h-.96c.04.69.57,1.12,1.46,1.12s1.44-.45,1.44-1.14c0-.51-.27-.79-.88-.92h.01Z"/>
+            <path class="svg-logo-cls-6" d="M63.84,41.82l-.64-.14c-.24-.05-.36-.14-.36-.29,0-.18.17-.3.41-.3.29,0,.47.16.47.4h.91c0-.69-.53-1.13-1.37-1.13s-1.38.42-1.38,1.09c0,.51.33.86.93.99l.58.13c.25.06.34.13.34.28,0,.18-.17.29-.45.29-.3,0-.5-.14-.52-.4h-.96c.04.69.57,1.12,1.46,1.12s1.44-.45,1.44-1.14c0-.51-.27-.79-.88-.92h.01Z"/>
+            <path class="svg-logo-cls-6" d="M68.71,41.21l-.52-.11c-.42-.1-.6-.22-.6-.46,0-.27.24-.45.59-.45s.64.19.65.51h.94c0-.82-.6-1.35-1.61-1.35-.93,0-1.6.54-1.6,1.39,0,.66.39,1.1,1.12,1.26l.53.11c.46.11.63.22.63.46,0,.27-.25.46-.65.46s-.69-.2-.72-.5h-.97c0,.85.64,1.34,1.67,1.34s1.69-.56,1.69-1.43c0-.69-.36-1.08-1.15-1.24h-.01Z"/>
+            <path class="svg-logo-cls-6" d="M71.93,43.06c-.36,0-.58-.33-.58-.94s.22-.94.58-.94c.3,0,.51.23.53.58h.91c-.02-.83-.59-1.39-1.46-1.39-.97,0-1.56.68-1.56,1.75s.61,1.75,1.57,1.75c.87,0,1.43-.52,1.45-1.37h-.91c-.04.35-.23.56-.53.56Z"/>
+            <path class="svg-logo-cls-6" d="M75.88,40.38c-.47,0-.81.24-.97.69h-.02v-1.85h-.97v4.58h.99v-1.9c0-.39.19-.65.54-.65s.52.24.52.63v1.92h.99v-2.15c0-.8-.39-1.27-1.08-1.27h-.01Z"/>
+            <path class="svg-logo-cls-6" d="M79.09,43.09c-.36,0-.58-.35-.58-.97s.22-.97.58-.97.58.36.58.97-.22.97-.58.97M79.09,40.37c-.97,0-1.58.67-1.58,1.75s.61,1.75,1.58,1.75,1.58-.64,1.58-1.75-.62-1.75-1.58-1.75"/>
+            <path class="svg-logo-cls-6" d="M82.7,43.09c-.36,0-.58-.35-.58-.97s.22-.97.58-.97.58.36.58.97-.22.97-.58.97M82.7,40.37c-.97,0-1.58.67-1.58,1.75s.61,1.75,1.58,1.75,1.58-.64,1.58-1.75-.62-1.75-1.58-1.75"/>
+          </g>
+          <rect class="svg-logo-cls-6" x="84.86" y="39.22" width=".99" height="4.58"/>
+          <g class="svg-logo-cls-4">
+            <path class="svg-logo-cls-6" d="M24.08,29.23H7.43c-.5,0-.89-.4-.89-.89v-7.75c0-.49.4-.89.89-.89h13.43c.5,0,.9-.4.9-.9v-3.61c0-.5-.4-.9-.9-.9H7.43c-.5,0-.89-.4-.89-.89v-7.04c0-.5.4-.9.89-.9h16.11c.5,0,.9-.4.9-.89V.91c0-.5-.4-.9-.9-.9H.89C.4.01,0,.41,0,.91v32.88c0,.49.4.89.89.89h23.19c.5,0,.89-.4.89-.89v-3.66c0-.5-.4-.9-.89-.9Z"/>
+            <path class="svg-logo-cls-6" d="M27.36,34.68h4.42c.49,0,.89-.4.89-.89V12.27c0-.91,1.2-1.23,1.67-.46l13.46,22.44c.16.27.45.43.77.43h4.87c.5,0,.9-.4.9-.89V.91c0-.49-.4-.89-.9-.89h-4.42c-.5,0-.9.4-.9.89v19.93c0,.91-1.2,1.23-1.67.46L33.97.45c-.16-.27-.45-.44-.77-.44h-5.84c-.5,0-.9.4-.9.89v32.88c0,.5.4.89.9.89Z"/>
+            <path class="svg-logo-cls-6" d="M74.82,21.47h-6.9c-.6,0-1.04-.59-.85-1.17l3.47-10.47c.27-.82,1.43-.82,1.7,0l3.43,10.47c.19.58-.24,1.17-.85,1.17h-.01ZM75.08.59c-.13-.35-.46-.59-.85-.59h-5.45c-.38,0-.71.23-.83.58l-12.1,32.88c-.22.58.22,1.21.83,1.21h4.79c.38,0,.71-.24.85-.59l2.37-6.66c.12-.36.46-.59.85-.59h11.65c.38,0,.71.24.85.59l2.37,6.66c.12.36.46.59.85.59h5.05c.62,0,1.05-.62.85-1.21L75.11.58h-.02Z"/>
+            <path class="svg-logo-cls-6" d="M112.74,29.23h-16.65c-.5,0-.89-.4-.89-.89v-7.75c0-.49.4-.89.89-.89h13.43c.5,0,.89-.4.89-.9v-3.61c0-.5-.4-.9-.89-.9h-13.43c-.5,0-.89-.4-.89-.89v-7.04c0-.5.4-.9.89-.9h16.11c.5,0,.9-.4.9-.89V.91c0-.5-.4-.9-.9-.9h-22.65c-.49,0-.89.4-.89.9v32.88c0,.49.4.89.89.89h23.19c.5,0,.89-.4.89-.89v-3.66c0-.5-.4-.9-.89-.9Z"/>
+            <path class="svg-logo-cls-6" d="M89.19,40.09h23.94c.29,0,.52.23.52.52v2.62c0,.29-.23.52-.52.52h-23.94c-.29,0-.52-.23-.52-.52v-2.62c0-.29.23-.52.52-.52"/>
+          </g>
+        </g>
+      </g>
+    </svg>
   </div>
   <div class="topbar-title">Infographic Builder · Brand Edition</div>
   <div style="width:160px;"></div>
@@ -780,6 +1067,10 @@
           <div class="block-item" onclick="addElement('iconstat')"><span class="block-icon">🏷</span> Icono + dato</div>
           <div class="block-item" onclick="addElement('progress')"><span class="block-icon">▬</span> Barra de progreso</div>
           <div class="block-item" onclick="addElement('bulletlist')"><span class="block-icon">≡</span> Lista de puntos</div>
+          <div class="block-item" onclick="addElement('barchart')"><span class="block-icon">📊</span> Gráfico de barras</div>
+          <div class="block-item" onclick="addElement('donutchart')"><span class="block-icon">🌿</span> Medidor concéntrico</div>
+          <div class="block-item" onclick="addElement('radarchart')"><span class="block-icon">🕸</span> Radar competencias</div>
+          <div class="block-item" onclick="addElement('table')"><span class="block-icon">▦</span> Tabla de métricas</div>
         </div>
 
         <div class="section-head">Estructurales</div>
@@ -801,28 +1092,40 @@
       <div class="tab-section" id="tab-templates">
         <div class="section-head">Plantillas ENAE</div>
         <div class="templates-grid">
-          <div class="tpl-card" onclick="loadTemplate('stat4')">
-            <div class="tpl-preview" style="background:var(--enae-red)">📊</div>
-            <div class="tpl-name">4 KPIs</div>
-          </div>
           <div class="tpl-card" onclick="loadTemplate('cover')">
-            <div class="tpl-preview" style="background:var(--enae-dark)">🎯</div>
+            <div class="tpl-preview" style="background:#0E0E0E;color:#EBC844">🎯</div>
             <div class="tpl-name">Portada</div>
           </div>
+          <div class="tpl-card" onclick="loadTemplate('stat4')">
+            <div class="tpl-preview" style="background:#1E1E1E;color:#EBC844">📊</div>
+            <div class="tpl-name">4 KPIs</div>
+          </div>
           <div class="tpl-card" onclick="loadTemplate('list')">
-            <div class="tpl-preview" style="background:#2a2a2a">≡</div>
+            <div class="tpl-preview" style="background:#1E1E1E;color:#3498DB">≡</div>
             <div class="tpl-name">Lista + dato</div>
           </div>
           <div class="tpl-card" onclick="loadTemplate('progress3')">
-            <div class="tpl-preview" style="background:var(--enae-red)">▬▬▬</div>
+            <div class="tpl-preview" style="background:#1E1E1E;color:#2ECC71">▬▬▬</div>
             <div class="tpl-name">Barras %</div>
           </div>
           <div class="tpl-card" onclick="loadTemplate('quote')">
-            <div class="tpl-preview" style="background:var(--enae-dark)">❝</div>
+            <div class="tpl-preview" style="background:#1E1E1E;color:#EBC844">❝</div>
             <div class="tpl-name">Cita</div>
           </div>
+          <div class="tpl-card" onclick="loadTemplate('dashboard_financial')">
+            <div class="tpl-preview" style="background:#1E1E1E;color:#EBC844">💳</div>
+            <div class="tpl-name">Dashboard</div>
+          </div>
+          <div class="tpl-card" onclick="loadTemplate('scorecard_esg')">
+            <div class="tpl-preview" style="background:#1E1E1E;color:#2ECC71">🌿</div>
+            <div class="tpl-name">Scorecard ESG</div>
+          </div>
+          <div class="tpl-card" onclick="loadTemplate('competence_radar')">
+            <div class="tpl-preview" style="background:#1E1E1E;color:#3498DB">🕸</div>
+            <div class="tpl-name">Radar Líder</div>
+          </div>
           <div class="tpl-card" onclick="clearCanvas()">
-            <div class="tpl-preview" style="background:#1a1a1a;color:#555">✕</div>
+            <div class="tpl-preview" style="background:#0E0E0E;color:#808080">✕</div>
             <div class="tpl-name">Limpiar</div>
           </div>
         </div>
@@ -848,14 +1151,18 @@
           </select>
         </div>
         <div class="field-group">
-          <label class="field-label">Fondo</label>
-          <div class="color-row">
-            <div class="color-swatch selected" style="background:#a91831" onclick="setBg('#a91831',this)"></div>
-            <div class="color-swatch" style="background:#202221" onclick="setBg('#202221',this)"></div>
-            <div class="color-swatch" style="background:#ffffff;border:1px solid #555" onclick="setBg('#ffffff',this)"></div>
-            <div class="color-swatch" style="background:#dee5ec" onclick="setBg('#dee5ec',this)"></div>
-            <div class="color-swatch" style="background:#1a1a2e" onclick="setBg('#1a1a2e',this)"></div>
-            <div class="color-swatch" style="background:#f4f6f8;border:1px solid #555" onclick="setBg('#f4f6f8',this)"></div>
+          <label class="field-label">Fondo del Canvas</label>
+          <div class="color-row" style="display:flex;flex-wrap:wrap;gap:6px;">
+            <div class="color-swatch selected" style="background:#0E0E0E" onclick="setBg('#0E0E0E',this)" title="Fondo Máximo Oscuro"></div>
+            <div class="color-swatch" style="background:#1E1E1E" onclick="setBg('#1E1E1E',this)" title="Card Gris Oscuro"></div>
+            <div class="color-swatch" style="background:#a91831" onclick="setBg('#a91831',this)" title="Rojo ENAE"></div>
+            <div class="color-swatch" style="background:#EBC844" onclick="setBg('#EBC844',this)" title="Oro"></div>
+            <div class="color-swatch" style="background:#E74C3C" onclick="setBg('#E74C3C',this)" title="Coral"></div>
+            <div class="color-swatch" style="background:#3498DB" onclick="setBg('#3498DB',this)" title="Azul"></div>
+            <div class="color-swatch" style="background:#2ECC71" onclick="setBg('#2ECC71',this)" title="Verde"></div>
+            <div class="color-swatch" style="background:#9B59B6" onclick="setBg('#9B59B6',this)" title="Rosa"></div>
+            <div class="color-swatch" style="background:#F5F5F4;border:1px solid #555" onclick="setBg('#F5F5F4',this)" title="Blanco"></div>
+            <div class="color-swatch" style="background:#808080" onclick="setBg('#808080',this)" title="Gris"></div>
           </div>
           <input type="color" class="prop-color-input" id="bg-custom" style="margin-top:8px" onchange="setBg(this.value,null)">
         </div>
@@ -952,7 +1259,7 @@ let elements = [];
 let selectedId = null;
 let zoomLevel = 1;
 let canvasW = 595, canvasH = 842; // A4 vertical default
-let canvasBg = '#a91831';
+let canvasBg = '#0E0E0E';
 let idCounter = 0;
 
 // Drag state
@@ -971,7 +1278,7 @@ let resizeStartW = 0, resizeStartH = 0;
 // ============================================================
 window.addEventListener('DOMContentLoaded', () => {
   applyFormat();
-  setBg('#a91831', document.querySelector('.color-swatch'));
+  setBg('#0E0E0E', document.querySelector('.color-swatch'));
   loadTemplate('cover');
   updateWatermark();
 });
@@ -1036,20 +1343,24 @@ function defaultsFor(type) {
   const base = { id: ++idCounter, type, x: cx, y: cy, w: 320, h: 120, opacity: 100 };
 
   const palette = {
-    heading:    { text: 'Título Principal', fontSize: 52, color: '#ffffff', bg: 'transparent' },
-    subheading: { text: 'Subtítulo de la infografía', fontSize: 24, color: '#dee5ec', bg: 'transparent' },
-    body:       { text: 'Texto descriptivo. Añade aquí la información que quieras comunicar de forma clara y directa.', fontSize: 14, color: '#ffffff', bg: 'transparent', w: 320, h: 100 },
-    label:      { text: 'ETIQUETA · ENAE', fontSize: 11, color: '#a91831', bg: 'transparent', h: 40 },
-    stat:       { number: '94%', label: 'Satisfacción', desc: 'de los alumnos recomendarían ENAE', color: '#ffffff', bg: '#8a1228', accent: '#a91831', w: 200, h: 150 },
-    iconstat:   { icon: '🎓', value: '1.200', label: 'Alumnos', color: '#ffffff', bg: 'rgba(169,24,49,0.25)', w: 220, h: 80 },
-    progress:   { items: [['Satisfacción',92],['Empleabilidad',88],['Internacionalización',76]], color: '#ffffff', bg: '#8a1228', accent: '#ffffff', w: 300, h: 140 },
-    bulletlist: { items: ['Punto clave uno','Punto clave dos','Punto clave tres'], color: '#ffffff', bg: 'rgba(0,0,0,0.2)', w: 260, h: 130 },
-    accentbar:  { color: '#a91831', bg: '#a91831', w: 6, h: 100, x: 40, y: cy },
-    divider:    { color: 'rgba(255,255,255,0.25)', bg: 'transparent', w: 320, h: 2, y: cy + 60 },
-    quote:      { text: 'La educación es el arma más poderosa que puedes usar para cambiar el mundo.', author: '— Nelson Mandela', color: '#ffffff', bg: 'rgba(169,24,49,0.3)', w: 300, h: 160 },
-    logo:       { color: '#ffffff', accent: '#a91831', bg: 'transparent', w: 200, h: 100 },
-    rect:       { color: 'transparent', bg: '#a91831', w: 200, h: 100 },
-    circle:     { color: 'transparent', bg: '#a91831', w: 120, h: 120 },
+    heading:    { text: 'Título Principal', fontSize: 44, color: '#F5F5F4', bg: 'transparent' },
+    subheading: { text: 'Subtítulo descriptivo', fontSize: 20, color: '#808080', bg: 'transparent' },
+    body:       { text: 'Texto descriptivo. Añade aquí la información que quieras comunicar de forma clara y directa.', fontSize: 14, color: '#808080', bg: 'transparent', w: 320, h: 100 },
+    label:      { text: 'ETIQUETA · ENAE', fontSize: 11, color: '#EBC844', bg: 'transparent', h: 40 },
+    stat:       { number: '94%', label: 'SATISFACCIÓN', desc: 'de los alumnos recomendarían ENAE', color: '#F5F5F4', bg: '#1E1E1E', accent: '#EBC844', w: 220, h: 160 },
+    iconstat:   { icon: '🎓', value: '1.200', label: 'ALUMNOS', color: '#F5F5F4', bg: '#1E1E1E', w: 220, h: 90 },
+    progress:   { items: [['Satisfacción',92],['Empleabilidad',88]], color: '#F5F5F4', bg: '#1E1E1E', accent: '#3498DB', w: 300, h: 150 },
+    bulletlist: { items: ['Punto clave uno','Punto clave dos','Punto clave tres'], color: '#F5F5F4', bg: '#1E1E1E', w: 280, h: 130 },
+    accentbar:  { color: '#EBC844', bg: '#EBC844', w: 6, h: 100, x: 40, y: cy },
+    divider:    { color: 'rgba(255,255,255,0.08)', bg: 'transparent', w: 320, h: 2, y: cy + 60 },
+    quote:      { text: 'La formación de alto nivel no es solo adquirir conocimientos, sino transformar visiones.', author: '— ENAE International Business School', color: '#F5F5F4', bg: '#1E1E1E', w: 320, h: 160 },
+    logo:       { color: '#F5F5F4', accent: '#EBC844', bg: 'transparent', w: 140, h: 54 },
+    rect:       { color: 'transparent', bg: '#1E1E1E', w: 200, h: 100 },
+    circle:     { color: 'transparent', bg: '#1E1E1E', w: 120, h: 120 },
+    barchart:   { title: 'CRECIMIENTO', items: [['2022', 45], ['2023', 65], ['2024', 90]], color: '#F5F5F4', bg: '#1E1E1E', accent: '#EBC844', w: 250, h: 180 },
+    donutchart: { title: 'MÉTRICAS ESG', value: 87, items: [['Entorno', 82, '#EBC844'], ['Social', 71, '#E74C3C'], ['Gobierno', 96, '#3498DB']], color: '#F5F5F4', bg: '#1E1E1E', w: 280, h: 260 },
+    radarchart: { title: 'COMPETENCIAS EJECUTIVAS', items: [['COURAGEOUS', 80, 50], ['COMPASSIONATE', 60, 45], ['FEARLESS', 85, 60], ['AUDACIOUS', 75, 55], ['CARING', 70, 50], ['SENSITIVE', 50, 40], ['INDEPENDENT', 90, 65], ['DETERMINED', 85, 70]], color: '#F5F5F4', bg: '#1E1E1E', w: 320, h: 320 },
+    table:      { title: 'PROGRAMAS', headers: ['Programa', 'Var', 'Matrículas'], rows: [['IA Avanzada', '+1.66%', '230'], ['Dirección General', '+0.80%', '412'], ['Marketing Digital', '-0.50%', '185'], ['Finanzas', '+1.20%', '340']], color: '#F5F5F4', bg: '#1E1E1E', accent: '#EBC844', w: 360, h: 180 },
   };
   return { ...base, ...(palette[type] || {}) };
 }
@@ -1153,14 +1464,225 @@ function buildHTML(el) {
       </div>`;
 
     case 'logo': return `
-      <div class="el-logo-block" style="width:100%;height:100%">
-        <div class="el-logo-enae" style="color:${el.color}">${'ENAE'}</div>
-        <div class="el-logo-sub" style="color:${el.color}">International Business School</div>
-        <div class="el-logo-bar" style="background:${el.accent}"></div>
+      <div class="el-logo-block" style="width:100%;height:100%;color:${el.color}">
+        <svg id="Capa_2" data-name="Capa 2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 113.65 43.88" style="width:100%;height:100%;">
+          <defs>
+            <style>
+              .el-logo-cls-1-${el.id} { fill: none; }
+              .el-logo-cls-2-${el.id} { clip-path: url(#el-logo-clip-1-${el.id}); }
+              .el-logo-cls-3-${el.id} { clip-path: url(#el-logo-clip-3-${el.id}); }
+              .el-logo-cls-4-${el.id} { clip-path: url(#el-logo-clip-4-${el.id}); }
+              .el-logo-cls-5-${el.id} { clip-path: url(#el-logo-clip-2-${el.id}); }
+              .el-logo-cls-6-${el.id} { fill: currentColor; }
+              .el-logo-cls-7-${el.id} { clip-path: url(#el-logo-clip-${el.id}); }
+            </style>
+            <clipPath id="el-logo-clip-${el.id}">
+              <rect class="el-logo-cls-1-${el.id}" width="113.65" height="43.88"/>
+            </clipPath>
+            <clipPath id="el-logo-clip-1-${el.id}">
+              <rect class="el-logo-cls-1-${el.id}" width="113.65" height="43.88"/>
+            </clipPath>
+            <clipPath id="el-logo-clip-2-${el.id}">
+              <rect class="el-logo-cls-1-${el.id}" width="113.65" height="43.88"/>
+            </clipPath>
+            <clipPath id="el-logo-clip-3-${el.id}">
+              <rect class="el-logo-cls-1-${el.id}" width="113.65" height="43.88"/>
+            </clipPath>
+            <clipPath id="el-logo-clip-4-${el.id}">
+              <rect class="el-logo-cls-1-${el.id}" width="113.65" height="43.88"/>
+            </clipPath>
+          </defs>
+          <g id="Capa_1-2" data-name="Capa 1">
+            <g>
+              <rect class="el-logo-cls-6-${el.id}" x=".3" y="39.43" width="1.03" height="4.36"/>
+              <g class="el-logo-cls-7-${el.id}">
+                <path class="el-logo-cls-6-${el.id}" d="M3.98,40.38c-.47,0-.8.24-.97.69h-.02v-.63h-.95v3.36h.99v-1.9c0-.39.21-.65.53-.65s.51.23.51.63v1.92h.99v-2.15c0-.8-.39-1.27-1.08-1.27"/>
+                <path class="el-logo-cls-6-${el.id}" d="M6.93,39.69h-.99v.75h-.41v.8h.41v1.66c0,.66.31.93,1.11.93.19,0,.34-.02.43-.05v-.76s-.12.01-.21.01c-.24,0-.36-.12-.36-.35v-1.44h.56v-.8h-.56v-.75h.01Z"/>
+                <path class="el-logo-cls-6-${el.id}" d="M8.93,41.74c.02-.36.27-.62.58-.62s.56.24.58.62h-1.16ZM9.5,40.37c-.94,0-1.54.69-1.54,1.78s.59,1.74,1.57,1.74c.8,0,1.38-.45,1.48-1.14h-.89c-.07.23-.29.37-.57.37-.37,0-.63-.28-.63-.69v-.07h2.1v-.3c0-1.03-.59-1.68-1.52-1.68h0Z"/>
+                <path class="el-logo-cls-6-${el.id}" d="M12.55,41.07h-.02v-.63h-.95v3.36h.99v-1.78c0-.47.23-.74.65-.74.12,0,.24.02.33.06v-.92c-.07-.02-.16-.05-.25-.05-.36,0-.62.23-.74.68h0Z"/>
+                <path class="el-logo-cls-6-${el.id}" d="M15.95,40.38c-.47,0-.8.24-.97.69h-.02v-.63h-.95v3.36h.99v-1.9c0-.39.21-.65.53-.65s.51.23.51.63v1.92h.99v-2.15c0-.8-.39-1.27-1.08-1.27Z"/>
+                <path class="el-logo-cls-6-${el.id}" d="M19.52,42.59c0,.3-.27.52-.59.52-.25,0-.42-.13-.42-.35s.16-.34.44-.36l.57-.05v.23h.01ZM19.11,40.37c-.83,0-1.39.45-1.41,1.14h.89c.02-.21.21-.36.47-.36s.46.14.46.42v.19l-.73.05c-.81.05-1.26.4-1.26,1.03s.47,1.02,1.05,1.02c.38,0,.75-.19.92-.53h.02v.48h.95v-2.31c0-.68-.54-1.14-1.38-1.14h0Z"/>
+                <path class="el-logo-cls-6-${el.id}" d="M22.38,39.69h-.99v.75h-.41v.8h.41v1.66c0,.66.31.93,1.11.93.19,0,.34-.02.44-.05v-.76s-.12.01-.2.01c-.24,0-.36-.12-.36-.35v-1.44h.56v-.8h-.56v-.75h.01Z"/>
+                <path class="el-logo-cls-6-${el.id}" d="M24.02,39.1c-.28,0-.51.23-.51.53s.23.53.51.53.51-.22.51-.53-.23-.53-.51-.53"/>
+              </g>
+              <rect class="el-logo-cls-6-${el.id}" x="23.52" y="40.44" width=".99" height="3.36"/>
+              <g class="el-logo-cls-2-${el.id}">
+                <path class="el-logo-cls-6-${el.id}" d="M26.67,43.09c-.36,0-.58-.35-.58-.97s.22-.97.58-.97.58.36.58.97-.22.97-.58.97M26.67,40.37c-.97,0-1.58.67-1.58,1.75s.61,1.75,1.58,1.75,1.58-.64,1.58-1.75-.62-1.75-1.58-1.75"/>
+                <path class="el-logo-cls-6-${el.id}" d="M30.74,40.38c-.47,0-.8.24-.97.69h-.02v-.63h-.95v3.36h.99v-1.9c0-.39.21-.65.53-.65s.51.23.51.63v1.92h.99v-2.15c0-.8-.39-1.27-1.08-1.27"/>
+                <path class="el-logo-cls-6-${el.id}" d="M34.32,42.59c0,.3-.27.52-.59.52-.25,0-.42-.13-.42-.35s.16-.34.43-.36l.57-.05v.23h.01ZM33.91,40.37c-.83,0-1.39.45-1.41,1.14h.89c.02-.21.21-.36.47-.36s.46.14.46.42v.19l-.73.05c-.81.05-1.26.4-1.26,1.03s.47,1.02,1.05,1.02c.38,0,.75-.19.92-.53h.02v.48h.96v-2.31c0-.68-.54-1.14-1.38-1.14h0Z"/>
+              </g>
+              <rect class="el-logo-cls-6-${el.id}" x="35.95" y="39.22" width=".99" height="4.58"/>
+              <g class="el-logo-cls-5-${el.id}">
+                <path class="el-logo-cls-6-${el.id}" d="M40.62,43.02h-.62v-1.12h.62c.42,0,.67.2.67.56s-.24.57-.65.57h-.01ZM40,40.23h.59c.34,0,.54.18.54.48s-.22.51-.59.51h-.54v-.99ZM41.34,41.5v-.02c.45-.07.79-.46.79-.94,0-.68-.48-1.09-1.27-1.09h-1.89v4.36h1.93c.86,0,1.4-.5,1.4-1.26,0-.58-.44-1.02-.98-1.05h.01Z"/>
+                <path class="el-logo-cls-6-${el.id}" d="M44.87,42.34c0,.39-.21.65-.52.65s-.52-.22-.52-.63v-1.92h-.99v2.16c0,.8.47,1.27,1.14,1.27.47,0,.76-.25.91-.69h.02v.64h.97v-3.36h-.99v1.9-.02Z"/>
+                <path class="el-logo-cls-6-${el.id}" d="M48.4,41.82l-.64-.14c-.24-.05-.36-.14-.36-.29,0-.18.17-.3.41-.3.29,0,.47.16.47.4h.91c0-.69-.53-1.13-1.37-1.13s-1.38.42-1.38,1.09c0,.51.33.86.93.99l.58.13c.25.06.34.13.34.28,0,.18-.17.29-.45.29-.3,0-.5-.14-.52-.4h-.96c.04.69.57,1.12,1.46,1.12s1.44-.45,1.44-1.14c0-.51-.27-.79-.88-.92h.01Z"/>
+                <path class="el-logo-cls-6-${el.id}" d="M50.31,39.1c-.28,0-.51.23-.51.53s.23.53.51.53.51-.22.51-.53-.23-.53-.51-.53"/>
+              </g>
+              <rect class="el-logo-cls-6-${el.id}" x="49.82" y="40.44" width=".99" height="3.36"/>
+              <g class="el-logo-cls-3-${el.id}">
+                <path class="el-logo-cls-6-${el.id}" d="M53.41,40.38c-.47,0-.8.24-.97.69h-.02v-.63h-.96v3.36h.99v-1.9c0-.39.21-.65.53-.65s.51.23.51.63v1.92h.99v-2.15c0-.8-.39-1.27-1.08-1.27"/>
+                <path class="el-logo-cls-6-${el.id}" d="M56.01,41.74c.02-.36.27-.62.58-.62s.56.24.58.62h-1.16ZM56.58,40.37c-.94,0-1.54.69-1.54,1.78s.59,1.74,1.57,1.74c.8,0,1.38-.45,1.47-1.14h-.89c-.07.23-.29.37-.57.37-.37,0-.63-.28-.63-.69v-.07h2.1v-.3c0-1.03-.59-1.68-1.52-1.68h0Z"/>
+                <path class="el-logo-cls-6-${el.id}" d="M60.54,41.82l-.64-.14c-.24-.05-.36-.14-.36-.29,0-.18.17-.3.41-.3.29,0,.47.16.47.4h.91c0-.69-.53-1.13-1.37-1.13s-1.38.42-1.38,1.09c0,.51.33.86.93.99l.58.13c.25.06.34.13.34.28,0,.18-.17.29-.45.29-.3,0-.5-.14-.52-.4h-.96c.04.69.57,1.12,1.46,1.12s1.44-.45,1.44-1.14c0-.51-.27-.79-.88-.92h.01Z"/>
+                <path class="el-logo-cls-6-${el.id}" d="M63.84,41.82l-.64-.14c-.24-.05-.36-.14-.36-.29,0-.18.17-.3.41-.3.29,0,.47.16.47.4h.91c0-.69-.53-1.13-1.37-1.13s-1.38.42-1.38,1.09c0,.51.33.86.93.99l.58.13c.25.06.34.13.34.28,0,.18-.17.29-.45.29-.3,0-.5-.14-.52-.4h-.96c.04.69.57,1.12,1.46,1.12s1.44-.45,1.44-1.14c0-.51-.27-.79-.88-.92h.01Z"/>
+                <path class="el-logo-cls-6-${el.id}" d="M68.71,41.21l-.52-.11c-.42-.1-.6-.22-.6-.46,0-.27.24-.45.59-.45s.64.19.65.51h.94c0-.82-.6-1.35-1.61-1.35-.93,0-1.6.54-1.6,1.39,0,.66.39,1.1,1.12,1.26l.53.11c.46.11.63.22.63.46,0,.27-.25.46-.65.46s-.69-.2-.72-.5h-.97c0,.85.64,1.34,1.67,1.34s1.69-.56,1.69-1.43c0-.69-.36-1.08-1.15-1.24h-.01Z"/>
+                <path class="el-logo-cls-6-${el.id}" d="M71.93,43.06c-.36,0-.58-.33-.58-.94s.22-.94.58-.94c.3,0,.51.23.53.58h.91c-.02-.83-.59-1.39-1.46-1.39-.97,0-1.56.68-1.56,1.75s.61,1.75,1.57,1.75c.87,0,1.43-.52,1.45-1.37h-.91c-.04.35-.23.56-.53.56Z"/>
+                <path class="el-logo-cls-6-${el.id}" d="M75.88,40.38c-.47,0-.81.24-.97.69h-.02v-1.85h-.97v4.58h.99v-1.9c0-.39.19-.65.54-.65s.52.24.52.63v1.92h.99v-2.15c0-.8-.39-1.27-1.08-1.27h-.01Z"/>
+                <path class="el-logo-cls-6-${el.id}" d="M79.09,43.09c-.36,0-.58-.35-.58-.97s.22-.97.58-.97.58.36.58.97-.22.97-.58.97M79.09,40.37c-.97,0-1.58.67-1.58,1.75s.61,1.75,1.58,1.75,1.58-.64,1.58-1.75-.62-1.75-1.58-1.75"/>
+                <path class="el-logo-cls-6-${el.id}" d="M82.7,43.09c-.36,0-.58-.35-.58-.97s.22-.97.58-.97.58.36.58.97-.22.97-.58.97M82.7,40.37c-.97,0-1.58.67-1.58,1.75s.61,1.75,1.58,1.75,1.58-.64,1.58-1.75-.62-1.75-1.58-1.75"/>
+              </g>
+              <rect class="el-logo-cls-6-${el.id}" x="84.86" y="39.22" width=".99" height="4.58"/>
+              <g class="el-logo-cls-4-${el.id}">
+                <path class="el-logo-cls-6-${el.id}" d="M24.08,29.23H7.43c-.5,0-.89-.4-.89-.89v-7.75c0-.49.4-.89.89-.89h13.43c.5,0,.9-.4.9-.9v-3.61c0-.5-.4-.9-.9-.9H7.43c-.5,0-.89-.4-.89-.89v-7.04c0-.5.4-.9.89-.9h16.11c.5,0,.9-.4.9-.89V.91c0-.5-.4-.9-.9-.9H.89C.4.01,0,.41,0,.91v32.88c0,.49.4.89.89.89h23.19c.5,0,.89-.4.89-.89v-3.66c0-.5-.4-.9-.89-.9Z"/>
+                <path class="el-logo-cls-6-${el.id}" d="M27.36,34.68h4.42c.49,0,.89-.4.89-.89V12.27c0-.91,1.2-1.23,1.67-.46l13.46,22.44c.16.27.45.43.77.43h4.87c.5,0,.9-.4.9-.89V.91c0-.49-.4-.89-.9-.89h-4.42c-.5,0-.9.4-.9.89v19.93c0,.91-1.2,1.23-1.67.46L33.97.45c-.16-.27-.45-.44-.77-.44h-5.84c-.5,0-.9.4-.9.89v32.88c0,.5.4.89.9.89Z"/>
+                <path class="el-logo-cls-6-${el.id}" d="M74.82,21.47h-6.9c-.6,0-1.04-.59-.85-1.17l3.47-10.47c.27-.82,1.43-.82,1.7,0l3.43,10.47c.19.58-.24,1.17-.85,1.17h-.01ZM75.08.59c-.13-.35-.46-.59-.85-.59h-5.45c-.38,0-.71.23-.83.58l-12.1,32.88c-.22.58.22,1.21.83,1.21h4.79c.38,0,.71-.24.85-.59l2.37-6.66c.12-.36.46-.59.85-.59h11.65c.38,0,.71.24.85.59l2.37,6.66c.12.36.46.59.85.59h5.05c.62,0,1.05-.62.85-1.21L75.11.58h-.02Z"/>
+                <path class="el-logo-cls-6-${el.id}" d="M112.74,29.23h-16.65c-.5,0-.89-.4-.89-.89v-7.75c0-.49.4-.89.89-.89h13.43c.5,0,.89-.4.89-.9v-3.61c0-.5-.4-.9-.89-.9h-13.43c-.5,0-.89-.4-.89-.89v-7.04c0-.5.4-.9.89-.9h16.11c.5,0,.9-.4.9-.89V.91c0-.5-.4-.9-.9-.9h-22.65c-.49,0-.89.4-.89.9v32.88c0,.49.4.89.89.89h23.19c.5,0,.89-.4.89-.89v-3.66c0-.5-.4-.9-.89-.9Z"/>
+                <path class="el-logo-cls-6-${el.id}" d="M89.19,40.09h23.94c.29,0,.52.23.52.52v2.62c0,.29-.23.52-.52.52h-23.94c-.29,0-.52-.23-.52-.52v-2.62c0-.29.23-.52.52-.52"/>
+              </g>
+            </g>
+          </g>
+        </svg>
       </div>`;
 
     case 'rect':   return `<div style="background:${el.bg};width:100%;height:100%;border-radius:3px"></div>`;
     case 'circle': return `<div style="background:${el.bg};width:100%;height:100%;border-radius:50%"></div>`;
+
+    case 'barchart': {
+      const bars = (el.items||[]).map(([name, val]) => `
+        <div class="el-barchart-col" style="display:flex;flex-direction:column;align-items:center;height:100%;flex:1;max-width:44px;position:relative">
+          <div class="el-barchart-val" style="color:${el.color};font-size:10px;font-weight:700;margin-bottom:4px;font-family:var(--font-sans)">${val}%</div>
+          <div class="el-barchart-track" style="background:rgba(255,255,255,0.06);width:8px;height:calc(100% - 34px);border-radius:4px;position:relative;display:flex;align-items:flex-end">
+            <div class="el-barchart-fill" style="background:${el.accent};width:100%;height:${val}%;border-radius:4px;box-shadow:0 0 8px ${el.accent}80"></div>
+          </div>
+          <div class="el-barchart-label" style="color:${el.color};font-size:10px;margin-top:6px;font-weight:600;font-family:var(--font-sans);opacity:0.8;text-transform:uppercase">${name}</div>
+        </div>
+      `).join('');
+      return `
+      <div class="el-barchart-block" style="background:${el.bg};width:100%;height:100%;padding:14px;box-sizing:border-box;display:flex;flex-direction:column;justify-content:space-between;border-radius:4px;border:1px solid var(--border-dark)">
+        <div class="el-barchart-title" style="color:${el.color};font-family:var(--font-display);font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:8px">${el.title}</div>
+        <div class="el-barchart-container" style="display:flex;align-items:flex-end;justify-content:space-around;height:calc(100% - 24px);width:100%">
+          ${bars}
+        </div>
+      </div>`;
+    }
+
+    case 'donutchart': {
+      const items = el.items || [];
+      const col1 = items[0] ? items[0][2] : '#EBC844';
+      const col2 = items[1] ? items[1][2] : '#E74C3C';
+      const col3 = items[2] ? items[2][2] : '#3498DB';
+      const val1 = items[0] ? items[0][1] : 0;
+      const val2 = items[1] ? items[1][1] : 0;
+      const val3 = items[2] ? items[2][1] : 0;
+      const rows = items.map(([name, val, col]) => `
+        <div style="display:flex;align-items:center;justify-content:space-between;color:${el.color}">
+          <div style="display:flex;align-items:center;gap:6px">
+            <span style="width:6px;height:6px;border-radius:50%;background:${col}"></span>
+            <span style="opacity:0.8;font-weight:500">${name.toUpperCase()}</span>
+          </div>
+          <span style="font-weight:700">${val}/100</span>
+        </div>
+      `).join('');
+
+      return `
+      <div class="el-donutchart-block" style="background:${el.bg};width:100%;height:100%;padding:16px;box-sizing:border-box;display:flex;flex-direction:column;align-items:center;justify-content:space-between;border-radius:4px;border:1px solid var(--border-dark)">
+        <div class="el-donutchart-title" style="color:${el.color};font-family:var(--font-display);font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;width:100%;text-align:center">${el.title}</div>
+        <div style="position:relative;width:100%;height:140px;display:flex;align-items:center;justify-content:center;margin-top:10px">
+          <svg viewBox="0 0 200 115" style="width:180px;height:100%">
+            <path d="M 20 100 A 80 80 0 0 1 180 100" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="8" stroke-linecap="round"/>
+            <path d="M 40 100 A 60 60 0 0 1 160 100" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="8" stroke-linecap="round"/>
+            <path d="M 60 100 A 40 40 0 0 1 140 100" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="8" stroke-linecap="round"/>
+            <path d="M 20 100 A 80 80 0 0 1 180 100" fill="none" stroke="${col1}" stroke-width="8" stroke-linecap="round" stroke-dasharray="251.3" stroke-dashoffset="${251.3 * (1 - val1/100)}"/>
+            <path d="M 40 100 A 60 60 0 0 1 160 100" fill="none" stroke="${col2}" stroke-width="8" stroke-linecap="round" stroke-dasharray="188.5" stroke-dashoffset="${188.5 * (1 - val2/100)}"/>
+            <path d="M 60 100 A 40 40 0 0 1 140 100" fill="none" stroke="${col3}" stroke-width="8" stroke-linecap="round" stroke-dasharray="125.7" stroke-dashoffset="${125.7 * (1 - val3/100)}"/>
+          </svg>
+          <div style="position:absolute;bottom:10px;text-align:center">
+            <div style="font-family:var(--font-display);font-size:32px;font-weight:900;color:${el.color};line-height:1">${el.value}</div>
+            <div style="font-family:var(--font-sans);font-size:9px;color:${el.color};letter-spacing:1px;opacity:0.6;margin-top:2px">PROMEDIO</div>
+          </div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:5px;width:100%;font-size:10px;font-family:var(--font-sans);margin-top:10px;border-top:1px solid var(--border-dark);padding-top:8px">
+          ${rows}
+        </div>
+      </div>`;
+    }
+
+    case 'radarchart': {
+      const cx = 100, cy = 105, r = 60;
+      const axesCount = (el.items||[]).length;
+      
+      const grids = [0.25, 0.5, 0.75, 1.0].map(pct => {
+        const pts = [];
+        for(let i=0; i<axesCount; i++) {
+          const angle = (i * 360 / axesCount - 90) * Math.PI / 180;
+          pts.push(`${cx + r * pct * Math.cos(angle)},${cy + r * pct * Math.sin(angle)}`);
+        }
+        return `<polygon points="${pts.join(' ')}" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>`;
+      }).join('');
+
+      const spokes = [];
+      for(let i=0; i<axesCount; i++) {
+        const angle = (i * 360 / axesCount - 90) * Math.PI / 180;
+        spokes.push(`<line x1="${cx}" y1="${cy}" x2="${cx + r * Math.cos(angle)}" y2="${cy + r * Math.sin(angle)}" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>`);
+      }
+
+      const ptsENAE = [];
+      const ptsAvg = [];
+      const labels = [];
+      (el.items||[]).forEach(([name, valENAE, valAvg], i) => {
+        const angle = (i * 360 / axesCount - 90) * Math.PI / 180;
+        ptsENAE.push(`${cx + r * (valENAE/100) * Math.cos(angle)},${cy + r * (valENAE/100) * Math.sin(angle)}`);
+        ptsAvg.push(`${cx + r * (valAvg/100) * Math.cos(angle)},${cy + r * (valAvg/100) * Math.sin(angle)}`);
+        
+        const lx = cx + (r + 14) * Math.cos(angle);
+        const ly = cy + (r + 8) * Math.sin(angle);
+        
+        let anchor = "middle";
+        if (Math.cos(angle) > 0.1) anchor = "start";
+        else if (Math.cos(angle) < -0.1) anchor = "end";
+        
+        labels.push(`<text x="${lx}" y="${ly + 3}" fill="${el.color}" font-size="6.5" font-weight="700" font-family="var(--font-sans)" text-anchor="${anchor}" opacity="0.8">${name}</text>`);
+      });
+
+      const polyENAE = `<polygon points="${ptsENAE.join(' ')}" fill="rgba(52,152,219,0.2)" stroke="#3498DB" stroke-width="1.5"/>`;
+      const polyAvg = `<polygon points="${ptsAvg.join(' ')}" fill="rgba(231,76,60,0.15)" stroke="#E74C3C" stroke-width="1.2" stroke-dasharray="2,2"/>`;
+
+      return `
+      <div class="el-radarchart-block" style="background:${el.bg};width:100%;height:100%;padding:14px;box-sizing:border-box;display:flex;flex-direction:column;align-items:center;border-radius:4px;border:1px solid var(--border-dark)">
+        <div class="el-radarchart-title" style="color:${el.color};font-family:var(--font-display);font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;width:100%;text-align:center">${el.title}</div>
+        <div style="width:100%;height:calc(100% - 24px);display:flex;align-items:center;justify-content:center">
+          <svg viewBox="0 0 200 200" style="width:100%;height:100%">
+            ${grids}
+            ${spokes}
+            ${polyAvg}
+            ${polyENAE}
+            ${labels.join('')}
+          </svg>
+        </div>
+      </div>`;
+    }
+
+    case 'table': {
+      const headers = (el.headers||[]).map(h => `<th style="color:${el.accent};font-family:var(--font-display);font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase;padding:6px 4px;border-bottom:1px solid var(--border-dark)">${h}</th>`).join('');
+      const rows = (el.rows||[]).map(row => `
+        <tr style="border-bottom:1px solid rgba(255,255,255,0.04)">
+          <td style="color:${el.color};font-weight:600;padding:8px 4px">${row[0]}</td>
+          <td style="color:${(row[1]||'').startsWith('-') ? '#E74C3C' : '#2ECC71'};font-weight:700;padding:8px 4px">${row[1]}</td>
+          <td style="color:${el.color};font-weight:700;text-align:right;padding:8px 4px">${row[2]}</td>
+        </tr>
+      `).join('');
+      return `
+      <div class="el-table-block" style="background:${el.bg};width:100%;height:100%;padding:14px;box-sizing:border-box;display:flex;flex-direction:column;border-radius:4px;border:1px solid var(--border-dark);overflow:hidden">
+        <div style="font-family:var(--font-display);font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:${el.color};margin-bottom:8px">${el.title}</div>
+        <table style="width:100%;border-collapse:collapse;font-family:var(--font-sans);font-size:11px;text-align:left">
+          <thead>
+            <tr>${headers}</tr>
+          </thead>
+          <tbody>
+            ${rows}
+          </tbody>
+        </table>
+      </div>`;
+    }
 
     default: return `<div style="color:#fff;font-size:12px;padding:8px">Elemento: ${el.type}</div>`;
   }
@@ -1361,6 +1883,86 @@ function renderProps(id) {
     `;
   }
 
+  if (el.type === 'barchart') {
+    const rows = (el.items||[]).map((item, i) => `
+      <div style="display:flex;gap:6px;margin-bottom:6px">
+        <input class="prop-input" type="text" value="${item[0]}" style="flex:2" oninput="updateBarchartItem(${id},${i},0,this.value)">
+        <input class="prop-input" type="number" value="${item[1]}" style="flex:1;max-width:56px" onchange="updateBarchartItem(${id},${i},1,+this.value)">
+      </div>`).join('');
+    html += `
+    <div class="prop-row"><label class="prop-label">Título</label><input class="prop-input" type="text" value="${el.title||''}" oninput="updateProp(${id},'title',this.value);rerender(${id})"></div>
+    <div style="margin:8px 0"><label class="prop-label">Barras (Nombre y %)</label></div>
+    ${rows}
+    <button onclick="addBarchartItem(${id})" style="width:100%;background:#333;border:1px solid #555;color:#ccc;padding:6px;border-radius:3px;cursor:pointer;font-size:12px;margin-bottom:8px">+ Añadir barra</button>
+    <div class="prop-row"><label class="prop-label">Color texto</label><input type="color" class="prop-color-input" value="${toHex(el.color)}" oninput="updateProp(${id},'color',this.value);rerender(${id})"></div>
+    <div class="prop-row"><label class="prop-label">Color barra</label><input type="color" class="prop-color-input" value="${toHex(el.accent||'#ffffff')}" oninput="updateProp(${id},'accent',this.value);rerender(${id})"></div>
+    <div class="prop-row"><label class="prop-label">Fondo</label><input type="color" class="prop-color-input" value="${toHex(el.bg)}" oninput="updateProp(${id},'bg',this.value);rerender(${id})"></div>
+    `;
+  }
+
+  if (el.type === 'donutchart') {
+    const rows = (el.items||[]).map((item, i) => `
+      <div style="display:flex;flex-direction:column;gap:4px;margin-bottom:8px;padding:6px;background:rgba(255,255,255,0.02);border-radius:3px">
+        <div style="display:flex;gap:4px">
+          <input class="prop-input" type="text" value="${item[0]}" style="flex:2" oninput="updateDonutchartItem(${id},${i},0,this.value)">
+          <input type="color" class="prop-color-input" value="${toHex(item[2])}" style="width:28px" oninput="updateDonutchartItem(${id},${i},2,this.value)">
+        </div>
+        <div style="display:flex;align-items:center;gap:6px">
+          <label class="prop-label" style="font-size:9px">Valor:</label>
+          <input type="range" min="0" max="100" value="${item[1]}" style="flex:1" oninput="updateDonutchartItem(${id},${i},1,+this.value);this.nextElementSibling.value=this.value">
+          <input class="prop-input" type="number" value="${item[1]}" style="width:36px;font-size:10px" onchange="updateDonutchartItem(${id},${i},1,+this.value)">
+        </div>
+      </div>`).join('');
+    html += `
+    <div class="prop-row"><label class="prop-label">Título</label><input class="prop-input" type="text" value="${el.title||''}" oninput="updateProp(${id},'title',this.value);rerender(${id})"></div>
+    <div class="prop-row"><label class="prop-label">Valor Promedio Central</label><input class="prop-input" type="number" value="${el.value||0}" onchange="updateProp(${id},'value',+this.value);rerender(${id})"></div>
+    <div style="margin:8px 0"><label class="prop-label">Círculos Concéntricos (Máx 3)</label></div>
+    ${rows}
+    <div class="prop-row"><label class="prop-label">Color texto</label><input type="color" class="prop-color-input" value="${toHex(el.color)}" oninput="updateProp(${id},'color',this.value);rerender(${id})"></div>
+    <div class="prop-row"><label class="prop-label">Fondo</label><input type="color" class="prop-color-input" value="${toHex(el.bg)}" oninput="updateProp(${id},'bg',this.value);rerender(${id})"></div>
+    `;
+  }
+
+  if (el.type === 'radarchart') {
+    const rows = (el.items||[]).map((item, i) => `
+      <div style="display:flex;flex-direction:column;gap:4px;margin-bottom:8px;padding:6px;background:rgba(255,255,255,0.02);border-radius:3px">
+        <input class="prop-input" type="text" value="${item[0]}" style="width:100%" oninput="updateRadarchartItem(${id},${i},0,this.value)">
+        <div style="display:flex;gap:6px">
+          <div style="flex:1"><label style="font-size:8px;opacity:0.6">ENAE %</label><input class="prop-input" type="number" value="${item[1]}" onchange="updateRadarchartItem(${id},${i},1,+this.value)"></div>
+          <div style="flex:1"><label style="font-size:8px;opacity:0.6">Promedio %</label><input class="prop-input" type="number" value="${item[2]}" onchange="updateRadarchartItem(${id},${i},2,+this.value)"></div>
+        </div>
+      </div>`).join('');
+    html += `
+    <div class="prop-row"><label class="prop-label">Título</label><input class="prop-input" type="text" value="${el.title||''}" oninput="updateProp(${id},'title',this.value);rerender(${id})"></div>
+    <div style="margin:8px 0"><label class="prop-label">Ejes de Competencias</label></div>
+    <div style="max-height:220px;overflow-y:auto;padding-right:4px">${rows}</div>
+    <div class="prop-row"><label class="prop-label">Color texto</label><input type="color" class="prop-color-input" value="${toHex(el.color)}" oninput="updateProp(${id},'color',this.value);rerender(${id})"></div>
+    <div class="prop-row"><label class="prop-label">Fondo</label><input type="color" class="prop-color-input" value="${toHex(el.bg)}" oninput="updateProp(${id},'bg',this.value);rerender(${id})"></div>
+    `;
+  }
+
+  if (el.type === 'table') {
+    const headerRow = (el.headers||[]).map((h, i) => `
+      <input class="prop-input" type="text" value="${h}" style="flex:1" oninput="updateTableHeaderItem(${id},${i},this.value)">`).join('');
+    const rows = (el.rows||[]).map((row, i) => `
+      <div style="display:flex;gap:4px;margin-bottom:6px">
+        <input class="prop-input" type="text" value="${row[0]}" style="flex:2" oninput="updateTableItem(${id},${i},0,this.value)">
+        <input class="prop-input" type="text" value="${row[1]}" style="flex:1;max-width:56px" oninput="updateTableItem(${id},${i},1,this.value)">
+        <input class="prop-input" type="text" value="${row[2]}" style="flex:1;max-width:64px;text-align:right" oninput="updateTableItem(${id},${i},2,this.value)">
+      </div>`).join('');
+    html += `
+    <div class="prop-row"><label class="prop-label">Título</label><input class="prop-input" type="text" value="${el.title||''}" oninput="updateProp(${id},'title',this.value);rerender(${id})"></div>
+    <div style="margin:6px 0"><label class="prop-label">Cabeceras de Tabla</label></div>
+    <div style="display:flex;gap:4px;margin-bottom:10px">${headerRow}</div>
+    <div style="margin:6px 0"><label class="prop-label">Filas de Datos (Nombre, Var, Cifra)</label></div>
+    ${rows}
+    <div class="prop-row"><label class="prop-label">Color texto</label><input type="color" class="prop-color-input" value="${toHex(el.color)}" oninput="updateProp(${id},'color',this.value);rerender(${id})"></div>
+    <div class="prop-row"><label class="prop-label">Color cabecera</label><input type="color" class="prop-color-input" value="${toHex(el.accent||'#ffffff')}" oninput="updateProp(${id},'accent',this.value);rerender(${id})"></div>
+    <div class="prop-row"><label class="prop-label">Fondo</label><input type="color" class="prop-color-input" value="${toHex(el.bg)}" oninput="updateProp(${id},'bg',this.value);rerender(${id})"></div>
+    `;
+  }
+
+
   html += `<button class="prop-delete-btn" onclick="deleteSelected()">🗑 Eliminar elemento</button>`;
   p.innerHTML = html;
 }
@@ -1417,6 +2019,45 @@ function addBulletItem(id) {
   rerender(id);
   renderProps(id);
 }
+
+function updateBarchartItem(id, i, col, val) {
+  const el = elements.find(x => x.id === id);
+  if (!el) return;
+  el.items[i][col] = col === 1 ? +val : val;
+  rerender(id);
+}
+function addBarchartItem(id) {
+  const el = elements.find(x => x.id === id);
+  if (!el) return;
+  el.items.push(['NUEVO', 50]);
+  rerender(id);
+  renderProps(id);
+}
+function updateDonutchartItem(id, i, col, val) {
+  const el = elements.find(x => x.id === id);
+  if (!el) return;
+  el.items[i][col] = col === 1 ? +val : val;
+  rerender(id);
+}
+function updateRadarchartItem(id, i, col, val) {
+  const el = elements.find(x => x.id === id);
+  if (!el) return;
+  el.items[i][col] = col >= 1 ? +val : val;
+  rerender(id);
+}
+function updateTableItem(id, i, col, val) {
+  const el = elements.find(x => x.id === id);
+  if (!el) return;
+  el.rows[i][col] = val;
+  rerender(id);
+}
+function updateTableHeaderItem(id, col, val) {
+  const el = elements.find(x => x.id === id);
+  if (!el) return;
+  el.headers[col] = val;
+  rerender(id);
+}
+
 
 // ============================================================
 //  LAYERS
@@ -1477,58 +2118,112 @@ function loadTemplate(name) {
   clearCanvas();
   switch(name) {
     case 'cover':
-      // Dark bg
-      setBg('#202221', null);
-      addElement('rect', { x:0, y:0, w:canvasW, h:canvasH*0.45, bg:'#a91831', z:0, opacity:100 });
-      addElement('logo',  { x:30, y:24, w:180, h:80, color:'#ffffff', accent:'#ffffff', z:2 });
-      addElement('heading', { x:30, y:canvasH*0.1, w:canvasW-60, h:100, text:'TÍTULO\nPRINCIPAL', fontSize:64, color:'#ffffff', bg:'transparent', z:2 });
-      addElement('subheading', { x:30, y:canvasH*0.32, w:canvasW-60, h:50, text:'Subtítulo descriptivo de la infografía', fontSize:20, color:'rgba(222,229,236,0.85)', bg:'transparent', z:2 });
-      addElement('accentbar', { x:30, y:canvasH*0.48, w:60, h:4, bg:'#ffffff', color:'#ffffff', z:3 });
-      addElement('body', { x:30, y:canvasH*0.52, w:canvasW-60, h:80, text:'Descripción breve del contenido. Añade aquí el contexto y los datos principales que quieres comunicar a tu audiencia.', fontSize:14, color:'#dee5ec', bg:'transparent', z:2 });
+      setBg('#0E0E0E', null);
+      addElement('rect', { x: 30, y: 140, w: canvasW-60, h: 4, bg: '#EBC844', z: 1 });
+      addElement('logo',  { x: 30, y: 40, w: 140, h: 54, color: '#F5F5F4', z: 2 });
+      addElement('heading', { x: 30, y: 160, w: canvasW-60, h: 180, text: 'LA REVOLUCIÓN\nDE LA IA\nGENERATIVA', fontSize: 56, color: '#F5F5F4', bg: 'transparent', z: 2 });
+      addElement('subheading', { x: 30, y: 350, w: canvasW-60, h: 50, text: 'Programa Ejecutivo en Inteligencia Artificial', fontSize: 20, color: '#808080', bg: 'transparent', z: 2 });
+      addElement('body', { x: 30, y: 420, w: canvasW-60, h: 100, text: 'Descubre cómo los agentes inteligentes y los modelos de lenguaje a gran escala están transformando el tejido empresarial global.', fontSize: 14, color: '#808080', bg: 'transparent', z: 2 });
       break;
 
     case 'stat4':
-      setBg('#a91831', null);
-      addElement('heading', { x:30, y:30, w:canvasW-60, h:70, text:'DATOS CLAVE', fontSize:44, color:'#ffffff', bg:'transparent' });
-      addElement('accentbar', { x:30, y:110, w:60, h:3, bg:'#ffffff', color:'#ffffff' });
-      [[0,0,'94%','Satisfacción','alumnos recomendarían'],[1,0,'1.200','Estudiantes','matriculados al año'],
-       [0,1,'#10','Ranking QS','Máster IA & Data Science'],[1,1,'25+','Años','de experiencia']].forEach(([col,row,num,lbl,desc]) => {
-        addElement('stat', { x:30+col*270, y:140+row*170, w:240, h:150, number:num, label:lbl, desc:desc, color:'#ffffff', bg:'rgba(0,0,0,0.25)', accent:'#ffffff' });
-      });
-      addElement('logo', { x:canvasW-180, y:canvasH-80, w:150, h:60, color:'#ffffff', accent:'rgba(255,255,255,0.5)' });
+      setBg('#0E0E0E', null);
+      addElement('heading', { x: 30, y: 40, w: canvasW-60, h: 60, text: 'MÉTRICAS CLAVE', fontSize: 36, color: '#F5F5F4', bg: 'transparent' });
+      addElement('divider', { x: 30, y: 110, w: canvasW-60, h: 2, color: 'rgba(255,255,255,0.08)', bg: 'transparent' });
+      
+      // Card 1 (Regular dark card, Oro text accent)
+      addElement('stat', { x: 30, y: 140, w: 250, h: 170, number: '94%', label: 'SATISFACCIÓN', desc: 'Porcentaje de recomendación de los alumnos.', color: '#F5F5F4', bg: '#1E1E1E', accent: '#EBC844' });
+      
+      // Card 2 (Alert/Critical Card, solid Coral background, white text)
+      addElement('stat', { x: 300, y: 140, w: 250, h: 170, number: '1.2x', label: 'CRECIMIENTO', desc: 'Incremento interanual en la demanda corporativa.', color: '#F5F5F4', bg: '#E74C3C', accent: '#F5F5F4' });
+      
+      // Card 3 (Regular dark card, Sky-blue text accent)
+      addElement('stat', { x: 30, y: 330, w: 250, h: 170, number: '#10', label: 'RANKING MUNDIAL', desc: 'Máster en Inteligencia Artificial aplicada.', color: '#F5F5F4', bg: '#1E1E1E', accent: '#3498DB' });
+      
+      // Card 4 (Regular dark card, Emerald text accent)
+      addElement('stat', { x: 300, y: 330, w: 250, h: 170, number: '98%', label: 'EMPLEABILIDAD', desc: 'Alumnos que acceden al mercado laboral.', color: '#F5F5F4', bg: '#1E1E1E', accent: '#2ECC71' });
+      
+      addElement('logo', { x: canvasW-180, y: canvasH-80, w: 140, h: 54, color: '#808080', accent: '#1E1E1E' });
       break;
 
     case 'list':
-      setBg('#202221', null);
-      addElement('rect', { x:0, y:0, w:10, h:canvasH, bg:'#a91831', z:0 });
-      addElement('heading', { x:30, y:40, w:canvasW-60, h:70, text:'PUNTOS CLAVE', fontSize:44, color:'#ffffff', bg:'transparent' });
-      addElement('stat', { x:30, y:130, w:180, h:130, number:'92%', label:'Empleabilidad', desc:'de nuestros alumnos trabajan en su sector', color:'#ffffff', bg:'#a91831', accent:'#ffffff' });
-      addElement('bulletlist', { x:240, y:130, w:310, h:220,
-        items:['Formación de alto nivel internacional','Red de más de 5.000 alumni activos','Profesorado con experiencia real en empresa','Campus en Murcia con instalaciones propias','Acuerdos con más de 200 empresas partner'],
-        color:'#ffffff', bg:'rgba(255,255,255,0.06)' });
-      addElement('divider', { x:30, y:370, w:canvasW-60, h:1, color:'rgba(222,229,236,0.2)', bg:'rgba(222,229,236,0.2)' });
-      addElement('body', { x:30, y:385, w:canvasW-60, h:60, text:'ENAE International Business School · Campus Universitario de Espinardo, Murcia', fontSize:12, color:'rgba(222,229,236,0.5)', bg:'transparent' });
+      setBg('#0E0E0E', null);
+      addElement('heading', { x: 30, y: 40, w: canvasW-60, h: 60, text: 'PROGRAMA ACADÉMICO', fontSize: 36, color: '#F5F5F4' });
+      addElement('stat', { x: 30, y: 130, w: 220, h: 180, number: '500h', label: 'DURACIÓN TOTAL', desc: 'Formación teórico-práctica con proyectos reales en empresas.', color: '#F5F5F4', bg: '#1E1E1E', accent: '#3498DB' });
+      addElement('bulletlist', { x: 270, y: 130, w: 290, h: 220, items: ['Módulo 1: Fundamentos de IA y Machine Learning', 'Módulo 2: Redes Neuronales Profundas', 'Módulo 3: Procesamiento del Lenguaje Natural', 'Módulo 4: Creación de Agentes Inteligentes', 'Módulo 5: Casos de Negocio e Implementación'], color: '#F5F5F4', bg: '#1E1E1E' });
+      addElement('divider', { x: 30, y: 380, w: canvasW-60, h: 2, color: 'rgba(255,255,255,0.08)' });
+      addElement('body', { x: 30, y: 400, w: canvasW-60, h: 60, text: 'ENAE International Business School · Escuela Europea de Negocios de Excelencia.', fontSize: 13, color: '#808080' });
       break;
 
     case 'progress3':
-      setBg('#a91831', null);
-      addElement('heading', { x:30, y:30, w:canvasW-60, h:60, text:'INDICADORES', fontSize:40, color:'#ffffff', bg:'transparent' });
-      addElement('subheading', { x:30, y:100, w:canvasW-60, h:36, text:'Resultados académicos y de empleabilidad 2024', fontSize:16, color:'rgba(255,255,255,0.7)', bg:'transparent' });
-      addElement('progress', { x:30, y:155, w:canvasW-60, h:250,
-        items:[['Satisfacción del alumno',94],['Tasa de empleabilidad',91],['Inserción laboral < 6 meses',83],['Recomendarían ENAE',96],['Calidad del profesorado',89]],
-        color:'#ffffff', bg:'rgba(0,0,0,0.2)', accent:'#ffffff' });
-      addElement('logo', { x:canvasW-200, y:canvasH-80, w:170, h:60, color:'#ffffff', accent:'rgba(255,255,255,0.5)' });
+      setBg('#0E0E0E', null);
+      addElement('heading', { x: 30, y: 40, w: canvasW-60, h: 60, text: 'MÉTRICAS CLAVE', fontSize: 36, color: '#F5F5F4' });
+      addElement('subheading', { x: 30, y: 100, w: canvasW-60, h: 30, text: 'Resultados de aprendizaje y satisfacción general', fontSize: 16, color: '#808080' });
+      addElement('progress', { x: 30, y: 150, w: canvasW-60, h: 230, items: [['Dominio de LLMs y Agentes', 92], ['Aplicación práctica empresarial', 88], ['Satisfacción con el profesorado', 96], ['Tasa de recomendación directa', 94]], color: '#F5F5F4', bg: '#1E1E1E', accent: '#3498DB' });
+      addElement('logo', { x: canvasW-180, y: canvasH-80, w: 140, h: 54, color: '#808080' });
       break;
 
     case 'quote':
-      setBg('#202221', null);
-      addElement('rect', { x:0, y:0, w:canvasW, h:8, bg:'#a91831', z:0 });
-      addElement('quote', {
-        x:40, y:60, w:canvasW-80, h:200,
-        text:'La formación no es solo adquirir conocimiento. Es transformar perspectivas y crear líderes capaces de impulsar el cambio.',
-        author:'— ENAE International Business School',
-        color:'#ffffff', bg:'rgba(169,24,49,0.15)' });
-      addElement('logo', { x:canvasW/2-80, y:canvasH-100, w:160, h:70, color:'#dee5ec', accent:'#a91831' });
+      setBg('#0E0E0E', null);
+      addElement('quote', { x: 40, y: 120, w: canvasW-80, h: 220, text: 'La inteligencia artificial no reemplazará a los directivos, pero los directivos que utilicen inteligencia artificial reemplazarán a los que no la utilicen.', author: '— ENAE International Business School', color: '#F5F5F4', bg: '#1E1E1E' });
+      addElement('logo', { x: canvasW/2-70, y: canvasH-120, w: 140, h: 54, color: '#808080' });
+      break;
+
+    case 'dashboard_financial':
+      setBg('#0E0E0E', null);
+      addElement('logo', { x: 30, y: 40, w: 140, h: 54, color: '#F5F5F4' });
+      addElement('accentbar', { x: 30, y: 110, w: 535, h: 4, bg: '#EBC844' });
+      addElement('heading', { x: 30, y: 125, w: 535, h: 50, text: 'RENDIMIENTO GLOBAL ENAE', fontSize: 32, color: '#F5F5F4' });
+      
+      // Main Stat Card
+      addElement('stat', { x: 30, y: 190, w: 250, h: 180, number: '+18.4%', label: 'CRECIMIENTO ANUAL', desc: 'Incremento acumulado en admisiones del año en curso.', color: '#F5F5F4', bg: '#1E1E1E', accent: '#EBC844' });
+      
+      // Bar Chart Card
+      addElement('barchart', { x: 300, y: 190, w: 265, h: 180, title: 'CRECIMIENTO POR TRIMESTRE', items: [['T1', 34], ['T2', 56], ['T3', 78], ['T4', 92]], color: '#F5F5F4', bg: '#1E1E1E', accent: '#EBC844' });
+      
+      // Program Details Table
+      addElement('table', { x: 30, y: 390, w: 535, h: 220, title: 'RENDIMIENTO DE PROGRAMAS AVANZADOS', headers: ['Programa Master', 'Var Anual', 'Matrículas'], rows: [['Dirección Financiera', '+18.66%', '340'], ['IA Avanzada y Big Data', '+24.43%', '230'], ['Marketing Digital', '-2.57%', '185'], ['Dirección General', '+8.90%', '412']], color: '#F5F5F4', bg: '#1E1E1E', accent: '#EBC844' });
+      
+      // Subtext body
+      addElement('body', { x: 30, y: 630, w: 535, h: 60, text: 'Datos auditados correspondientes a las matrículas activas del curso académico de la Escuela de Negocios ENAE.', fontSize: 13, color: '#808080' });
+      
+      // Footer Logo
+      addElement('logo', { x: 425, y: 740, w: 140, h: 54, color: '#808080' });
+      break;
+
+    case 'scorecard_esg':
+      setBg('#0E0E0E', null);
+      addElement('logo', { x: 30, y: 40, w: 140, h: 54, color: '#F5F5F4' });
+      addElement('accentbar', { x: 30, y: 110, w: 535, h: 4, bg: '#2ECC71' });
+      addElement('heading', { x: 30, y: 125, w: 535, h: 50, text: 'INFORME DE IMPACTO ESG ENAE', fontSize: 30, color: '#F5F5F4' });
+
+      // Score Card (Off-white block on left)
+      addElement('stat', { x: 30, y: 190, w: 180, h: 280, number: '92', label: 'SCORE GLOBAL', desc: 'Calificación ponderada en base a auditoría de impacto ESG institucional.', color: '#0E0E0E', bg: '#F5F5F4', accent: '#2ECC71' });
+      
+      // Concentric Gauge donutchart (on right)
+      addElement('donutchart', { x: 230, y: 190, w: 335, h: 280, title: 'DESGLOSE DE CRITERIOS', value: 87, items: [['Calidad Académica', 82, '#EBC844'], ['Impacto Social', 71, '#E74C3C'], ['Gobernanza', 96, '#3498DB']], color: '#F5F5F4', bg: '#1E1E1E' });
+      
+      // Green progress status bars (Bottom)
+      addElement('progress', { x: 30, y: 490, w: 535, h: 230, items: [['Acreditación Carbono Neutro', 95], ['Programas Verdes Integrados', 80], ['Diversidad e Inclusión de Becas', 90], ['Eficiencia Energética del Campus', 88]], color: '#F5F5F4', bg: '#1E1E1E', accent: '#2ECC71' });
+
+      // Footer Logo
+      addElement('logo', { x: 425, y: 740, w: 140, h: 54, color: '#808080' });
+      break;
+
+    case 'competence_radar':
+      setBg('#0E0E0E', null);
+      addElement('logo', { x: 30, y: 40, w: 140, h: 54, color: '#F5F5F4' });
+      addElement('accentbar', { x: 30, y: 110, w: 535, h: 4, bg: '#3498DB' });
+      addElement('heading', { x: 30, y: 125, w: 535, h: 50, text: 'RADAR DE COMPETENCIAS DIRECTIVAS', fontSize: 26, color: '#F5F5F4' });
+
+      // Radar mesh spider web chart
+      addElement('radarchart', { x: 30, y: 190, w: 535, h: 360, title: 'PERFIL EJECUTIVO VS. PROMEDIO DE LA INDUSTRIA', items: [['DETERMINADO', 85, 70], ['VALIENTE', 80, 50], ['EMPATICO', 60, 45], ['SIN MIEDO', 85, 60], ['AUDAZ', 75, 55], ['SOLIDARIO', 70, 50], ['SENSIBLE', 50, 40], ['INDEPENDIENTE', 90, 65]], color: '#F5F5F4', bg: '#1E1E1E' });
+
+      // Explanation sidebar
+      addElement('bulletlist', { x: 30, y: 570, w: 535, h: 140, items: ['Perfil ENAE (Polígono Azul): Representa el desarrollo de habilidades tras completar el Máster.', 'Perfil Promedio (Polígono Coral): Media obtenida en directivos de control.', 'Ejes analizados: 8 áreas clave de liderazgo estratégico.'], color: '#F5F5F4', bg: '#1E1E1E' });
+
+      // Footer Logo
+      addElement('logo', { x: 425, y: 740, w: 140, h: 54, color: '#808080' });
       break;
   }
   refreshLayers();
@@ -1555,7 +2250,16 @@ function exportSVG() {
   const w = inf.offsetWidth, h = inf.offsetHeight;
 
   let svgContent = `<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}" viewBox="0 0 ${w} ${h}">`;
-  svgContent += `<defs><style>@import url('https://fonts.googleapis.com/css2?family=Barlow:wght@300;400;600;700;900&amp;family=Barlow+Condensed:wght@300;700;900&amp;display=swap');</style></defs>`;
+  svgContent += `<defs><style>
+    @font-face {
+      font-family: 'Open Sans';
+      src: local('Open Sans'), local('OpenSans');
+    }
+    @font-face {
+      font-family: 'SF UI Display';
+      src: local('SF UI Display'), local('SFUIDisplay');
+    }
+  </style></defs>`;
   svgContent += `<rect width="${w}" height="${h}" fill="${canvasBg}"/>`;
 
   elements.forEach(el => {
@@ -1565,19 +2269,100 @@ function exportSVG() {
       const rx = el.type === 'circle' ? Math.min(el.w,el.h)/2 : 3;
       svgContent += `<rect width="${el.w}" height="${el.h}" fill="${el.bg}" rx="${rx}"/>`;
     } else if (el.type === 'heading' || el.type === 'label') {
-      svgContent += `<text font-family="'Barlow Condensed',sans-serif" font-weight="900" font-size="${el.fontSize}" fill="${el.color}" dominant-baseline="hanging" text-anchor="start" transform="uppercase">${escXML(el.text)}</text>`;
+      svgContent += `<text font-family="'SF UI Display',sans-serif" font-weight="900" font-size="${el.fontSize}" fill="${el.color}" dominant-baseline="hanging" text-anchor="start" transform="uppercase">${escXML(el.text)}</text>`;
     } else if (el.type === 'subheading' || el.type === 'body') {
-      svgContent += `<foreignObject width="${el.w}" height="${el.h}"><div xmlns="http://www.w3.org/1999/xhtml" style="font-family:Barlow,sans-serif;font-size:${el.fontSize}px;color:${el.color};font-weight:${el.type==='subheading'?300:400}">${escXML(el.text)}</div></foreignObject>`;
+      svgContent += `<foreignObject width="${el.w}" height="${el.h}"><div xmlns="http://www.w3.org/1999/xhtml" style="font-family:'Open Sans',sans-serif;font-size:${el.fontSize}px;color:${el.color};font-weight:${el.type==='subheading'?300:400}">${escXML(el.text)}</div></foreignObject>`;
     } else if (el.type === 'accentbar' || el.type === 'divider') {
       svgContent += `<rect width="${el.w}" height="${el.h}" fill="${el.bg||el.color}" rx="2"/>`;
     } else if (el.type === 'stat') {
       svgContent += `<rect width="${el.w}" height="${el.h}" fill="${el.bg}" rx="3"/>`;
       svgContent += `<rect width="4" height="${el.h}" fill="${el.accent}" rx="2"/>`;
-      svgContent += `<text x="20" y="58" font-family="'Barlow Condensed',sans-serif" font-weight="900" font-size="52" fill="${el.color}">${escXML(el.number)}</text>`;
-      svgContent += `<text x="20" y="78" font-family="Barlow,sans-serif" font-weight="700" font-size="11" fill="${el.color}" letter-spacing="1.5">${escXML((el.label||'').toUpperCase())}</text>`;
-      if (el.desc) svgContent += `<foreignObject x="16" y="88" width="${el.w-32}" height="50"><div xmlns="http://www.w3.org/1999/xhtml" style="font-family:Barlow,sans-serif;font-size:12px;color:${el.color};font-weight:300">${escXML(el.desc)}</div></foreignObject>`;
+      svgContent += `<text x="20" y="58" font-family="'SF UI Display',sans-serif" font-weight="900" font-size="52" fill="${el.color}">${escXML(el.number)}</text>`;
+      svgContent += `<text x="20" y="78" font-family="'SF UI Display',sans-serif" font-weight="700" font-size="11" fill="${el.color}" letter-spacing="1.5">${escXML((el.label||'').toUpperCase())}</text>`;
+      if (el.desc) svgContent += `<foreignObject x="16" y="88" width="${el.w-32}" height="50"><div xmlns="http://www.w3.org/1999/xhtml" style="font-family:'Open Sans',sans-serif;font-size:12px;color:${el.color};font-weight:300">${escXML(el.desc)}</div></foreignObject>`;
+    } else if (el.type === 'logo') {
+      svgContent += `
+      <g color="${el.color}">
+        <svg x="0" y="0" width="${el.w}" height="${el.h}" viewBox="0 0 113.65 43.88">
+          <defs>
+            <style>
+              .el-logo-cls-1-svg-${el.id} { fill: none; }
+              .el-logo-cls-2-svg-${el.id} { clip-path: url(#el-logo-clip-1-svg-${el.id}); }
+              .el-logo-cls-3-svg-${el.id} { clip-path: url(#el-logo-clip-3-svg-${el.id}); }
+              .el-logo-cls-4-svg-${el.id} { clip-path: url(#el-logo-clip-4-svg-${el.id}); }
+              .el-logo-cls-5-svg-${el.id} { clip-path: url(#el-logo-clip-2-svg-${el.id}); }
+              .el-logo-cls-6-svg-${el.id} { fill: currentColor; }
+              .el-logo-cls-7-svg-${el.id} { clip-path: url(#el-logo-clip-svg-${el.id}); }
+            </style>
+            <clipPath id="el-logo-clip-svg-${el.id}">
+              <rect class="el-logo-cls-1-svg-${el.id}" width="113.65" height="43.88"/>
+            </clipPath>
+            <clipPath id="el-logo-clip-1-svg-${el.id}">
+              <rect class="el-logo-cls-1-svg-${el.id}" width="113.65" height="43.88"/>
+            </clipPath>
+            <clipPath id="el-logo-clip-2-svg-${el.id}">
+              <rect class="el-logo-cls-1-svg-${el.id}" width="113.65" height="43.88"/>
+            </clipPath>
+            <clipPath id="el-logo-clip-3-svg-${el.id}">
+              <rect class="el-logo-cls-1-svg-${el.id}" width="113.65" height="43.88"/>
+            </clipPath>
+            <clipPath id="el-logo-clip-4-svg-${el.id}">
+              <rect class="el-logo-cls-1-svg-${el.id}" width="113.65" height="43.88"/>
+            </clipPath>
+          </defs>
+          <g id="Capa_1-2-svg-${el.id}" data-name="Capa 1">
+            <g>
+              <rect class="el-logo-cls-6-svg-${el.id}" x=".3" y="39.43" width="1.03" height="4.36"/>
+              <g class="el-logo-cls-7-svg-${el.id}">
+                <path class="el-logo-cls-6-svg-${el.id}" d="M3.98,40.38c-.47,0-.8.24-.97.69h-.02v-.63h-.95v3.36h.99v-1.9c0-.39.21-.65.53-.65s.51.23.51.63v1.92h.99v-2.15c0-.8-.39-1.27-1.08-1.27"/>
+                <path class="el-logo-cls-6-svg-${el.id}" d="M6.93,39.69h-.99v.75h-.41v.8h.41v1.66c0,.66.31.93,1.11.93.19,0,.34-.02.43-.05v-.76s-.12.01-.21.01c-.24,0-.36-.12-.36-.35v-1.44h.56v-.8h-.56v-.75h.01Z"/>
+                <path class="el-logo-cls-6-svg-${el.id}" d="M8.93,41.74c.02-.36.27-.62.58-.62s.56.24.58.62h-1.16ZM9.5,40.37c-.94,0-1.54.69-1.54,1.78s.59,1.74,1.57,1.74c.8,0,1.38-.45,1.48-1.14h-.89c-.07.23-.29.37-.57.37-.37,0-.63-.28-.63-.69v-.07h2.1v-.3c0-1.03-.59-1.68-1.52-1.68h0Z"/>
+                <path class="el-logo-cls-6-svg-${el.id}" d="M12.55,41.07h-.02v-.63h-.95v3.36h.99v-1.78c0-.47.23-.74.65-.74.12,0,.24.02.33.06v-.92c-.07-.02-.16-.05-.25-.05-.36,0-.62.23-.74.68h0Z"/>
+                <path class="el-logo-cls-6-svg-${el.id}" d="M15.95,40.38c-.47,0-.8.24-.97.69h-.02v-.63h-.95v3.36h.99v-1.9c0-.39.21-.65.53-.65s.51.23.51.63v1.92h.99v-2.15c0-.8-.39-1.27-1.08-1.27Z"/>
+                <path class="el-logo-cls-6-svg-${el.id}" d="M19.52,42.59c0,.3-.27.52-.59.52-.25,0-.42-.13-.42-.35s.16-.34.44-.36l.57-.05v.23h.01ZM19.11,40.37c-.83,0-1.39.45-1.41,1.14h.89c.02-.21.21-.36.47-.36s.46.14.46.42v.19l-.73.05c-.81.05-1.26.4-1.26,1.03s.47,1.02,1.05,1.02c.38,0,.75-.19.92-.53h.02v.48h.95v-2.31c0-.68-.54-1.14-1.38-1.14h0Z"/>
+                <path class="el-logo-cls-6-svg-${el.id}" d="M22.38,39.69h-.99v.75h-.41v.8h.41v1.66c0,.66.31.93,1.11.93.19,0,.34-.02.44-.05v-.76s-.12.01-.2.01c-.24,0-.36-.12-.36-.35v-1.44h.56v-.8h-.56v-.75h.01Z"/>
+                <path class="el-logo-cls-6-svg-${el.id}" d="M24.02,39.1c-.28,0-.51.23-.51.53s.23.53.51.53.51-.22.51-.53-.23-.53-.51-.53"/>
+              </g>
+              <rect class="el-logo-cls-6-svg-${el.id}" x="23.52" y="40.44" width=".99" height="3.36"/>
+              <g class="el-logo-cls-2-svg-${el.id}">
+                <path class="el-logo-cls-6-svg-${el.id}" d="M26.67,43.09c-.36,0-.58-.35-.58-.97s.22-.97.58-.97.58.36.58.97-.22.97-.58.97M26.67,40.37c-.97,0-1.58.67-1.58,1.75s.61,1.75,1.58,1.75,1.58-.64,1.58-1.75-.62-1.75-1.58-1.75"/>
+                <path class="el-logo-cls-6-svg-${el.id}" d="M30.74,40.38c-.47,0-.8.24-.97.69h-.02v-.63h-.95v3.36h.99v-1.9c0-.39.21-.65.53-.65s.51.23.51.63v1.92h.99v-2.15c0-.8-.39-1.27-1.08-1.27"/>
+                <path class="el-logo-cls-6-svg-${el.id}" d="M34.32,42.59c0,.3-.27.52-.59.52-.25,0-.42-.13-.42-.35s.16-.34.43-.36l.57-.05v.23h.01ZM33.91,40.37c-.83,0-1.39.45-1.41,1.14h.89c.02-.21.21-.36.47-.36s.46.14.46.42v.19l-.73.05c-.81.05-1.26.4-1.26,1.03s.47,1.02,1.05,1.02c.38,0,.75-.19.92-.53h.02v.48h.96v-2.31c0-.68-.54-1.14-1.38-1.14h0Z"/>
+              </g>
+              <rect class="el-logo-cls-6-svg-${el.id}" x="35.95" y="39.22" width=".99" height="4.58"/>
+              <g class="el-logo-cls-5-svg-${el.id}">
+                <path class="el-logo-cls-6-svg-${el.id}" d="M40.62,43.02h-.62v-1.12h.62c.42,0,.67.2.67.56s-.24.57-.65.57h-.01ZM40,40.23h.59c.34,0,.54.18.54.48s-.22.51-.59.51h-.54v-.99ZM41.34,41.5v-.02c.45-.07.79-.46.79-.94,0-.68-.48-1.09-1.27-1.09h-1.89v4.36h1.93c.86,0,1.4-.5,1.4-1.26,0-.58-.44-1.02-.98-1.05h.01Z"/>
+                <path class="el-logo-cls-6-svg-${el.id}" d="M44.87,42.34c0,.39-.21.65-.52.65s-.52-.22-.52-.63v-1.92h-.99v2.16c0,.8.47,1.27,1.14,1.27.47,0,.76-.25.91-.69h.02v.64h.97v-3.36h-.99v1.9-.02Z"/>
+                <path class="el-logo-cls-6-svg-${el.id}" d="M48.4,41.82l-.64-.14c-.24-.05-.36-.14-.36-.29,0-.18.17-.3.41-.3.29,0,.47.16.47.4h.91c0-.69-.53-1.13-1.37-1.13s-1.38.42-1.38,1.09c0,.51.33.86.93.99l.58.13c.25.06.34.13.34.28,0,.18-.17.29-.45.29-.3,0-.5-.14-.52-.4h-.96c.04.69.57,1.12,1.46,1.12s1.44-.45,1.44-1.14c0-.51-.27-.79-.88-.92h.01Z"/>
+                <path class="el-logo-cls-6-svg-${el.id}" d="M50.31,39.1c-.28,0-.51.23-.51.53s.23.53.51.53.51-.22.51-.53-.23-.53-.51-.53"/>
+              </g>
+              <rect class="el-logo-cls-6-svg-${el.id}" x="49.82" y="40.44" width=".99" height="3.36"/>
+              <g class="el-logo-cls-3-svg-${el.id}">
+                <path class="el-logo-cls-6-svg-${el.id}" d="M53.41,40.38c-.47,0-.8.24-.97.69h-.02v-.63h-.96v3.36h.99v-1.9c0-.39.21-.65.53-.65s.51.23.51.63v1.92h.99v-2.15c0-.8-.39-1.27-1.08-1.27"/>
+                <path class="el-logo-cls-6-svg-${el.id}" d="M56.01,41.74c.02-.36.27-.62.58-.62s.56.24.58.62h-1.16ZM56.58,40.37c-.94,0-1.54.69-1.54,1.78s.59,1.74,1.57,1.74c.8,0,1.38-.45,1.47-1.14h-.89c-.07.23-.29.37-.57.37-.37,0-.63-.28-.63-.69v-.07h2.1v-.3c0-1.03-.59-1.68-1.52-1.68h0Z"/>
+                <path class="el-logo-cls-6-svg-${el.id}" d="M60.54,41.82l-.64-.14c-.24-.05-.36-.14-.36-.29,0-.18.17-.3.41-.3.29,0,.47.16.47.4h.91c0-.69-.53-1.13-1.37-1.13s-1.38.42-1.38,1.09c0,.51.33.86.93.99l.58.13c.25.06.34.13.34.28,0,.18-.17.29-.45.29-.3,0-.5-.14-.52-.4h-.96c.04.69.57,1.12,1.46,1.12s1.44-.45,1.44-1.14c0-.51-.27-.79-.88-.92h.01Z"/>
+                <path class="el-logo-cls-6-svg-${el.id}" d="M63.84,41.82l-.64-.14c-.24-.05-.36-.14-.36-.29,0-.18.17-.3.41-.3.29,0,.47.16.47.4h.91c0-.69-.53-1.13-1.37-1.13s-1.38.42-1.38,1.09c0,.51.33.86.93.99l.58.13c.25.06.34.13.34.28,0,.18-.17.29-.45.29-.3,0-.5-.14-.52-.4h-.96c.04.69.57,1.12,1.46,1.12s1.44-.45,1.44-1.14c0-.51-.27-.79-.88-.92h.01Z"/>
+                <path class="el-logo-cls-6-svg-${el.id}" d="M68.71,41.21l-.52-.11c-.42-.1-.6-.22-.6-.46,0-.27.24-.45.59-.45s.64.19.65.51h.94c0-.82-.6-1.35-1.61-1.35-.93,0-1.6.54-1.6,1.39,0,.66.39,1.1,1.12,1.26l.53.11c.46.11.63.22.63.46,0,.27-.25.46-.65.46s-.69-.2-.72-.5h-.97c0,.85.64,1.34,1.67,1.34s1.69-.56,1.69-1.43c0-.69-.36-1.08-1.15-1.24h-.01Z"/>
+                <path class="el-logo-cls-6-svg-${el.id}" d="M71.93,43.06c-.36,0-.58-.33-.58-.94s.22-.94.58-.94c.3,0,.51.23.53.58h.91c-.02-.83-.59-1.39-1.46-1.39-.97,0-1.56.68-1.56,1.75s.61,1.75,1.57,1.75c.87,0,1.43-.52,1.45-1.37h-.91c-.04.35-.23.56-.53.56Z"/>
+                <path class="el-logo-cls-6-svg-${el.id}" d="M75.88,40.38c-.47,0-.81.24-.97.69h-.02v-1.85h-.97v4.58h.99v-1.9c0-.39.19-.65.54-.65s.52.24.52.63v1.92h.99v-2.15c0-.8-.39-1.27-1.08-1.27h-.01Z"/>
+                <path class="el-logo-cls-6-svg-${el.id}" d="M79.09,43.09c-.36,0-.58-.35-.58-.97s.22-.97.58-.97.58.36.58.97-.22.97-.58.97M79.09,40.37c-.97,0-1.58.67-1.58,1.75s.61,1.75,1.58,1.75,1.58-.64,1.58-1.75-.62-1.75-1.58-1.75"/>
+                <path class="el-logo-cls-6-svg-${el.id}" d="M82.7,43.09c-.36,0-.58-.35-.58-.97s.22-.97.58-.97.58.36.58.97-.22.97-.58.97M82.7,40.37c-.97,0-1.58.67-1.58,1.75s.61,1.75,1.58,1.75,1.58-.64,1.58-1.75-.62-1.75-1.58-1.75"/>
+              </g>
+              <rect class="el-logo-cls-6-svg-${el.id}" x="84.86" y="39.22" width=".99" height="4.58"/>
+              <g class="el-logo-cls-4-svg-${el.id}">
+                <path class="el-logo-cls-6-svg-${el.id}" d="M24.08,29.23H7.43c-.5,0-.89-.4-.89-.89v-7.75c0-.49.4-.89.89-.89h13.43c.5,0,.9-.4.9-.9v-3.61c0-.5-.4-.9-.9-.9H7.43c-.5,0-.89-.4-.89-.89v-7.04c0-.5.4-.9.89-.9h16.11c.5,0,.9-.4.9-.89V.91c0-.5-.4-.9-.9-.9H.89C.4.01,0,.41,0,.91v32.88c0,.49.4.89.89.89h23.19c.5,0,.89-.4.89-.89v-3.66c0-.5-.4-.9-.89-.9Z"/>
+                <path class="el-logo-cls-6-svg-${el.id}" d="M27.36,34.68h4.42c.49,0,.89-.4.89-.89V12.27c0-.91,1.2-1.23,1.67-.46l13.46,22.44c.16.27.45.43.77.43h4.87c.5,0,.9-.4.9-.89V.91c0-.49-.4-.89-.9-.89h-4.42c-.5,0-.9.4-.9.89v19.93c0,.91-1.2,1.23-1.67.46L33.97.45c-.16-.27-.45-.44-.77-.44h-5.84c-.5,0-.9.4-.9.89v32.88c0,.5.4.89.9.89Z"/>
+                <path class="el-logo-cls-6-svg-${el.id}" d="M74.82,21.47h-6.9c-.6,0-1.04-.59-.85-1.17l3.47-10.47c.27-.82,1.43-.82,1.7,0l3.43,10.47c.19.58-.24,1.17-.85,1.17h-.01ZM75.08.59c-.13-.35-.46-.59-.85-.59h-5.45c-.38,0-.71.23-.83.58l-12.1,32.88c-.22.58.22,1.21.83,1.21h4.79c.38,0,.71-.24.85-.59l2.37-6.66c.12-.36.46-.59.85-.59h11.65c.38,0,.71.24.85.59l2.37,6.66c.12.36.46.59.85.59h5.05c.62,0,1.05-.62.85-1.21L75.11.58h-.02Z"/>
+                <path class="el-logo-cls-6-svg-${el.id}" d="M112.74,29.23h-16.65c-.5,0-.89-.4-.89-.89v-7.75c0-.49.4-.89.89-.89h13.43c.5,0,.89-.4.89-.9v-3.61c0-.5-.4-.9-.89-.9h-13.43c-.5,0-.89-.4-.89-.89v-7.04c0-.5.4-.9.89-.9h16.11c.5,0,.9-.4.9-.89V.91c0-.5-.4-.9-.9-.9h-22.65c-.49,0-.89.4-.89.9v32.88c0,.49.4.89.89.89h23.19c.5,0,.89-.4.89-.89v-3.66c0-.5-.4-.9-.89-.9Z"/>
+                <path class="el-logo-cls-6-svg-${el.id}" d="M89.19,40.09h23.94c.29,0,.52.23.52.52v2.62c0,.29-.23.52-.52.52h-23.94c-.29,0-.52-.23-.52-.52v-2.62c0-.29.23-.52.52-.52"/>
+              </g>
+            </g>
+          </g>
+        </svg>
+      </g>
+      `;
     } else {
-      svgContent += `<foreignObject width="${el.w}" height="${el.h}"><div xmlns="http://www.w3.org/1999/xhtml" style="font-family:Barlow,sans-serif;font-size:13px;color:${el.color||'#fff'};background:${el.bg||'transparent'};width:100%;height:100%;padding:10px">${escXML(JSON.stringify({type:el.type}))}</div></foreignObject>`;
+      svgContent += `<foreignObject width="${el.w}" height="${el.h}"><div xmlns="http://www.w3.org/1999/xhtml" style="width:100%;height:100%;box-sizing:border-box;--font-display:'SF UI Display',sans-serif;--font-sans:'Open Sans',sans-serif">${buildHTML(el)}</div></foreignObject>`;
     }
     svgContent += `</g>`;
   });
@@ -1595,7 +2380,96 @@ function exportHTML() {
   deselectAll();
   const inf = document.getElementById('infographic');
   const snapshot = inf.outerHTML;
-  const fullHTML = `<!DOCTYPE html><html><head><meta charset="UTF-8"><link href="https://fonts.googleapis.com/css2?family=Barlow:ital,wght@0,300;0,400;0,600;0,700;0,900&family=Barlow+Condensed:wght@300;400;700;900&display=swap" rel="stylesheet"><style>body{margin:0;background:#111;display:flex;align-items:center;justify-content:center;min-height:100vh}.inf-element{position:absolute}.el-heading{font-family:'Barlow Condensed',sans-serif;font-weight:900;text-transform:uppercase;line-height:1.05}.el-subheading{font-family:Barlow,sans-serif;font-weight:300;line-height:1.3}.el-body-text{font-family:Barlow,sans-serif;font-weight:400;line-height:1.55}.el-label-text{font-family:'Barlow Condensed',sans-serif;font-weight:700;letter-spacing:2px;text-transform:uppercase}.el-stat-block{display:flex;flex-direction:column;align-items:flex-start;padding:16px 20px}.el-stat-number{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:56px;line-height:1}.el-stat-label{font-size:12px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;margin-top:4px;opacity:.8}.el-stat-desc{font-size:13px;font-weight:300;margin-top:8px;line-height:1.4}.el-bullet-list{list-style:none;padding:12px 16px}.el-bullet-list li{padding:5px 0 5px 18px;position:relative;font-size:14px;line-height:1.4}.el-bullet-list li::before{content:'';position:absolute;left:0;top:12px;width:8px;height:8px;border-radius:50%;background:#a91831}.el-progress-block{padding:10px 14px}.el-progress-title{font-size:13px;font-weight:700;margin-bottom:8px;text-transform:uppercase}.el-progress-track{height:10px;border-radius:5px;overflow:hidden;background:rgba(255,255,255,.15);margin-bottom:4px}.el-progress-fill{height:100%;border-radius:5px}.el-progress-label{font-size:11px;opacity:.7;display:flex;justify-content:space-between;margin-bottom:8px}.el-quote-block{padding:18px 20px 18px 28px;position:relative}.el-quote-block::before{content:'"';position:absolute;left:8px;top:4px;font-size:60px;font-family:'Barlow Condensed',sans-serif;font-weight:900;opacity:.25;line-height:1}.el-quote-text{font-size:15px;font-weight:300;font-style:italic;line-height:1.5;margin-bottom:10px}.el-quote-author{font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase}.el-icon-stat{display:flex;align-items:center;gap:12px;padding:12px 16px}.el-icon-stat .icon-box{width:44px;height:44px;display:flex;align-items:center;justify-content:center;font-size:22px;border-radius:3px}.el-icon-stat .icon-val{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:28px;line-height:1}.el-icon-stat .icon-lbl{font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;opacity:.8}.el-logo-block{display:flex;align-items:center;justify-content:center;flex-direction:column;gap:4px;padding:16px}.el-logo-enae{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:48px;letter-spacing:4px;line-height:1}.el-logo-sub{font-size:11px;font-weight:700;letter-spacing:3px;text-transform:uppercase}.el-logo-bar{width:40px;height:3px;margin-top:4px;align-self:flex-end}.resize-handle{display:none}.canvas-watermark{position:absolute;font-family:'Barlow Condensed',sans-serif;font-weight:900;letter-spacing:8px;opacity:.04;pointer-events:none}</style></head><body>${snapshot}</body></html>`;
+  const fullHTML = `<!DOCTYPE html><html><head><meta charset="UTF-8"><style>
+  @font-face {
+    font-family: 'Open Sans';
+    src: url('src/fonts/Open%20Sans/OpenSans.ttf') format('truetype');
+    font-weight: 400;
+    font-style: normal;
+  }
+  @font-face {
+    font-family: 'Open Sans';
+    src: url('src/fonts/Open%20Sans/OpenSans-Bold.ttf') format('truetype');
+    font-weight: 700;
+    font-style: normal;
+  }
+  @font-face {
+    font-family: 'Open Sans';
+    src: url('src/fonts/Open%20Sans/OpenSans-Light.ttf') format('truetype');
+    font-weight: 300;
+    font-style: normal;
+  }
+  @font-face {
+    font-family: 'Open Sans';
+    src: url('src/fonts/Open%20Sans/OpenSans-ExtraBold.ttf') format('truetype');
+    font-weight: 800;
+    font-style: normal;
+  }
+
+  @font-face {
+    font-family: 'SF UI Display';
+    src: url('src/fonts/SF%20UI%20Display/SFUIDisplay-Regular.otf') format('opentype');
+    font-weight: 400;
+    font-style: normal;
+  }
+  @font-face {
+    font-family: 'SF UI Display';
+    src: url('src/fonts/SF%20UI%20Display/SFUIDisplay-Bold.otf') format('opentype');
+    font-weight: 700;
+    font-style: normal;
+  }
+  @font-face {
+    font-family: 'SF UI Display';
+    src: url('src/fonts/SF%20UI%20Display/SFUIDisplay-Light.otf') format('opentype');
+    font-weight: 300;
+    font-style: normal;
+  }
+  @font-face {
+    font-family: 'SF UI Display';
+    src: url('src/fonts/SF%20UI%20Display/SFUIDisplay-Thin.otf') format('opentype');
+    font-weight: 200;
+    font-style: normal;
+  }
+  @font-face {
+    font-family: 'SF UI Display';
+    src: url('src/fonts/SF%20UI%20Display/SFUIDisplay-Ultralight.otf') format('opentype');
+    font-weight: 100;
+    font-style: normal;
+  }
+
+  body{margin:0;background:#111;display:flex;align-items:center;justify-content:center;min-height:100vh}
+  .inf-element{position:absolute}
+  .el-heading{font-family:'SF UI Display',sans-serif;font-weight:900;text-transform:uppercase;line-height:1.05}
+  .el-subheading{font-family:'Open Sans',sans-serif;font-weight:300;line-height:1.3}
+  .el-body-text{font-family:'Open Sans',sans-serif;font-weight:400;line-height:1.55}
+  .el-label-text{font-family:'SF UI Display',sans-serif;font-weight:700;letter-spacing:2px;text-transform:uppercase}
+  .el-stat-block{display:flex;flex-direction:column;align-items:flex-start;padding:16px 20px}
+  .el-stat-number{font-family:'SF UI Display',sans-serif;font-weight:900;font-size:56px;line-height:1}
+  .el-stat-label{font-family:'SF UI Display',sans-serif;font-size:12px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;margin-top:4px;opacity:.8}
+  .el-stat-desc{font-family:'Open Sans',sans-serif;font-size:13px;font-weight:300;margin-top:8px;line-height:1.4}
+  .el-bullet-list{list-style:none;padding:12px 16px}
+  .el-bullet-list li{font-family:'Open Sans',sans-serif;padding:5px 0 5px 18px;position:relative;font-size:14px;line-height:1.4}
+  .el-bullet-list li::before{content:'';position:absolute;left:0;top:12px;width:8px;height:8px;border-radius:50%;background:#a91831}
+  .el-progress-block{padding:10px 14px}
+  .el-progress-title{font-family:'SF UI Display',sans-serif;font-size:13px;font-weight:700;margin-bottom:8px;text-transform:uppercase}
+  .el-progress-track{height:10px;border-radius:5px;overflow:hidden;background:rgba(255,255,255,.15);margin-bottom:4px}
+  .el-progress-fill{height:100%;border-radius:5px}
+  .el-progress-label{font-family:'Open Sans',sans-serif;font-size:11px;opacity:.7;display:flex;justify-content:space-between;margin-bottom:8px}
+  .el-quote-block{padding:18px 20px 18px 28px;position:relative}
+  .el-quote-block::before{content:'"';position:absolute;left:8px;top:4px;font-size:60px;font-family:'SF UI Display',sans-serif;font-weight:900;opacity:.25;line-height:1}
+  .el-quote-text{font-family:'Open Sans',sans-serif;font-size:15px;font-weight:300;font-style:italic;line-height:1.5;margin-bottom:10px}
+  .el-quote-author{font-family:'SF UI Display',sans-serif;font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase}
+  .el-icon-stat{display:flex;align-items:center;gap:12px;padding:12px 16px}
+  .el-icon-stat .icon-box{width:44px;height:44px;display:flex;align-items:center;justify-content:center;font-size:22px;border-radius:3px}
+  .el-icon-stat .icon-val{font-family:'SF UI Display',sans-serif;font-weight:900;font-size:28px;line-height:1}
+  .el-icon-stat .icon-lbl{font-family:'SF UI Display',sans-serif;font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;opacity:.8}
+  .el-logo-block{display:flex;align-items:center;justify-content:center;flex-direction:column;gap:4px;padding:16px}
+  .el-logo-enae{font-family:'SF UI Display',sans-serif;font-weight:900;font-size:48px;letter-spacing:4px;line-height:1}
+  .el-logo-sub{font-family:'SF UI Display',sans-serif;font-size:11px;font-weight:700;letter-spacing:3px;text-transform:uppercase}
+  .el-logo-bar{width:40px;height:3px;margin-top:4px;align-self:flex-end}
+  .resize-handle{display:none}
+  .canvas-watermark{position:absolute;font-family:'SF UI Display',sans-serif;font-weight:900;letter-spacing:8px;opacity:.04;pointer-events:none}
+</style></head><body>${snapshot}</body></html>`;
   const blob = new Blob([fullHTML], {type:'text/html'});
   const a = document.createElement('a');
   a.download = 'enae-infografia.html';
