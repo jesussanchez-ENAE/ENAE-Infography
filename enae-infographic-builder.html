@@ -1,0 +1,1654 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ENAE Infographic Builder</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow:ital,wght@0,300;0,400;0,600;0,700;0,900;1,700&family=Barlow+Condensed:wght@300;400;700;900&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<style>
+  /* ============================================
+     ENAE BRAND TOKENS
+     Primary:   #a91831  (Pantone 7627C)
+     Dark:      #202221  (Pantone 419C)
+     Light:     #dee5ec  (Pantone 656C)
+     Font:      SF UI Display → Barlow (closest web match)
+  ============================================ */
+  :root {
+    --enae-red:    #a91831;
+    --enae-red-dark: #8a1228;
+    --enae-dark:   #202221;
+    --enae-light:  #dee5ec;
+    --enae-white:  #ffffff;
+    --enae-gray:   #6b7280;
+    --enae-gray-light: #f4f6f8;
+    --radius: 4px;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Barlow', sans-serif;
+    background: #1a1a1a;
+    color: var(--enae-dark);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* ── TOP BAR ── */
+  .topbar {
+    background: var(--enae-dark);
+    padding: 12px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 3px solid var(--enae-red);
+    flex-shrink: 0;
+  }
+  .topbar-logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .logo-mark {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 900;
+    font-size: 22px;
+    color: var(--enae-white);
+    letter-spacing: 2px;
+  }
+  .logo-mark span {
+    color: var(--enae-red);
+  }
+  .logo-sub {
+    font-size: 9px;
+    color: var(--enae-light);
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    border-left: 2px solid var(--enae-red);
+    padding-left: 8px;
+    line-height: 1.3;
+  }
+  .topbar-title {
+    color: var(--enae-light);
+    font-size: 13px;
+    font-weight: 300;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+
+  /* ── MAIN LAYOUT ── */
+  .app {
+    flex: 1;
+    display: flex;
+    overflow: hidden;
+    height: calc(100vh - 55px);
+  }
+
+  /* ── LEFT PANEL ── */
+  .panel {
+    width: 320px;
+    background: #252525;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    flex-shrink: 0;
+  }
+  .panel-tabs {
+    display: flex;
+    background: #1e1e1e;
+    border-bottom: 1px solid #333;
+  }
+  .panel-tab {
+    flex: 1;
+    padding: 10px 6px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    color: #888;
+    cursor: pointer;
+    border: none;
+    background: none;
+    transition: all .2s;
+    border-bottom: 2px solid transparent;
+  }
+  .panel-tab.active {
+    color: var(--enae-white);
+    border-bottom-color: var(--enae-red);
+  }
+  .panel-body {
+    flex: 1;
+    overflow-y: auto;
+    padding: 16px;
+  }
+  .panel-body::-webkit-scrollbar { width: 4px; }
+  .panel-body::-webkit-scrollbar-track { background: #1e1e1e; }
+  .panel-body::-webkit-scrollbar-thumb { background: #444; border-radius: 2px; }
+
+  /* Tab sections */
+  .tab-section { display: none; }
+  .tab-section.active { display: block; }
+
+  /* Form elements */
+  .field-group { margin-bottom: 16px; }
+  .field-label {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: #aaa;
+    margin-bottom: 6px;
+    display: block;
+  }
+  .field-input, .field-select, .field-textarea {
+    width: 100%;
+    background: #1e1e1e;
+    border: 1px solid #3a3a3a;
+    border-radius: var(--radius);
+    color: var(--enae-white);
+    font-family: 'Barlow', sans-serif;
+    font-size: 13px;
+    padding: 8px 10px;
+    outline: none;
+    transition: border-color .2s;
+  }
+  .field-input:focus, .field-select:focus, .field-textarea:focus {
+    border-color: var(--enae-red);
+  }
+  .field-textarea { resize: vertical; min-height: 70px; }
+  .field-select { cursor: pointer; }
+
+  /* Color picker row */
+  .color-row {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-top: 6px;
+  }
+  .color-swatch {
+    width: 28px;
+    height: 28px;
+    border-radius: 3px;
+    cursor: pointer;
+    border: 2px solid transparent;
+    transition: transform .15s, border-color .15s;
+  }
+  .color-swatch:hover { transform: scale(1.1); }
+  .color-swatch.selected { border-color: var(--enae-white); }
+
+  /* Section header inside panel */
+  .section-head {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--enae-red);
+    margin: 16px 0 10px;
+    padding-bottom: 4px;
+    border-bottom: 1px solid #333;
+  }
+
+  /* Block items list */
+  .block-list { display: flex; flex-direction: column; gap: 6px; }
+  .block-item {
+    background: #1e1e1e;
+    border: 1px solid #333;
+    border-radius: var(--radius);
+    padding: 8px 10px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    transition: border-color .2s, background .2s;
+    font-size: 12px;
+    color: #ccc;
+  }
+  .block-item:hover { border-color: var(--enae-red); background: #2a2020; color: var(--enae-white); }
+  .block-icon { font-size: 16px; flex-shrink: 0; }
+
+  /* Stacked items in canvas list */
+  .element-row {
+    background: #1e1e1e;
+    border: 1px solid #333;
+    border-radius: var(--radius);
+    padding: 8px 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 5px;
+    font-size: 12px;
+    color: #bbb;
+    cursor: pointer;
+  }
+  .element-row.selected { border-color: var(--enae-red); color: var(--enae-white); }
+  .element-actions { display: flex; gap: 4px; }
+  .el-btn {
+    background: none;
+    border: none;
+    color: #888;
+    cursor: pointer;
+    font-size: 13px;
+    padding: 2px 4px;
+    border-radius: 2px;
+    transition: color .15s;
+  }
+  .el-btn:hover { color: var(--enae-red); }
+
+  /* ── CANVAS AREA ── */
+  .canvas-area {
+    flex: 1;
+    background: #111;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    overflow: auto;
+    padding: 24px;
+    gap: 16px;
+  }
+
+  .canvas-toolbar {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: #252525;
+    border-radius: 6px;
+    padding: 8px 14px;
+    flex-shrink: 0;
+  }
+  .ct-label {
+    font-size: 11px;
+    color: #888;
+    font-weight: 600;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    margin-right: 4px;
+  }
+  .ct-btn {
+    background: #333;
+    border: 1px solid #444;
+    color: #ccc;
+    padding: 6px 12px;
+    font-size: 12px;
+    font-family: 'Barlow', sans-serif;
+    border-radius: 3px;
+    cursor: pointer;
+    transition: all .15s;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+  }
+  .ct-btn:hover { background: #444; color: #fff; }
+  .ct-btn.primary {
+    background: var(--enae-red);
+    border-color: var(--enae-red);
+    color: #fff;
+  }
+  .ct-btn.primary:hover { background: var(--enae-red-dark); }
+  .ct-sep { width: 1px; height: 22px; background: #444; }
+
+  #canvas-wrapper {
+    position: relative;
+    flex-shrink: 0;
+    box-shadow: 0 8px 40px rgba(0,0,0,.6);
+  }
+
+  /* ── INFOGRAPHIC CANVAS ── */
+  #infographic {
+    position: relative;
+    overflow: hidden;
+    user-select: none;
+    font-family: 'Barlow', sans-serif;
+  }
+
+  /* Selection outline */
+  .el-selected-ring {
+    outline: 2px dashed var(--enae-red);
+    outline-offset: 2px;
+  }
+
+  /* ── ELEMENTS ── */
+  .inf-element {
+    position: absolute;
+    cursor: move;
+  }
+  .inf-element:hover .element-handle { opacity: 1; }
+
+  /* Resize handle */
+  .resize-handle {
+    position: absolute;
+    bottom: -5px;
+    right: -5px;
+    width: 12px;
+    height: 12px;
+    background: var(--enae-red);
+    border-radius: 50%;
+    cursor: se-resize;
+    z-index: 10;
+    display: none;
+  }
+  .inf-element.selected .resize-handle { display: block; }
+
+  /* TEXT elements */
+  .el-heading {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 900;
+    line-height: 1.05;
+    text-transform: uppercase;
+  }
+  .el-subheading {
+    font-family: 'Barlow', sans-serif;
+    font-weight: 300;
+    line-height: 1.3;
+  }
+  .el-body-text {
+    font-family: 'Barlow', sans-serif;
+    font-weight: 400;
+    line-height: 1.55;
+  }
+  .el-label-text {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+
+  /* STAT BLOCK */
+  .el-stat-block {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 16px 20px;
+  }
+  .el-stat-number {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 900;
+    font-size: 56px;
+    line-height: 1;
+  }
+  .el-stat-label {
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    margin-top: 4px;
+    opacity: .8;
+  }
+  .el-stat-desc {
+    font-size: 13px;
+    font-weight: 300;
+    margin-top: 8px;
+    line-height: 1.4;
+  }
+
+  /* DIVIDER */
+  .el-divider-h { width: 100%; border: none; }
+  .el-divider-v { height: 100%; width: 3px; }
+
+  /* ACCENT BAR */
+  .el-accent-bar {}
+
+  /* BULLET LIST */
+  .el-bullet-list { list-style: none; padding: 12px 16px; }
+  .el-bullet-list li {
+    padding: 5px 0 5px 18px;
+    position: relative;
+    font-size: 14px;
+    line-height: 1.4;
+    font-weight: 400;
+  }
+  .el-bullet-list li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 12px;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--enae-red);
+  }
+
+  /* ICON STAT ROW */
+  .el-icon-stat {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 16px;
+  }
+  .el-icon-stat .icon-box {
+    width: 44px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    flex-shrink: 0;
+    border-radius: 3px;
+  }
+  .el-icon-stat .icon-info {}
+  .el-icon-stat .icon-val {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 900;
+    font-size: 28px;
+    line-height: 1;
+  }
+  .el-icon-stat .icon-lbl {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    opacity: .8;
+  }
+
+  /* PROGRESS BAR */
+  .el-progress-block { padding: 10px 14px; }
+  .el-progress-title {
+    font-size: 13px;
+    font-weight: 700;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .el-progress-track {
+    height: 10px;
+    border-radius: 5px;
+    overflow: hidden;
+    background: rgba(255,255,255,.15);
+    margin-bottom: 10px;
+  }
+  .el-progress-fill {
+    height: 100%;
+    border-radius: 5px;
+    transition: width .3s;
+  }
+  .el-progress-label {
+    font-size: 11px;
+    opacity: .7;
+    display: flex;
+    justify-content: space-between;
+    margin-top: -6px;
+    margin-bottom: 8px;
+  }
+
+  /* QUOTE */
+  .el-quote-block {
+    padding: 18px 20px 18px 28px;
+    position: relative;
+  }
+  .el-quote-block::before {
+    content: '"';
+    position: absolute;
+    left: 8px;
+    top: 4px;
+    font-size: 60px;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 900;
+    opacity: .25;
+    line-height: 1;
+  }
+  .el-quote-text {
+    font-size: 15px;
+    font-weight: 300;
+    font-style: italic;
+    line-height: 1.5;
+    margin-bottom: 10px;
+  }
+  .el-quote-author {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+  }
+
+  /* LOGO BLOCK */
+  .el-logo-block {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 4px;
+    padding: 16px;
+  }
+  .el-logo-enae {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 900;
+    font-size: 48px;
+    letter-spacing: 4px;
+    line-height: 1;
+  }
+  .el-logo-sub {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+  }
+  .el-logo-bar {
+    width: 40px;
+    height: 3px;
+    margin-top: 4px;
+    align-self: flex-end;
+  }
+
+  /* SHAPE elements */
+  .el-shape-rect {}
+  .el-shape-triangle {
+    width: 0 !important;
+    height: 0 !important;
+  }
+  .el-shape-circle { border-radius: 50%; }
+
+  /* WATERMARK (ghost ENAE behind) */
+  .canvas-watermark {
+    position: absolute;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 900;
+    letter-spacing: 8px;
+    opacity: .04;
+    pointer-events: none;
+    user-select: none;
+    color: inherit;
+  }
+
+  /* ── RIGHT PROPS PANEL ── */
+  .props-panel {
+    width: 240px;
+    background: #252525;
+    overflow-y: auto;
+    padding: 14px;
+    flex-shrink: 0;
+    border-left: 1px solid #333;
+  }
+  .props-panel::-webkit-scrollbar { width: 4px; }
+  .props-panel::-webkit-scrollbar-track { background: #1e1e1e; }
+  .props-panel::-webkit-scrollbar-thumb { background: #444; border-radius: 2px; }
+
+  .props-title {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--enae-red);
+    margin-bottom: 12px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid #333;
+  }
+  .props-empty {
+    font-size: 12px;
+    color: #555;
+    text-align: center;
+    padding: 30px 0;
+    line-height: 1.6;
+  }
+  .prop-row {
+    margin-bottom: 12px;
+  }
+  .prop-label {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    color: #888;
+    display: block;
+    margin-bottom: 5px;
+  }
+  .prop-input, .prop-select {
+    width: 100%;
+    background: #1e1e1e;
+    border: 1px solid #3a3a3a;
+    border-radius: var(--radius);
+    color: var(--enae-white);
+    font-family: 'Barlow', sans-serif;
+    font-size: 12px;
+    padding: 6px 8px;
+    outline: none;
+  }
+  .prop-input:focus, .prop-select:focus { border-color: var(--enae-red); }
+  .prop-row-2 { display: flex; gap: 8px; }
+  .prop-row-2 .prop-row { flex: 1; margin-bottom: 0; }
+  .prop-color-input {
+    width: 100%;
+    height: 32px;
+    border: 1px solid #3a3a3a;
+    border-radius: var(--radius);
+    padding: 2px;
+    background: #1e1e1e;
+    cursor: pointer;
+  }
+  .prop-delete-btn {
+    width: 100%;
+    background: #3a1818;
+    border: 1px solid #6b2020;
+    color: #ff8080;
+    padding: 7px;
+    border-radius: var(--radius);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+    margin-top: 16px;
+    transition: background .15s;
+    font-family: 'Barlow', sans-serif;
+  }
+  .prop-delete-btn:hover { background: #5a2020; }
+
+  /* Slider */
+  input[type=range] {
+    width: 100%;
+    accent-color: var(--enae-red);
+  }
+
+  /* ── EXPORT OVERLAY ── */
+  .overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,.7);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 999;
+  }
+  .overlay.show { display: flex; }
+  .overlay-box {
+    background: #252525;
+    border: 1px solid #444;
+    border-radius: 8px;
+    padding: 28px 32px;
+    min-width: 340px;
+    max-width: 480px;
+  }
+  .overlay-title {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 900;
+    font-size: 22px;
+    color: var(--enae-white);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: 4px;
+  }
+  .overlay-sub { font-size: 12px; color: #888; margin-bottom: 20px; }
+  .export-options { display: flex; flex-direction: column; gap: 10px; }
+  .export-opt {
+    background: #1e1e1e;
+    border: 1px solid #3a3a3a;
+    border-radius: 5px;
+    padding: 12px 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    cursor: pointer;
+    transition: border-color .2s;
+  }
+  .export-opt:hover { border-color: var(--enae-red); }
+  .export-opt-icon { font-size: 22px; }
+  .export-opt-info {}
+  .export-opt-name { font-size: 14px; font-weight: 700; color: var(--enae-white); }
+  .export-opt-desc { font-size: 11px; color: #888; margin-top: 2px; }
+  .overlay-close {
+    width: 100%;
+    margin-top: 16px;
+    background: none;
+    border: 1px solid #444;
+    color: #888;
+    padding: 8px;
+    border-radius: var(--radius);
+    cursor: pointer;
+    font-size: 12px;
+    font-family: 'Barlow', sans-serif;
+    transition: border-color .15s, color .15s;
+  }
+  .overlay-close:hover { border-color: #666; color: #ccc; }
+
+  /* Templates grid */
+  .templates-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+  .tpl-card {
+    background: #1e1e1e;
+    border: 1px solid #333;
+    border-radius: 4px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: border-color .2s;
+  }
+  .tpl-card:hover { border-color: var(--enae-red); }
+  .tpl-preview {
+    height: 70px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+  }
+  .tpl-name {
+    padding: 6px 8px;
+    font-size: 11px;
+    font-weight: 600;
+    color: #ccc;
+    border-top: 1px solid #2a2a2a;
+    text-align: center;
+    letter-spacing: 0.5px;
+  }
+
+  /* Tooltip */
+  [title] { position: relative; }
+
+  /* Scrollbar */
+  .canvas-area::-webkit-scrollbar { width: 6px; height: 6px; }
+  .canvas-area::-webkit-scrollbar-track { background: #111; }
+  .canvas-area::-webkit-scrollbar-thumb { background: #333; border-radius: 3px; }
+</style>
+</head>
+<body>
+
+<!-- TOP BAR -->
+<div class="topbar">
+  <div class="topbar-logo">
+    <div class="logo-mark">EN<span>AE</span></div>
+    <div class="logo-sub">International<br>Business School</div>
+  </div>
+  <div class="topbar-title">Infographic Builder · Brand Edition</div>
+  <div style="width:160px;"></div>
+</div>
+
+<!-- APP -->
+<div class="app">
+
+  <!-- LEFT: BLOCKS + LAYERS -->
+  <div class="panel">
+    <div class="panel-tabs">
+      <button class="panel-tab active" onclick="switchTab('blocks',this)">Bloques</button>
+      <button class="panel-tab" onclick="switchTab('templates',this)">Plantillas</button>
+      <button class="panel-tab" onclick="switchTab('layers',this)">Capas</button>
+      <button class="panel-tab" onclick="switchTab('canvas',this)">Canvas</button>
+    </div>
+    <div class="panel-body">
+
+      <!-- BLOCKS TAB -->
+      <div class="tab-section active" id="tab-blocks">
+        <div class="section-head">Tipografía</div>
+        <div class="block-list">
+          <div class="block-item" onclick="addElement('heading')"><span class="block-icon">𝗛</span> Título principal</div>
+          <div class="block-item" onclick="addElement('subheading')"><span class="block-icon">𝗦</span> Subtítulo</div>
+          <div class="block-item" onclick="addElement('body')"><span class="block-icon">¶</span> Texto cuerpo</div>
+          <div class="block-item" onclick="addElement('label')"><span class="block-icon">𝗟</span> Etiqueta / Label</div>
+        </div>
+
+        <div class="section-head">Datos & Stats</div>
+        <div class="block-list">
+          <div class="block-item" onclick="addElement('stat')"><span class="block-icon">📊</span> Bloque de cifra</div>
+          <div class="block-item" onclick="addElement('iconstat')"><span class="block-icon">🏷</span> Icono + dato</div>
+          <div class="block-item" onclick="addElement('progress')"><span class="block-icon">▬</span> Barra de progreso</div>
+          <div class="block-item" onclick="addElement('bulletlist')"><span class="block-icon">≡</span> Lista de puntos</div>
+        </div>
+
+        <div class="section-head">Estructurales</div>
+        <div class="block-list">
+          <div class="block-item" onclick="addElement('accentbar')"><span class="block-icon">▌</span> Barra de acento</div>
+          <div class="block-item" onclick="addElement('divider')"><span class="block-icon">─</span> Divisor horizontal</div>
+          <div class="block-item" onclick="addElement('quote')"><span class="block-icon">❝</span> Cita destacada</div>
+          <div class="block-item" onclick="addElement('logo')"><span class="block-icon">🅴</span> Logo ENAE</div>
+        </div>
+
+        <div class="section-head">Formas</div>
+        <div class="block-list">
+          <div class="block-item" onclick="addElement('rect')"><span class="block-icon">▪</span> Rectángulo</div>
+          <div class="block-item" onclick="addElement('circle')"><span class="block-icon">●</span> Círculo</div>
+        </div>
+      </div>
+
+      <!-- TEMPLATES TAB -->
+      <div class="tab-section" id="tab-templates">
+        <div class="section-head">Plantillas ENAE</div>
+        <div class="templates-grid">
+          <div class="tpl-card" onclick="loadTemplate('stat4')">
+            <div class="tpl-preview" style="background:var(--enae-red)">📊</div>
+            <div class="tpl-name">4 KPIs</div>
+          </div>
+          <div class="tpl-card" onclick="loadTemplate('cover')">
+            <div class="tpl-preview" style="background:var(--enae-dark)">🎯</div>
+            <div class="tpl-name">Portada</div>
+          </div>
+          <div class="tpl-card" onclick="loadTemplate('list')">
+            <div class="tpl-preview" style="background:#2a2a2a">≡</div>
+            <div class="tpl-name">Lista + dato</div>
+          </div>
+          <div class="tpl-card" onclick="loadTemplate('progress3')">
+            <div class="tpl-preview" style="background:var(--enae-red)">▬▬▬</div>
+            <div class="tpl-name">Barras %</div>
+          </div>
+          <div class="tpl-card" onclick="loadTemplate('quote')">
+            <div class="tpl-preview" style="background:var(--enae-dark)">❝</div>
+            <div class="tpl-name">Cita</div>
+          </div>
+          <div class="tpl-card" onclick="clearCanvas()">
+            <div class="tpl-preview" style="background:#1a1a1a;color:#555">✕</div>
+            <div class="tpl-name">Limpiar</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- LAYERS TAB -->
+      <div class="tab-section" id="tab-layers">
+        <div class="section-head">Capas del canvas</div>
+        <div id="layers-list"><p style="font-size:12px;color:#555;padding:10px 0">No hay elementos.</p></div>
+      </div>
+
+      <!-- CANVAS SETTINGS TAB -->
+      <div class="tab-section" id="tab-canvas">
+        <div class="section-head">Formato</div>
+        <div class="field-group">
+          <label class="field-label">Formato</label>
+          <select class="field-select" id="canvas-format" onchange="applyFormat()">
+            <option value="a4-v">A4 Vertical (infografía)</option>
+            <option value="a4-h">A4 Horizontal (presentación)</option>
+            <option value="square">Cuadrado (redes sociales)</option>
+            <option value="story">Story / Vertical (RRSS)</option>
+            <option value="banner">Banner horizontal</option>
+          </select>
+        </div>
+        <div class="field-group">
+          <label class="field-label">Fondo</label>
+          <div class="color-row">
+            <div class="color-swatch selected" style="background:#a91831" onclick="setBg('#a91831',this)"></div>
+            <div class="color-swatch" style="background:#202221" onclick="setBg('#202221',this)"></div>
+            <div class="color-swatch" style="background:#ffffff;border:1px solid #555" onclick="setBg('#ffffff',this)"></div>
+            <div class="color-swatch" style="background:#dee5ec" onclick="setBg('#dee5ec',this)"></div>
+            <div class="color-swatch" style="background:#1a1a2e" onclick="setBg('#1a1a2e',this)"></div>
+            <div class="color-swatch" style="background:#f4f6f8;border:1px solid #555" onclick="setBg('#f4f6f8',this)"></div>
+          </div>
+          <input type="color" class="prop-color-input" id="bg-custom" style="margin-top:8px" onchange="setBg(this.value,null)">
+        </div>
+
+        <div class="section-head">Watermark</div>
+        <div class="field-group">
+          <label class="field-label">Mostrar fondo ENAE</label>
+          <select class="field-select" id="watermark-toggle" onchange="toggleWatermark()">
+            <option value="1">Sí</option>
+            <option value="0">No</option>
+          </select>
+        </div>
+      </div>
+
+    </div><!-- /panel-body -->
+  </div><!-- /panel -->
+
+  <!-- CENTER: CANVAS -->
+  <div class="canvas-area">
+    <div class="canvas-toolbar">
+      <span class="ct-label">Zoom</span>
+      <button class="ct-btn" onclick="zoom(-0.1)">−</button>
+      <span id="zoom-label" style="color:#ccc;font-size:12px;min-width:38px;text-align:center">100%</span>
+      <button class="ct-btn" onclick="zoom(+0.1)">+</button>
+      <div class="ct-sep"></div>
+      <button class="ct-btn" onclick="deselectAll()">Deselect</button>
+      <button class="ct-btn" onclick="deleteSelected()">🗑 Eliminar</button>
+      <div class="ct-sep"></div>
+      <button class="ct-btn primary" onclick="document.getElementById('export-overlay').classList.add('show')">⬇ Exportar</button>
+    </div>
+
+    <div id="canvas-wrapper">
+      <div id="infographic">
+        <div class="canvas-watermark" id="canvas-wm"></div>
+        <!-- elements injected here -->
+      </div>
+    </div>
+  </div>
+
+  <!-- RIGHT: PROPS -->
+  <div class="props-panel" id="props-panel">
+    <div class="props-title">Propiedades</div>
+    <div id="props-content">
+      <p class="props-empty">Selecciona un elemento para editar sus propiedades.</p>
+    </div>
+  </div>
+
+</div><!-- /app -->
+
+<!-- EXPORT OVERLAY -->
+<div class="overlay" id="export-overlay">
+  <div class="overlay-box">
+    <div class="overlay-title">Exportar</div>
+    <div class="overlay-sub">Elige el formato de salida</div>
+    <div class="export-options">
+      <div class="export-opt" onclick="exportPNG()">
+        <div class="export-opt-icon">🖼</div>
+        <div class="export-opt-info">
+          <div class="export-opt-name">PNG — Alta resolución</div>
+          <div class="export-opt-desc">Imagen de alta calidad, ideal para impresión digital</div>
+        </div>
+      </div>
+      <div class="export-opt" onclick="exportSVG()">
+        <div class="export-opt-icon">✏️</div>
+        <div class="export-opt-info">
+          <div class="export-opt-name">SVG — Vectorial</div>
+          <div class="export-opt-desc">Formato vectorial editable, escalable sin pérdida</div>
+        </div>
+      </div>
+      <div class="export-opt" onclick="exportHTML()">
+        <div class="export-opt-icon">🌐</div>
+        <div class="export-opt-info">
+          <div class="export-opt-name">HTML — Web embebible</div>
+          <div class="export-opt-desc">Listo para insertar en web o email</div>
+        </div>
+      </div>
+      <div class="export-opt" onclick="exportJSON()">
+        <div class="export-opt-icon">💾</div>
+        <div class="export-opt-info">
+          <div class="export-opt-name">JSON — Guardar proyecto</div>
+          <div class="export-opt-desc">Guarda y recupera tu diseño más tarde</div>
+        </div>
+      </div>
+    </div>
+    <button class="overlay-close" onclick="document.getElementById('export-overlay').classList.remove('show')">Cancelar</button>
+  </div>
+</div>
+
+<script>
+// ============================================================
+//  STATE
+// ============================================================
+let elements = [];
+let selectedId = null;
+let zoomLevel = 1;
+let canvasW = 595, canvasH = 842; // A4 vertical default
+let canvasBg = '#a91831';
+let idCounter = 0;
+
+// Drag state
+let dragging = false;
+let dragEl = null;
+let dragOffX = 0, dragOffY = 0;
+
+// Resize state
+let resizing = false;
+let resizeEl = null;
+let resizeStartX = 0, resizeStartY = 0;
+let resizeStartW = 0, resizeStartH = 0;
+
+// ============================================================
+//  INIT
+// ============================================================
+window.addEventListener('DOMContentLoaded', () => {
+  applyFormat();
+  setBg('#a91831', document.querySelector('.color-swatch'));
+  loadTemplate('cover');
+  updateWatermark();
+});
+
+// ============================================================
+//  CANVAS FORMAT & BG
+// ============================================================
+const formats = {
+  'a4-v':    [595, 842],
+  'a4-h':    [842, 595],
+  'square':  [600, 600],
+  'story':   [540, 960],
+  'banner':  [900, 300],
+};
+function applyFormat() {
+  const fmt = document.getElementById('canvas-format').value;
+  [canvasW, canvasH] = formats[fmt];
+  const inf = document.getElementById('infographic');
+  inf.style.width  = canvasW + 'px';
+  inf.style.height = canvasH + 'px';
+  updateWatermark();
+}
+function setBg(color, swatchEl) {
+  canvasBg = color;
+  document.getElementById('infographic').style.background = color;
+  document.querySelectorAll('.color-swatch').forEach(s => s.classList.remove('selected'));
+  if (swatchEl) swatchEl.classList.add('selected');
+}
+function toggleWatermark() {
+  updateWatermark();
+}
+function updateWatermark() {
+  const show = document.getElementById('watermark-toggle').value === '1';
+  const wm = document.getElementById('canvas-wm');
+  if (show) {
+    wm.textContent = 'ENAE';
+    wm.style.fontSize = Math.floor(canvasW * 0.38) + 'px';
+    wm.style.right = '-5%';
+    wm.style.bottom = '-2%';
+    wm.style.color = '#ffffff';
+  } else {
+    wm.textContent = '';
+  }
+}
+
+// ============================================================
+//  ZOOM
+// ============================================================
+function zoom(delta) {
+  zoomLevel = Math.max(0.3, Math.min(2, zoomLevel + delta));
+  document.getElementById('canvas-wrapper').style.transform = `scale(${zoomLevel})`;
+  document.getElementById('canvas-wrapper').style.transformOrigin = 'top center';
+  document.getElementById('zoom-label').textContent = Math.round(zoomLevel * 100) + '%';
+}
+
+// ============================================================
+//  ELEMENT DEFAULTS
+// ============================================================
+function defaultsFor(type) {
+  const cx = Math.floor(canvasW / 2 - 160);
+  const cy = Math.floor(canvasH / 2 - 60);
+  const base = { id: ++idCounter, type, x: cx, y: cy, w: 320, h: 120, opacity: 100 };
+
+  const palette = {
+    heading:    { text: 'Título Principal', fontSize: 52, color: '#ffffff', bg: 'transparent' },
+    subheading: { text: 'Subtítulo de la infografía', fontSize: 24, color: '#dee5ec', bg: 'transparent' },
+    body:       { text: 'Texto descriptivo. Añade aquí la información que quieras comunicar de forma clara y directa.', fontSize: 14, color: '#ffffff', bg: 'transparent', w: 320, h: 100 },
+    label:      { text: 'ETIQUETA · ENAE', fontSize: 11, color: '#a91831', bg: 'transparent', h: 40 },
+    stat:       { number: '94%', label: 'Satisfacción', desc: 'de los alumnos recomendarían ENAE', color: '#ffffff', bg: '#8a1228', accent: '#a91831', w: 200, h: 150 },
+    iconstat:   { icon: '🎓', value: '1.200', label: 'Alumnos', color: '#ffffff', bg: 'rgba(169,24,49,0.25)', w: 220, h: 80 },
+    progress:   { items: [['Satisfacción',92],['Empleabilidad',88],['Internacionalización',76]], color: '#ffffff', bg: '#8a1228', accent: '#ffffff', w: 300, h: 140 },
+    bulletlist: { items: ['Punto clave uno','Punto clave dos','Punto clave tres'], color: '#ffffff', bg: 'rgba(0,0,0,0.2)', w: 260, h: 130 },
+    accentbar:  { color: '#a91831', bg: '#a91831', w: 6, h: 100, x: 40, y: cy },
+    divider:    { color: 'rgba(255,255,255,0.25)', bg: 'transparent', w: 320, h: 2, y: cy + 60 },
+    quote:      { text: 'La educación es el arma más poderosa que puedes usar para cambiar el mundo.', author: '— Nelson Mandela', color: '#ffffff', bg: 'rgba(169,24,49,0.3)', w: 300, h: 160 },
+    logo:       { color: '#ffffff', accent: '#a91831', bg: 'transparent', w: 200, h: 100 },
+    rect:       { color: 'transparent', bg: '#a91831', w: 200, h: 100 },
+    circle:     { color: 'transparent', bg: '#a91831', w: 120, h: 120 },
+  };
+  return { ...base, ...(palette[type] || {}) };
+}
+
+// ============================================================
+//  ADD ELEMENT
+// ============================================================
+function addElement(type, overrides = {}) {
+  const el = { ...defaultsFor(type), ...overrides };
+  elements.push(el);
+  renderElement(el);
+  selectElement(el.id);
+  refreshLayers();
+}
+
+// ============================================================
+//  RENDER ELEMENT
+// ============================================================
+function renderElement(el) {
+  const inf = document.getElementById('infographic');
+  let existing = document.getElementById('el-' + el.id);
+  if (existing) existing.remove();
+
+  const wrapper = document.createElement('div');
+  wrapper.id = 'el-' + el.id;
+  wrapper.className = 'inf-element';
+  wrapper.style.cssText = `
+    left:${el.x}px; top:${el.y}px;
+    width:${el.w}px; height:${el.h}px;
+    opacity:${(el.opacity||100)/100};
+    z-index:${el.z||1};
+  `;
+  wrapper.innerHTML = buildHTML(el);
+
+  // Resize handle
+  const rh = document.createElement('div');
+  rh.className = 'resize-handle';
+  wrapper.appendChild(rh);
+
+  // Events
+  wrapper.addEventListener('mousedown', (e) => {
+    if (e.target.classList.contains('resize-handle')) {
+      e.stopPropagation();
+      startResize(e, el.id);
+    } else {
+      startDrag(e, el.id);
+    }
+  });
+
+  inf.appendChild(wrapper);
+}
+
+function buildHTML(el) {
+  switch(el.type) {
+    case 'heading': return `<div class="el-heading" style="font-size:${el.fontSize}px;color:${el.color};background:${el.bg};width:100%;height:100%;display:flex;align-items:center">${el.text}</div>`;
+    case 'subheading': return `<div class="el-subheading" style="font-size:${el.fontSize}px;color:${el.color};background:${el.bg};width:100%;height:100%;display:flex;align-items:center">${el.text}</div>`;
+    case 'body': return `<div class="el-body-text" style="font-size:${el.fontSize}px;color:${el.color};background:${el.bg};width:100%;height:100%;padding:4px 0">${el.text}</div>`;
+    case 'label': return `<div class="el-label-text" style="font-size:${el.fontSize}px;color:${el.color};background:${el.bg};width:100%;height:100%;display:flex;align-items:center">${el.text}</div>`;
+
+    case 'stat': return `
+      <div class="el-stat-block" style="background:${el.bg};width:100%;height:100%;border-left:4px solid ${el.accent}">
+        <div class="el-stat-number" style="color:${el.color}">${el.number}</div>
+        <div class="el-stat-label" style="color:${el.color}">${el.label}</div>
+        ${el.desc ? `<div class="el-stat-desc" style="color:${el.color}">${el.desc}</div>` : ''}
+      </div>`;
+
+    case 'iconstat': return `
+      <div class="el-icon-stat" style="background:${el.bg};width:100%;height:100%">
+        <div class="icon-box" style="background:rgba(169,24,49,0.4)">${el.icon}</div>
+        <div class="icon-info">
+          <div class="icon-val" style="color:${el.color}">${el.value}</div>
+          <div class="icon-lbl" style="color:${el.color}">${el.label}</div>
+        </div>
+      </div>`;
+
+    case 'progress': {
+      const items = el.items || [['Item',50]];
+      const bars = items.map(([name, pct]) => `
+        <div class="el-progress-title" style="color:${el.color}">${name}</div>
+        <div class="el-progress-track">
+          <div class="el-progress-fill" style="width:${pct}%;background:${el.accent}"></div>
+        </div>
+        <div class="el-progress-label" style="color:${el.color}"><span></span><span>${pct}%</span></div>
+      `).join('');
+      return `<div class="el-progress-block" style="background:${el.bg};width:100%;height:100%">${bars}</div>`;
+    }
+
+    case 'bulletlist': {
+      const items = el.items || ['Item'];
+      const lis = items.map(i => `<li style="color:${el.color}">${i}</li>`).join('');
+      return `<ul class="el-bullet-list" style="background:${el.bg};width:100%;height:100%">${lis}</ul>`;
+    }
+
+    case 'accentbar': return `<div style="background:${el.bg};width:100%;height:100%;border-radius:2px"></div>`;
+    case 'divider':   return `<div style="background:${el.color};width:100%;height:100%"></div>`;
+
+    case 'quote': return `
+      <div class="el-quote-block" style="background:${el.bg};width:100%;height:100%">
+        <div class="el-quote-text" style="color:${el.color}">${el.text}</div>
+        <div class="el-quote-author" style="color:${el.color};opacity:.7">${el.author||''}</div>
+      </div>`;
+
+    case 'logo': return `
+      <div class="el-logo-block" style="width:100%;height:100%">
+        <div class="el-logo-enae" style="color:${el.color}">${'ENAE'}</div>
+        <div class="el-logo-sub" style="color:${el.color}">International Business School</div>
+        <div class="el-logo-bar" style="background:${el.accent}"></div>
+      </div>`;
+
+    case 'rect':   return `<div style="background:${el.bg};width:100%;height:100%;border-radius:3px"></div>`;
+    case 'circle': return `<div style="background:${el.bg};width:100%;height:100%;border-radius:50%"></div>`;
+
+    default: return `<div style="color:#fff;font-size:12px;padding:8px">Elemento: ${el.type}</div>`;
+  }
+}
+
+// ============================================================
+//  DRAG
+// ============================================================
+function startDrag(e, id) {
+  e.preventDefault();
+  selectElement(id);
+  dragging = true;
+  dragEl = id;
+  const node = document.getElementById('el-' + id);
+  const scale = zoomLevel;
+  const inf = document.getElementById('infographic').getBoundingClientRect();
+  const elRect = node.getBoundingClientRect();
+  dragOffX = (e.clientX - elRect.left) / scale;
+  dragOffY = (e.clientY - elRect.top) / scale;
+}
+
+document.addEventListener('mousemove', (e) => {
+  if (dragging && dragEl !== null) {
+    const inf = document.getElementById('infographic').getBoundingClientRect();
+    const scale = zoomLevel;
+    const el = elements.find(x => x.id === dragEl);
+    if (!el) return;
+    el.x = Math.max(0, (e.clientX - inf.left) / scale - dragOffX);
+    el.y = Math.max(0, (e.clientY - inf.top)  / scale - dragOffY);
+    const node = document.getElementById('el-' + dragEl);
+    if (node) { node.style.left = el.x + 'px'; node.style.top = el.y + 'px'; }
+    refreshPropsPosition(el);
+  }
+  if (resizing && resizeEl !== null) {
+    const el = elements.find(x => x.id === resizeEl);
+    if (!el) return;
+    const scale = zoomLevel;
+    const dw = (e.clientX - resizeStartX) / scale;
+    const dh = (e.clientY - resizeStartY) / scale;
+    el.w = Math.max(30, resizeStartW + dw);
+    el.h = Math.max(20, resizeStartH + dh);
+    const node = document.getElementById('el-' + resizeEl);
+    if (node) { node.style.width = el.w + 'px'; node.style.height = el.h + 'px'; }
+  }
+});
+
+document.addEventListener('mouseup', () => {
+  if (dragging) { dragging = false; dragEl = null; }
+  if (resizing) {
+    resizing = false;
+    const el = elements.find(x => x.id === resizeEl);
+    if (el) renderElement(el); // re-render to fix proportions
+    resizeEl = null;
+  }
+});
+
+// ============================================================
+//  RESIZE
+// ============================================================
+function startResize(e, id) {
+  e.preventDefault();
+  resizing = true;
+  resizeEl = id;
+  resizeStartX = e.clientX;
+  resizeStartY = e.clientY;
+  const el = elements.find(x => x.id === id);
+  resizeStartW = el.w;
+  resizeStartH = el.h;
+}
+
+// ============================================================
+//  SELECT / DESELECT
+// ============================================================
+function selectElement(id) {
+  deselectAll();
+  selectedId = id;
+  const node = document.getElementById('el-' + id);
+  if (node) node.classList.add('selected', 'el-selected-ring');
+  renderProps(id);
+  refreshLayers();
+}
+function deselectAll() {
+  selectedId = null;
+  document.querySelectorAll('.inf-element').forEach(n => n.classList.remove('selected','el-selected-ring'));
+  document.getElementById('props-content').innerHTML = '<p class="props-empty">Selecciona un elemento para editar sus propiedades.</p>';
+  refreshLayers();
+}
+function deleteSelected() {
+  if (selectedId === null) return;
+  elements = elements.filter(x => x.id !== selectedId);
+  const node = document.getElementById('el-' + selectedId);
+  if (node) node.remove();
+  selectedId = null;
+  document.getElementById('props-content').innerHTML = '<p class="props-empty">Elemento eliminado.</p>';
+  refreshLayers();
+}
+
+// ============================================================
+//  PROPERTIES PANEL
+// ============================================================
+function renderProps(id) {
+  const el = elements.find(x => x.id === id);
+  if (!el) return;
+  const p = document.getElementById('props-content');
+
+  let html = `<div class="props-title" style="color:var(--enae-red);font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid #333">${el.type.toUpperCase()} #${el.id}</div>`;
+
+  // Position & size
+  html += `
+  <div style="font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--enae-red);margin-bottom:8px;padding-bottom:4px;border-bottom:1px solid #333">Posición & Tamaño</div>
+  <div class="prop-row-2">
+    <div class="prop-row"><label class="prop-label">X</label><input class="prop-input" type="number" value="${Math.round(el.x)}" onchange="updateProp(${id},'x',+this.value);moveTo(${id})"></div>
+    <div class="prop-row"><label class="prop-label">Y</label><input class="prop-input" type="number" value="${Math.round(el.y)}" onchange="updateProp(${id},'y',+this.value);moveTo(${id})"></div>
+  </div>
+  <div class="prop-row-2">
+    <div class="prop-row"><label class="prop-label">W</label><input class="prop-input" type="number" value="${Math.round(el.w)}" onchange="updateProp(${id},'w',+this.value);rerender(${id})"></div>
+    <div class="prop-row"><label class="prop-label">H</label><input class="prop-input" type="number" value="${Math.round(el.h)}" onchange="updateProp(${id},'h',+this.value);rerender(${id})"></div>
+  </div>
+  <div class="prop-row"><label class="prop-label">Opacidad ${el.opacity||100}%</label>
+    <input type="range" min="0" max="100" value="${el.opacity||100}" oninput="updateProp(${id},'opacity',+this.value);rerender(${id});this.previousElementSibling.textContent='Opacidad '+this.value+'%'">
+  </div>`;
+
+  // Type-specific props
+  html += `<div style="font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--enae-red);margin:12px 0 8px;padding-bottom:4px;border-bottom:1px solid #333">Contenido</div>`;
+
+  if (['heading','subheading','body','label'].includes(el.type)) {
+    html += `
+    <div class="prop-row"><label class="prop-label">Texto</label><input class="prop-input" type="text" value="${(el.text||'').replace(/"/g,'&quot;')}" oninput="updateProp(${id},'text',this.value);rerender(${id})"></div>
+    <div class="prop-row"><label class="prop-label">Tamaño fuente (px)</label><input class="prop-input" type="number" value="${el.fontSize||16}" onchange="updateProp(${id},'fontSize',+this.value);rerender(${id})"></div>
+    <div class="prop-row"><label class="prop-label">Color texto</label><input type="color" class="prop-color-input" value="${toHex(el.color)}" oninput="updateProp(${id},'color',this.value);rerender(${id})"></div>
+    `;
+  }
+  if (el.type === 'stat') {
+    html += `
+    <div class="prop-row"><label class="prop-label">Cifra</label><input class="prop-input" type="text" value="${el.number||''}" oninput="updateProp(${id},'number',this.value);rerender(${id})"></div>
+    <div class="prop-row"><label class="prop-label">Label</label><input class="prop-input" type="text" value="${el.label||''}" oninput="updateProp(${id},'label',this.value);rerender(${id})"></div>
+    <div class="prop-row"><label class="prop-label">Descripción</label><input class="prop-input" type="text" value="${el.desc||''}" oninput="updateProp(${id},'desc',this.value);rerender(${id})"></div>
+    <div class="prop-row"><label class="prop-label">Color texto</label><input type="color" class="prop-color-input" value="${toHex(el.color)}" oninput="updateProp(${id},'color',this.value);rerender(${id})"></div>
+    <div class="prop-row"><label class="prop-label">Fondo</label><input type="color" class="prop-color-input" value="${toHex(el.bg)}" oninput="updateProp(${id},'bg',this.value);rerender(${id})"></div>
+    <div class="prop-row"><label class="prop-label">Color acento</label><input type="color" class="prop-color-input" value="${toHex(el.accent||'#a91831')}" oninput="updateProp(${id},'accent',this.value);rerender(${id})"></div>
+    `;
+  }
+  if (el.type === 'iconstat') {
+    html += `
+    <div class="prop-row"><label class="prop-label">Emoji / Icono</label><input class="prop-input" type="text" value="${el.icon||''}" oninput="updateProp(${id},'icon',this.value);rerender(${id})"></div>
+    <div class="prop-row"><label class="prop-label">Valor</label><input class="prop-input" type="text" value="${el.value||''}" oninput="updateProp(${id},'value',this.value);rerender(${id})"></div>
+    <div class="prop-row"><label class="prop-label">Label</label><input class="prop-input" type="text" value="${el.label||''}" oninput="updateProp(${id},'label',this.value);rerender(${id})"></div>
+    <div class="prop-row"><label class="prop-label">Color texto</label><input type="color" class="prop-color-input" value="${toHex(el.color)}" oninput="updateProp(${id},'color',this.value);rerender(${id})"></div>
+    <div class="prop-row"><label class="prop-label">Fondo</label><input type="color" class="prop-color-input" value="${toHex(el.bg)}" oninput="updateProp(${id},'bg',this.value);rerender(${id})"></div>
+    `;
+  }
+  if (el.type === 'progress') {
+    const rows = (el.items||[]).map((item,i) => `
+      <div style="display:flex;gap:6px;margin-bottom:6px">
+        <input class="prop-input" type="text" placeholder="Nombre" value="${item[0]}" style="flex:2" oninput="updateProgressItem(${id},${i},0,this.value)">
+        <input class="prop-input" type="number" placeholder="%" value="${item[1]}" style="flex:1;max-width:56px" onchange="updateProgressItem(${id},${i},1,+this.value)">
+      </div>`).join('');
+    html += `
+    ${rows}
+    <button onclick="addProgressItem(${id})" style="width:100%;background:#333;border:1px solid #555;color:#ccc;padding:6px;border-radius:3px;cursor:pointer;font-size:12px;margin-bottom:8px">+ Añadir fila</button>
+    <div class="prop-row"><label class="prop-label">Color texto</label><input type="color" class="prop-color-input" value="${toHex(el.color)}" oninput="updateProp(${id},'color',this.value);rerender(${id})"></div>
+    <div class="prop-row"><label class="prop-label">Color barra</label><input type="color" class="prop-color-input" value="${toHex(el.accent||'#ffffff')}" oninput="updateProp(${id},'accent',this.value);rerender(${id})"></div>
+    <div class="prop-row"><label class="prop-label">Fondo</label><input type="color" class="prop-color-input" value="${toHex(el.bg)}" oninput="updateProp(${id},'bg',this.value);rerender(${id})"></div>
+    `;
+  }
+  if (el.type === 'bulletlist') {
+    const rows = (el.items||[]).map((item,i) => `
+      <input class="prop-input" type="text" value="${item}" style="margin-bottom:5px" oninput="updateBulletItem(${id},${i},this.value)">`).join('');
+    html += `
+    ${rows}
+    <button onclick="addBulletItem(${id})" style="width:100%;background:#333;border:1px solid #555;color:#ccc;padding:6px;border-radius:3px;cursor:pointer;font-size:12px;margin-bottom:8px">+ Añadir punto</button>
+    <div class="prop-row"><label class="prop-label">Color texto</label><input type="color" class="prop-color-input" value="${toHex(el.color)}" oninput="updateProp(${id},'color',this.value);rerender(${id})"></div>
+    <div class="prop-row"><label class="prop-label">Fondo</label><input type="color" class="prop-color-input" value="${toHex(el.bg)}" oninput="updateProp(${id},'bg',this.value);rerender(${id})"></div>
+    `;
+  }
+  if (el.type === 'quote') {
+    html += `
+    <div class="prop-row"><label class="prop-label">Cita</label><textarea class="prop-input" oninput="updateProp(${id},'text',this.value);rerender(${id})" style="min-height:80px">${el.text||''}</textarea></div>
+    <div class="prop-row"><label class="prop-label">Autor</label><input class="prop-input" type="text" value="${el.author||''}" oninput="updateProp(${id},'author',this.value);rerender(${id})"></div>
+    <div class="prop-row"><label class="prop-label">Color texto</label><input type="color" class="prop-color-input" value="${toHex(el.color)}" oninput="updateProp(${id},'color',this.value);rerender(${id})"></div>
+    <div class="prop-row"><label class="prop-label">Fondo</label><input type="color" class="prop-color-input" value="${toHex(el.bg)}" oninput="updateProp(${id},'bg',this.value);rerender(${id})"></div>
+    `;
+  }
+  if (['rect','circle'].includes(el.type)) {
+    html += `
+    <div class="prop-row"><label class="prop-label">Color fondo</label><input type="color" class="prop-color-input" value="${toHex(el.bg)}" oninput="updateProp(${id},'bg',this.value);rerender(${id})"></div>
+    `;
+  }
+  if (['accentbar','divider'].includes(el.type)) {
+    html += `
+    <div class="prop-row"><label class="prop-label">Color</label><input type="color" class="prop-color-input" value="${toHex(el.bg||el.color)}" oninput="updateProp(${id},'bg',this.value);updateProp(${id},'color',this.value);rerender(${id})"></div>
+    `;
+  }
+  if (el.type === 'logo') {
+    html += `
+    <div class="prop-row"><label class="prop-label">Color logo</label><input type="color" class="prop-color-input" value="${toHex(el.color)}" oninput="updateProp(${id},'color',this.value);rerender(${id})"></div>
+    <div class="prop-row"><label class="prop-label">Color acento</label><input type="color" class="prop-color-input" value="${toHex(el.accent||'#a91831')}" oninput="updateProp(${id},'accent',this.value);rerender(${id})"></div>
+    `;
+  }
+
+  html += `<button class="prop-delete-btn" onclick="deleteSelected()">🗑 Eliminar elemento</button>`;
+  p.innerHTML = html;
+}
+
+function refreshPropsPosition(el) {
+  // lightweight update of x/y in props panel inputs
+  const panel = document.getElementById('props-content');
+  const inputs = panel.querySelectorAll('input[type=number]');
+  if (inputs[0]) inputs[0].value = Math.round(el.x);
+  if (inputs[1]) inputs[1].value = Math.round(el.y);
+}
+
+function updateProp(id, key, value) {
+  const el = elements.find(x => x.id === id);
+  if (el) el[key] = value;
+}
+function rerender(id) {
+  const el = elements.find(x => x.id === id);
+  if (!el) return;
+  renderElement(el);
+  document.getElementById('el-' + id).classList.add('selected','el-selected-ring');
+}
+function moveTo(id) {
+  const el = elements.find(x => x.id === id);
+  if (!el) return;
+  const node = document.getElementById('el-' + id);
+  if (node) { node.style.left = el.x + 'px'; node.style.top = el.y + 'px'; }
+}
+function updateProgressItem(id, i, col, val) {
+  const el = elements.find(x => x.id === id);
+  if (!el) return;
+  el.items[i][col] = col === 1 ? +val : val;
+  rerender(id);
+}
+function addProgressItem(id) {
+  const el = elements.find(x => x.id === id);
+  if (!el) return;
+  el.items.push(['Nuevo',50]);
+  el.h += 40;
+  rerender(id);
+  renderProps(id);
+}
+function updateBulletItem(id, i, val) {
+  const el = elements.find(x => x.id === id);
+  if (!el) return;
+  el.items[i] = val;
+  rerender(id);
+}
+function addBulletItem(id) {
+  const el = elements.find(x => x.id === id);
+  if (!el) return;
+  el.items.push('Nuevo punto');
+  el.h += 28;
+  rerender(id);
+  renderProps(id);
+}
+
+// ============================================================
+//  LAYERS
+// ============================================================
+function refreshLayers() {
+  const list = document.getElementById('layers-list');
+  if (!elements.length) { list.innerHTML = '<p style="font-size:12px;color:#555;padding:10px 0">No hay elementos.</p>'; return; }
+  list.innerHTML = [...elements].reverse().map(el => `
+    <div class="element-row ${el.id === selectedId ? 'selected' : ''}" onclick="selectElement(${el.id})">
+      <span>${el.type} #${el.id}</span>
+      <div class="element-actions">
+        <button class="el-btn" title="Subir" onclick="event.stopPropagation();layerUp(${el.id})">↑</button>
+        <button class="el-btn" title="Bajar" onclick="event.stopPropagation();layerDown(${el.id})">↓</button>
+        <button class="el-btn" title="Eliminar" onclick="event.stopPropagation();removeEl(${el.id})">✕</button>
+      </div>
+    </div>`).join('');
+}
+function layerUp(id) {
+  const el = elements.find(x => x.id === id);
+  if (!el) return;
+  el.z = (el.z||1) + 1;
+  document.getElementById('el-' + id).style.zIndex = el.z;
+}
+function layerDown(id) {
+  const el = elements.find(x => x.id === id);
+  if (!el) return;
+  el.z = Math.max(0, (el.z||1) - 1);
+  document.getElementById('el-' + id).style.zIndex = el.z;
+}
+function removeEl(id) {
+  elements = elements.filter(x => x.id !== id);
+  const node = document.getElementById('el-' + id);
+  if (node) node.remove();
+  if (selectedId === id) { selectedId = null; document.getElementById('props-content').innerHTML = '<p class="props-empty">Elemento eliminado.</p>'; }
+  refreshLayers();
+}
+
+// ============================================================
+//  TABS
+// ============================================================
+function switchTab(name, btn) {
+  document.querySelectorAll('.tab-section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.panel-tab').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + name).classList.add('active');
+  btn.classList.add('active');
+}
+
+// ============================================================
+//  TEMPLATES
+// ============================================================
+function clearCanvas() {
+  elements = [];
+  document.querySelectorAll('.inf-element').forEach(n => n.remove());
+  deselectAll();
+}
+
+function loadTemplate(name) {
+  clearCanvas();
+  switch(name) {
+    case 'cover':
+      // Dark bg
+      setBg('#202221', null);
+      addElement('rect', { x:0, y:0, w:canvasW, h:canvasH*0.45, bg:'#a91831', z:0, opacity:100 });
+      addElement('logo',  { x:30, y:24, w:180, h:80, color:'#ffffff', accent:'#ffffff', z:2 });
+      addElement('heading', { x:30, y:canvasH*0.1, w:canvasW-60, h:100, text:'TÍTULO\nPRINCIPAL', fontSize:64, color:'#ffffff', bg:'transparent', z:2 });
+      addElement('subheading', { x:30, y:canvasH*0.32, w:canvasW-60, h:50, text:'Subtítulo descriptivo de la infografía', fontSize:20, color:'rgba(222,229,236,0.85)', bg:'transparent', z:2 });
+      addElement('accentbar', { x:30, y:canvasH*0.48, w:60, h:4, bg:'#ffffff', color:'#ffffff', z:3 });
+      addElement('body', { x:30, y:canvasH*0.52, w:canvasW-60, h:80, text:'Descripción breve del contenido. Añade aquí el contexto y los datos principales que quieres comunicar a tu audiencia.', fontSize:14, color:'#dee5ec', bg:'transparent', z:2 });
+      break;
+
+    case 'stat4':
+      setBg('#a91831', null);
+      addElement('heading', { x:30, y:30, w:canvasW-60, h:70, text:'DATOS CLAVE', fontSize:44, color:'#ffffff', bg:'transparent' });
+      addElement('accentbar', { x:30, y:110, w:60, h:3, bg:'#ffffff', color:'#ffffff' });
+      [[0,0,'94%','Satisfacción','alumnos recomendarían'],[1,0,'1.200','Estudiantes','matriculados al año'],
+       [0,1,'#10','Ranking QS','Máster IA & Data Science'],[1,1,'25+','Años','de experiencia']].forEach(([col,row,num,lbl,desc]) => {
+        addElement('stat', { x:30+col*270, y:140+row*170, w:240, h:150, number:num, label:lbl, desc:desc, color:'#ffffff', bg:'rgba(0,0,0,0.25)', accent:'#ffffff' });
+      });
+      addElement('logo', { x:canvasW-180, y:canvasH-80, w:150, h:60, color:'#ffffff', accent:'rgba(255,255,255,0.5)' });
+      break;
+
+    case 'list':
+      setBg('#202221', null);
+      addElement('rect', { x:0, y:0, w:10, h:canvasH, bg:'#a91831', z:0 });
+      addElement('heading', { x:30, y:40, w:canvasW-60, h:70, text:'PUNTOS CLAVE', fontSize:44, color:'#ffffff', bg:'transparent' });
+      addElement('stat', { x:30, y:130, w:180, h:130, number:'92%', label:'Empleabilidad', desc:'de nuestros alumnos trabajan en su sector', color:'#ffffff', bg:'#a91831', accent:'#ffffff' });
+      addElement('bulletlist', { x:240, y:130, w:310, h:220,
+        items:['Formación de alto nivel internacional','Red de más de 5.000 alumni activos','Profesorado con experiencia real en empresa','Campus en Murcia con instalaciones propias','Acuerdos con más de 200 empresas partner'],
+        color:'#ffffff', bg:'rgba(255,255,255,0.06)' });
+      addElement('divider', { x:30, y:370, w:canvasW-60, h:1, color:'rgba(222,229,236,0.2)', bg:'rgba(222,229,236,0.2)' });
+      addElement('body', { x:30, y:385, w:canvasW-60, h:60, text:'ENAE International Business School · Campus Universitario de Espinardo, Murcia', fontSize:12, color:'rgba(222,229,236,0.5)', bg:'transparent' });
+      break;
+
+    case 'progress3':
+      setBg('#a91831', null);
+      addElement('heading', { x:30, y:30, w:canvasW-60, h:60, text:'INDICADORES', fontSize:40, color:'#ffffff', bg:'transparent' });
+      addElement('subheading', { x:30, y:100, w:canvasW-60, h:36, text:'Resultados académicos y de empleabilidad 2024', fontSize:16, color:'rgba(255,255,255,0.7)', bg:'transparent' });
+      addElement('progress', { x:30, y:155, w:canvasW-60, h:250,
+        items:[['Satisfacción del alumno',94],['Tasa de empleabilidad',91],['Inserción laboral < 6 meses',83],['Recomendarían ENAE',96],['Calidad del profesorado',89]],
+        color:'#ffffff', bg:'rgba(0,0,0,0.2)', accent:'#ffffff' });
+      addElement('logo', { x:canvasW-200, y:canvasH-80, w:170, h:60, color:'#ffffff', accent:'rgba(255,255,255,0.5)' });
+      break;
+
+    case 'quote':
+      setBg('#202221', null);
+      addElement('rect', { x:0, y:0, w:canvasW, h:8, bg:'#a91831', z:0 });
+      addElement('quote', {
+        x:40, y:60, w:canvasW-80, h:200,
+        text:'La formación no es solo adquirir conocimiento. Es transformar perspectivas y crear líderes capaces de impulsar el cambio.',
+        author:'— ENAE International Business School',
+        color:'#ffffff', bg:'rgba(169,24,49,0.15)' });
+      addElement('logo', { x:canvasW/2-80, y:canvasH-100, w:160, h:70, color:'#dee5ec', accent:'#a91831' });
+      break;
+  }
+  refreshLayers();
+}
+
+// ============================================================
+//  EXPORT
+// ============================================================
+function exportPNG() {
+  deselectAll();
+  const inf = document.getElementById('infographic');
+  html2canvas(inf, { scale: 2, useCORS: true, backgroundColor: null }).then(canvas => {
+    const a = document.createElement('a');
+    a.download = 'enae-infografia.png';
+    a.href = canvas.toDataURL('image/png');
+    a.click();
+    document.getElementById('export-overlay').classList.remove('show');
+  });
+}
+
+function exportSVG() {
+  deselectAll();
+  const inf = document.getElementById('infographic');
+  const w = inf.offsetWidth, h = inf.offsetHeight;
+
+  let svgContent = `<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}" viewBox="0 0 ${w} ${h}">`;
+  svgContent += `<defs><style>@import url('https://fonts.googleapis.com/css2?family=Barlow:wght@300;400;600;700;900&amp;family=Barlow+Condensed:wght@300;700;900&amp;display=swap');</style></defs>`;
+  svgContent += `<rect width="${w}" height="${h}" fill="${canvasBg}"/>`;
+
+  elements.forEach(el => {
+    const op = (el.opacity||100)/100;
+    svgContent += `<g transform="translate(${el.x},${el.y})" opacity="${op}">`;
+    if (['rect','circle'].includes(el.type)) {
+      const rx = el.type === 'circle' ? Math.min(el.w,el.h)/2 : 3;
+      svgContent += `<rect width="${el.w}" height="${el.h}" fill="${el.bg}" rx="${rx}"/>`;
+    } else if (el.type === 'heading' || el.type === 'label') {
+      svgContent += `<text font-family="'Barlow Condensed',sans-serif" font-weight="900" font-size="${el.fontSize}" fill="${el.color}" dominant-baseline="hanging" text-anchor="start" transform="uppercase">${escXML(el.text)}</text>`;
+    } else if (el.type === 'subheading' || el.type === 'body') {
+      svgContent += `<foreignObject width="${el.w}" height="${el.h}"><div xmlns="http://www.w3.org/1999/xhtml" style="font-family:Barlow,sans-serif;font-size:${el.fontSize}px;color:${el.color};font-weight:${el.type==='subheading'?300:400}">${escXML(el.text)}</div></foreignObject>`;
+    } else if (el.type === 'accentbar' || el.type === 'divider') {
+      svgContent += `<rect width="${el.w}" height="${el.h}" fill="${el.bg||el.color}" rx="2"/>`;
+    } else if (el.type === 'stat') {
+      svgContent += `<rect width="${el.w}" height="${el.h}" fill="${el.bg}" rx="3"/>`;
+      svgContent += `<rect width="4" height="${el.h}" fill="${el.accent}" rx="2"/>`;
+      svgContent += `<text x="20" y="58" font-family="'Barlow Condensed',sans-serif" font-weight="900" font-size="52" fill="${el.color}">${escXML(el.number)}</text>`;
+      svgContent += `<text x="20" y="78" font-family="Barlow,sans-serif" font-weight="700" font-size="11" fill="${el.color}" letter-spacing="1.5">${escXML((el.label||'').toUpperCase())}</text>`;
+      if (el.desc) svgContent += `<foreignObject x="16" y="88" width="${el.w-32}" height="50"><div xmlns="http://www.w3.org/1999/xhtml" style="font-family:Barlow,sans-serif;font-size:12px;color:${el.color};font-weight:300">${escXML(el.desc)}</div></foreignObject>`;
+    } else {
+      svgContent += `<foreignObject width="${el.w}" height="${el.h}"><div xmlns="http://www.w3.org/1999/xhtml" style="font-family:Barlow,sans-serif;font-size:13px;color:${el.color||'#fff'};background:${el.bg||'transparent'};width:100%;height:100%;padding:10px">${escXML(JSON.stringify({type:el.type}))}</div></foreignObject>`;
+    }
+    svgContent += `</g>`;
+  });
+
+  svgContent += `</svg>`;
+  const blob = new Blob([svgContent], {type:'image/svg+xml'});
+  const a = document.createElement('a');
+  a.download = 'enae-infografia.svg';
+  a.href = URL.createObjectURL(blob);
+  a.click();
+  document.getElementById('export-overlay').classList.remove('show');
+}
+
+function exportHTML() {
+  deselectAll();
+  const inf = document.getElementById('infographic');
+  const snapshot = inf.outerHTML;
+  const fullHTML = `<!DOCTYPE html><html><head><meta charset="UTF-8"><link href="https://fonts.googleapis.com/css2?family=Barlow:ital,wght@0,300;0,400;0,600;0,700;0,900&family=Barlow+Condensed:wght@300;400;700;900&display=swap" rel="stylesheet"><style>body{margin:0;background:#111;display:flex;align-items:center;justify-content:center;min-height:100vh}.inf-element{position:absolute}.el-heading{font-family:'Barlow Condensed',sans-serif;font-weight:900;text-transform:uppercase;line-height:1.05}.el-subheading{font-family:Barlow,sans-serif;font-weight:300;line-height:1.3}.el-body-text{font-family:Barlow,sans-serif;font-weight:400;line-height:1.55}.el-label-text{font-family:'Barlow Condensed',sans-serif;font-weight:700;letter-spacing:2px;text-transform:uppercase}.el-stat-block{display:flex;flex-direction:column;align-items:flex-start;padding:16px 20px}.el-stat-number{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:56px;line-height:1}.el-stat-label{font-size:12px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;margin-top:4px;opacity:.8}.el-stat-desc{font-size:13px;font-weight:300;margin-top:8px;line-height:1.4}.el-bullet-list{list-style:none;padding:12px 16px}.el-bullet-list li{padding:5px 0 5px 18px;position:relative;font-size:14px;line-height:1.4}.el-bullet-list li::before{content:'';position:absolute;left:0;top:12px;width:8px;height:8px;border-radius:50%;background:#a91831}.el-progress-block{padding:10px 14px}.el-progress-title{font-size:13px;font-weight:700;margin-bottom:8px;text-transform:uppercase}.el-progress-track{height:10px;border-radius:5px;overflow:hidden;background:rgba(255,255,255,.15);margin-bottom:4px}.el-progress-fill{height:100%;border-radius:5px}.el-progress-label{font-size:11px;opacity:.7;display:flex;justify-content:space-between;margin-bottom:8px}.el-quote-block{padding:18px 20px 18px 28px;position:relative}.el-quote-block::before{content:'"';position:absolute;left:8px;top:4px;font-size:60px;font-family:'Barlow Condensed',sans-serif;font-weight:900;opacity:.25;line-height:1}.el-quote-text{font-size:15px;font-weight:300;font-style:italic;line-height:1.5;margin-bottom:10px}.el-quote-author{font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase}.el-icon-stat{display:flex;align-items:center;gap:12px;padding:12px 16px}.el-icon-stat .icon-box{width:44px;height:44px;display:flex;align-items:center;justify-content:center;font-size:22px;border-radius:3px}.el-icon-stat .icon-val{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:28px;line-height:1}.el-icon-stat .icon-lbl{font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;opacity:.8}.el-logo-block{display:flex;align-items:center;justify-content:center;flex-direction:column;gap:4px;padding:16px}.el-logo-enae{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:48px;letter-spacing:4px;line-height:1}.el-logo-sub{font-size:11px;font-weight:700;letter-spacing:3px;text-transform:uppercase}.el-logo-bar{width:40px;height:3px;margin-top:4px;align-self:flex-end}.resize-handle{display:none}.canvas-watermark{position:absolute;font-family:'Barlow Condensed',sans-serif;font-weight:900;letter-spacing:8px;opacity:.04;pointer-events:none}</style></head><body>${snapshot}</body></html>`;
+  const blob = new Blob([fullHTML], {type:'text/html'});
+  const a = document.createElement('a');
+  a.download = 'enae-infografia.html';
+  a.href = URL.createObjectURL(blob);
+  a.click();
+  document.getElementById('export-overlay').classList.remove('show');
+}
+
+function exportJSON() {
+  const data = { elements, canvasBg, canvasW, canvasH, version: '1.0' };
+  const blob = new Blob([JSON.stringify(data, null, 2)], {type:'application/json'});
+  const a = document.createElement('a');
+  a.download = 'enae-proyecto.json';
+  a.href = URL.createObjectURL(blob);
+  a.click();
+  document.getElementById('export-overlay').classList.remove('show');
+}
+
+// ============================================================
+//  UTILS
+// ============================================================
+function toHex(color) {
+  if (!color || color === 'transparent') return '#a91831';
+  if (color.startsWith('#')) return color;
+  // rgba / rgb fallback
+  return '#a91831';
+}
+function escXML(s) {
+  if (typeof s !== 'string') return '';
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+// Close overlay on outside click
+document.getElementById('export-overlay').addEventListener('click', function(e) {
+  if (e.target === this) this.classList.remove('show');
+});
+
+// Keyboard shortcuts
+document.addEventListener('keydown', (e) => {
+  if (['INPUT','TEXTAREA','SELECT'].includes(e.target.tagName)) return;
+  if (e.key === 'Delete' || e.key === 'Backspace') deleteSelected();
+  if (e.key === 'Escape') deselectAll();
+  if (e.key === 'ArrowLeft'  && selectedId) nudge(-2,0);
+  if (e.key === 'ArrowRight' && selectedId) nudge(2,0);
+  if (e.key === 'ArrowUp'    && selectedId) nudge(0,-2);
+  if (e.key === 'ArrowDown'  && selectedId) nudge(0,2);
+});
+function nudge(dx, dy) {
+  const el = elements.find(x => x.id === selectedId);
+  if (!el) return;
+  el.x += dx; el.y += dy;
+  moveTo(el.id);
+}
+</script>
+</body>
+</html>
