@@ -193,9 +193,14 @@
   }
   .panel-tab {
     flex: 1;
-    padding: 10px 4px;
+    padding: 8px 4px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
     font-family: var(--font-display);
-    font-size: 11px;
+    font-size: 9.5px;
     font-weight: 700;
     letter-spacing: 1px;
     text-transform: uppercase;
@@ -205,6 +210,10 @@
     background: none;
     border-radius: var(--radius-md);
     transition: var(--transition);
+  }
+  .panel-tab span.material-symbols-outlined {
+    font-size: 18px;
+    margin-bottom: 2px;
   }
   .panel-tab:hover {
     color: var(--text-primary);
@@ -293,21 +302,52 @@
 
   /* Section header inside panel */
   .section-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
     font-family: var(--font-display);
     font-size: 10.5px;
     font-weight: 700;
-    letter-spacing: 2px;
+    letter-spacing: 1.5px;
     text-transform: uppercase;
     color: var(--text-primary);
     opacity: 0.95;
-    margin: 26px 0 14px;
-    padding-left: 10px;
+    margin: 16px 0 10px;
+    padding: 8px 10px;
     border-left: 2px solid var(--color-oro);
-    text-shadow: 0 0 10px rgba(235, 200, 68, 0.15);
+    background: rgba(255,255,255,0.02);
+    border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+    cursor: pointer;
+    user-select: none;
+    transition: var(--transition);
+  }
+  .section-head:hover {
+    background: rgba(255,255,255,0.05);
+  }
+  .section-head .chevron {
+    font-size: 16px;
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .section-head.collapsed .chevron {
+    transform: rotate(-90deg);
+  }
+  .section-content {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    overflow: hidden;
+    transition: max-height 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease, margin 0.3s ease;
+    max-height: 2000px;
+    opacity: 1;
+  }
+  .section-content.collapsed {
+    max-height: 0;
+    opacity: 0;
+    margin-bottom: 0;
   }
 
   /* Block items list */
-  .block-list { display: flex; flex-direction: column; gap: 8px; }
+  .block-list { /* Removed. Replaced by .section-content */ }
   .block-item {
     background: rgba(255, 255, 255, 0.015);
     border: 1px solid var(--border-dark);
@@ -1159,25 +1199,25 @@
   <!-- LEFT: BLOCKS + LAYERS -->
   <div class="panel">
     <div class="panel-tabs">
-      <button class="panel-tab active" onclick="switchTab('blocks',this)">Bloques</button>
-      <button class="panel-tab" onclick="switchTab('templates',this)">Plantillas</button>
-      <button class="panel-tab" onclick="switchTab('layers',this)">Capas</button>
-      <button class="panel-tab" onclick="switchTab('canvas',this)">Canvas</button>
+      <button class="panel-tab active" onclick="switchTab('blocks',this)"><span class="material-symbols-outlined">category</span>Bloques</button>
+      <button class="panel-tab" onclick="switchTab('templates',this)"><span class="material-symbols-outlined">dashboard_customize</span>Plantillas</button>
+      <button class="panel-tab" onclick="switchTab('layers',this)"><span class="material-symbols-outlined">layers</span>Capas</button>
+      <button class="panel-tab" onclick="switchTab('canvas',this)"><span class="material-symbols-outlined">aspect_ratio</span>Canvas</button>
     </div>
     <div class="panel-body">
 
       <!-- BLOCKS TAB -->
       <div class="tab-section active" id="tab-blocks">
-        <div class="section-head">Tipografía</div>
-        <div class="block-list">
+        <div class="section-head" onclick="toggleSection(this)"><span>Tipografía</span><span class="material-symbols-outlined chevron">expand_more</span></div>
+        <div class="section-content block-list">
           <div class="block-item" onclick="addElement('heading')"><span class="block-icon material-symbols-outlined">title</span> Título principal</div>
           <div class="block-item" onclick="addElement('subheading')"><span class="block-icon material-symbols-outlined">subtitles</span> Subtítulo</div>
           <div class="block-item" onclick="addElement('body')"><span class="block-icon material-symbols-outlined">notes</span> Texto cuerpo</div>
           <div class="block-item" onclick="addElement('label')"><span class="block-icon material-symbols-outlined">label</span> Etiqueta / Label</div>
         </div>
 
-        <div class="section-head">Datos & Stats</div>
-        <div class="block-list">
+        <div class="section-head" onclick="toggleSection(this)"><span>Datos & Stats</span><span class="material-symbols-outlined chevron">expand_more</span></div>
+        <div class="section-content block-list">
           <div class="block-item" onclick="addElement('stat')"><span class="block-icon material-symbols-outlined">analytics</span> Bloque de cifra</div>
           <div class="block-item" onclick="addElement('iconstat')"><span class="block-icon material-symbols-outlined">badge</span> Icono + dato</div>
           <div class="block-item" onclick="addElement('progress')"><span class="block-icon material-symbols-outlined">linear_scale</span> Barra de progreso</div>
@@ -1188,16 +1228,16 @@
           <div class="block-item" onclick="addElement('table')"><span class="block-icon material-symbols-outlined">table_chart</span> Tabla de métricas</div>
         </div>
 
-        <div class="section-head">Estructurales</div>
-        <div class="block-list">
+        <div class="section-head" onclick="toggleSection(this)"><span>Estructurales</span><span class="material-symbols-outlined chevron">expand_more</span></div>
+        <div class="section-content block-list">
           <div class="block-item" onclick="addElement('accentbar')"><span class="block-icon material-symbols-outlined">view_week</span> Barra de acento</div>
           <div class="block-item" onclick="addElement('divider')"><span class="block-icon material-symbols-outlined">horizontal_rule</span> Divisor horizontal</div>
           <div class="block-item" onclick="addElement('quote')"><span class="block-icon material-symbols-outlined">format_quote</span> Cita destacada</div>
           <div class="block-item" onclick="addElement('logo')"><span class="block-icon material-symbols-outlined">branding_watermark</span> Logo ENAE</div>
         </div>
 
-        <div class="section-head">Formas</div>
-        <div class="block-list">
+        <div class="section-head" onclick="toggleSection(this)"><span>Formas</span><span class="material-symbols-outlined chevron">expand_more</span></div>
+        <div class="section-content block-list">
           <div class="block-item" onclick="addElement('rect')"><span class="block-icon material-symbols-outlined">rectangle</span> Rectángulo</div>
           <div class="block-item" onclick="addElement('circle')"><span class="block-icon material-symbols-outlined">circle</span> Círculo</div>
         </div>
@@ -1205,8 +1245,8 @@
 
       <!-- TEMPLATES TAB -->
       <div class="tab-section" id="tab-templates">
-        <div class="section-head">Plantillas ENAE</div>
-        <div class="templates-grid">
+        <div class="section-head" onclick="toggleSection(this)"><span>Plantillas ENAE</span><span class="material-symbols-outlined chevron">expand_more</span></div>
+        <div class="section-content templates-grid">
           <div class="tpl-card" onclick="loadTemplate('cover')">
             <div class="tpl-preview" style="background:#0E0E0E;color:#EBC844"><span class="material-symbols-outlined">star</span></div>
             <div class="tpl-name">Portada</div>
@@ -1248,15 +1288,15 @@
 
       <!-- LAYERS TAB -->
       <div class="tab-section" id="tab-layers">
-        <div class="section-head">Capas del canvas</div>
-        <div id="layers-list"><p style="font-size:12px;color:#555;padding:10px 0">No hay elementos.</p></div>
+        <div class="section-head" onclick="toggleSection(this)"><span>Capas del canvas</span><span class="material-symbols-outlined chevron">expand_more</span></div>
+        <div class="section-content" id="layers-list"><p style="font-size:12px;color:#555;padding:10px 0">No hay elementos.</p></div>
       </div>
 
       <!-- CANVAS SETTINGS TAB -->
       <div class="tab-section" id="tab-canvas">
-        <div class="section-head">Formato</div>
-        <div class="field-group">
-          <label class="field-label">Formato</label>
+        <div class="section-head" onclick="toggleSection(this)"><span>Formato</span><span class="material-symbols-outlined chevron">expand_more</span></div>
+        <div class="section-content field-group">
+          <label class="field-label">Resolución</label>
           <select class="field-select" id="canvas-format" onchange="applyFormat()">
             <option value="a4-v">A4 Vertical (infografía)</option>
             <option value="a4-h">A4 Horizontal (presentación)</option>
@@ -1282,8 +1322,8 @@
           <input type="color" class="prop-color-input" id="bg-custom" style="margin-top:8px" onchange="setBg(this.value,null)">
         </div>
 
-        <div class="section-head">Watermark</div>
-        <div class="field-group">
+        <div class="section-head" onclick="toggleSection(this)"><span>Watermark</span><span class="material-symbols-outlined chevron">expand_more</span></div>
+        <div class="section-content field-group">
           <label class="field-label">Mostrar fondo ENAE</label>
           <select class="field-select" id="watermark-toggle" onchange="toggleWatermark()">
             <option value="1">Sí</option>
@@ -2792,6 +2832,15 @@ function nudge(dx, dy) {
   if (!el) return;
   el.x += dx; el.y += dy;
   moveTo(el.id);
+}
+
+// Accordion Toggle
+function toggleSection(headEl) {
+  headEl.classList.toggle('collapsed');
+  const contentEl = headEl.nextElementSibling;
+  if (contentEl && contentEl.classList.contains('section-content')) {
+    contentEl.classList.toggle('collapsed');
+  }
 }
 </script>
 </body>
