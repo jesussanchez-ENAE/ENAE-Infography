@@ -1103,7 +1103,14 @@
   /* Scrollbars globally */
   ::-webkit-scrollbar { width: 6px; height: 6px; }
   ::-webkit-scrollbar-track { background: var(--bg-darker); }
-  ::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.08); border-radius: 3px;  <div class="topbar-logo">
+  ::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.08); border-radius: 3px; }
+</style>
+</head>
+<body>
+
+<!-- TOP BAR -->
+<div class="topbar">
+  <div class="topbar-logo">
     <svg id="Capa_2" data-name="Capa 2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 113.65 43.88" style="width: 110px; height: auto;">
       <defs>
         <style>
@@ -1183,10 +1190,8 @@
   </div>
   <div class="topbar-title">Infographic Builder · Brand Edition</div>
   <div style="display:flex; gap:12px; align-items:center;">
-    <button class="el-btn" style="padding: 6px 12px; background:rgba(255,255,255,0.05); color:#fff; border-radius:4px" onclick="document.getElementById('config-overlay').classList.add('show')"><span class="material-symbols-outlined" style="font-size:16px; margin-right:6px">settings</span> Configuración IA</button>
+    <button class="el-btn" style="padding: 8px 16px; background:linear-gradient(135deg, var(--enae-red) 0%, #ff4b60 100%); color:#fff; border-radius:6px; border:none; box-shadow:0 4px 12px rgba(184, 29, 51, 0.4); font-weight:700; display:flex; align-items:center; gap:8px; cursor:pointer" onclick="document.getElementById('config-overlay').classList.add('show')"><span class="material-symbols-outlined" style="font-size:18px;">auto_awesome</span> Configurar IA</button>
   </div>
-</div>er · Brand Edition</div>
-  <div style="width:160px;"></div>
 </div>
 
 <!-- APP -->
@@ -1399,6 +1404,29 @@
       </div>
     </div>
     <button class="overlay-close" onclick="document.getElementById('export-overlay').classList.remove('show')">Cancelar</button>
+  </div>
+</div>
+
+<!-- CONFIG OVERLAY -->
+<div class="overlay" id="config-overlay">
+  <div class="overlay-box" style="width: 400px; min-width: 400px">
+    <div class="overlay-title">Configuración IA</div>
+    <div class="overlay-sub">Introduce tu API Key de Anthropic (Claude). Esta clave se guardará localmente en tu navegador para generar datos.</div>
+    <input type="password" id="anthropic-api-key" placeholder="sk-ant-api03-..." style="width:100%; padding: 12px; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); color:#fff; border-radius:4px; margin-bottom: 16px;">
+    <button onclick="saveApiKey()" style="width:100%; padding:12px; background:var(--enae-red); color:#fff; border:none; border-radius:4px; cursor:pointer; font-weight:700">Guardar Clave</button>
+    <button class="overlay-close" onclick="document.getElementById('config-overlay').classList.remove('show')">Cerrar</button>
+  </div>
+</div>
+
+<!-- AI PROMPT OVERLAY -->
+<div class="overlay" id="ai-overlay">
+  <div class="overlay-box" style="width: 480px; min-width: 480px">
+    <div class="overlay-title">Generador IA (Claude)</div>
+    <div class="overlay-sub">Describe los datos que necesitas. La IA generará las estadísticas automáticamente.</div>
+    <textarea id="ai-prompt" placeholder="Ej. Inventa 4 métricas de satisfacción de estudiantes con porcentajes..." style="width:100%; height:100px; padding: 12px; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); color:#fff; border-radius:4px; margin-bottom: 16px; font-family:var(--font-sans); resize:vertical"></textarea>
+    <div id="ai-status" style="color:var(--color-oro); font-size:12px; margin-bottom:12px; font-weight:600; display:none">Generando datos...</div>
+    <button id="ai-submit-btn" onclick="submitAiPrompt()" style="width:100%; padding:12px; background:var(--enae-red); color:#fff; border:none; border-radius:4px; cursor:pointer; font-weight:700; display:flex; align-items:center; justify-content:center; gap:8px"><span class="material-symbols-outlined">auto_awesome</span> Generar Datos</button>
+    <button class="overlay-close" onclick="document.getElementById('ai-overlay').classList.remove('show')">Cancelar</button>
   </div>
 </div>
 
