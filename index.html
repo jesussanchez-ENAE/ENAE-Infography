@@ -2167,6 +2167,29 @@ function renderProps(id) {
     `;
   }
 
+  let tsvHtml = `
+    <div style="margin-top:16px;padding-top:16px;border-top:1px solid rgba(255,255,255,0.05)">
+      <label class="prop-label" style="display:flex;align-items:center;gap:6px"><span class="material-symbols-outlined" style="font-size:14px">table_view</span>Pegar datos (Excel/CSV)</label>
+      <textarea placeholder="Pega aquí los datos desde tu hoja de cálculo..." style="width:100%;height:60px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.08);color:#fff;border-radius:4px;padding:8px;font-size:11px;font-family:monospace;resize:vertical;margin-top:8px" onpaste="setTimeout(()=>parseTSV(this.value, ${id}), 50)"></textarea>
+    </div>
+  `;
+
+  if (el.type === 'progress') {
+    const rows = (el.items||[]).map((item, i) => `
+      <div style="display:flex;gap:6px;margin-bottom:6px">
+        <input class="prop-input" type="text" value="${item[0]}" style="flex:2" oninput="updateProgressItem(${id},${i},0,this.value)">
+        <input class="prop-input" type="number" value="${item[1]}" style="flex:1;max-width:56px" onchange="updateProgressItem(${id},${i},1,+this.value)">
+      </div>`).join('');
+    html += `
+    <div style="margin:8px 0"><label class="prop-label">Barras de progreso</label></div>
+    ${rows}
+    <button onclick="addProgressItem(${id})" style="width:100%;background:#333;border:1px solid #555;color:#ccc;padding:6px;border-radius:3px;cursor:pointer;font-size:12px;margin-bottom:8px">+ Añadir barra</button>
+    ${tsvHtml}
+    <div class="prop-row"><label class="prop-label">Color texto</label><input type="color" class="prop-color-input" value="${toHex(el.color)}" oninput="updateProp(${id},'color',this.value);rerender(${id})"></div>
+    <div class="prop-row"><label class="prop-label">Color acento</label><input type="color" class="prop-color-input" value="${toHex(el.accent||'#ffffff')}" oninput="updateProp(${id},'accent',this.value);rerender(${id})"></div>
+    <div class="prop-row"><label class="prop-label">Fondo</label><input type="color" class="prop-color-input" value="${toHex(el.bg)}" oninput="updateProp(${id},'bg',this.value);rerender(${id})"></div>
+    `;
+  }
   if (el.type === 'barchart') {
     const rows = (el.items||[]).map((item, i) => `
       <div style="display:flex;gap:6px;margin-bottom:6px">
@@ -2178,6 +2201,7 @@ function renderProps(id) {
     <div style="margin:8px 0"><label class="prop-label">Barras (Nombre y %)</label></div>
     ${rows}
     <button onclick="addBarchartItem(${id})" style="width:100%;background:#333;border:1px solid #555;color:#ccc;padding:6px;border-radius:3px;cursor:pointer;font-size:12px;margin-bottom:8px">+ Añadir barra</button>
+    ${tsvHtml}
     <div class="prop-row"><label class="prop-label">Color texto</label><input type="color" class="prop-color-input" value="${toHex(el.color)}" oninput="updateProp(${id},'color',this.value);rerender(${id})"></div>
     <div class="prop-row"><label class="prop-label">Color barra</label><input type="color" class="prop-color-input" value="${toHex(el.accent||'#ffffff')}" oninput="updateProp(${id},'accent',this.value);rerender(${id})"></div>
     <div class="prop-row"><label class="prop-label">Fondo</label><input type="color" class="prop-color-input" value="${toHex(el.bg)}" oninput="updateProp(${id},'bg',this.value);rerender(${id})"></div>
@@ -2202,6 +2226,7 @@ function renderProps(id) {
     <div class="prop-row"><label class="prop-label">Valor Promedio Central</label><input class="prop-input" type="number" value="${el.value||0}" onchange="updateProp(${id},'value',+this.value);rerender(${id})"></div>
     <div style="margin:8px 0"><label class="prop-label">Círculos Concéntricos (Máx 3)</label></div>
     ${rows}
+    ${tsvHtml}
     <div class="prop-row"><label class="prop-label">Color texto</label><input type="color" class="prop-color-input" value="${toHex(el.color)}" oninput="updateProp(${id},'color',this.value);rerender(${id})"></div>
     <div class="prop-row"><label class="prop-label">Fondo</label><input type="color" class="prop-color-input" value="${toHex(el.bg)}" oninput="updateProp(${id},'bg',this.value);rerender(${id})"></div>
     `;
@@ -2220,6 +2245,7 @@ function renderProps(id) {
     <div class="prop-row"><label class="prop-label">Título</label><input class="prop-input" type="text" value="${el.title||''}" oninput="updateProp(${id},'title',this.value);rerender(${id})"></div>
     <div style="margin:8px 0"><label class="prop-label">Ejes de Competencias</label></div>
     <div style="max-height:220px;overflow-y:auto;padding-right:4px">${rows}</div>
+    ${tsvHtml}
     <div class="prop-row"><label class="prop-label">Color texto</label><input type="color" class="prop-color-input" value="${toHex(el.color)}" oninput="updateProp(${id},'color',this.value);rerender(${id})"></div>
     <div class="prop-row"><label class="prop-label">Fondo</label><input type="color" class="prop-color-input" value="${toHex(el.bg)}" oninput="updateProp(${id},'bg',this.value);rerender(${id})"></div>
     `;
@@ -2240,6 +2266,7 @@ function renderProps(id) {
     <div style="display:flex;gap:4px;margin-bottom:10px">${headerRow}</div>
     <div style="margin:6px 0"><label class="prop-label">Filas de Datos (Nombre, Var, Cifra)</label></div>
     ${rows}
+    ${tsvHtml}
     <div class="prop-row"><label class="prop-label">Color texto</label><input type="color" class="prop-color-input" value="${toHex(el.color)}" oninput="updateProp(${id},'color',this.value);rerender(${id})"></div>
     <div class="prop-row"><label class="prop-label">Color cabecera</label><input type="color" class="prop-color-input" value="${toHex(el.accent||'#ffffff')}" oninput="updateProp(${id},'accent',this.value);rerender(${id})"></div>
     <div class="prop-row"><label class="prop-label">Fondo</label><input type="color" class="prop-color-input" value="${toHex(el.bg)}" oninput="updateProp(${id},'bg',this.value);rerender(${id})"></div>
@@ -2342,6 +2369,31 @@ function updateTableHeaderItem(id, col, val) {
   rerender(id);
 }
 
+function parseTSV(tsv, id) {
+  if(!tsv || !tsv.trim()) return;
+  const el = elements.find(x => x.id === id);
+  if(!el) return;
+  const lines = tsv.trim().split('\n').map(l => l.split('\t').map(c => c.trim()));
+  
+  if (el.type === 'barchart' || el.type === 'progress') {
+    el.items = lines.map(cols => [cols[0] || 'Item', parseFloat(cols[1]) || 0]);
+  } else if (el.type === 'donutchart') {
+    const colors = ['#EBC844', '#E74C3C', '#3498DB'];
+    // Keep existing colors if available, otherwise assign brand colors
+    el.items = lines.slice(0, 3).map((cols, i) => [cols[0] || 'Item', parseFloat(cols[1]) || 0, el.items[i] ? el.items[i][2] : colors[i%colors.length]]);
+  } else if (el.type === 'radarchart') {
+    el.items = lines.map(cols => [cols[0] || 'Item', parseFloat(cols[1]) || 0, parseFloat(cols[2]) || 0]);
+  } else if (el.type === 'table') {
+    if(lines.length > 0) {
+      el.headers = lines[0]; // first line as headers
+      el.rows = lines.slice(1);
+    }
+  }
+  rerender(id);
+  renderProps(id);
+}
+
+
 
 // ============================================================
 //  LAYERS
@@ -2415,17 +2467,17 @@ function loadTemplate(name) {
       addElement('heading', { x: 30, y: 40, w: canvasW-60, h: 60, text: 'MÉTRICAS CLAVE', fontSize: 36, color: '#F5F5F4', bg: 'transparent' });
       addElement('divider', { x: 30, y: 110, w: canvasW-60, h: 2, color: 'rgba(255,255,255,0.08)', bg: 'transparent' });
       
-      // Card 1 (Regular dark card, Oro text accent)
-      addElement('stat', { x: 30, y: 140, w: 250, h: 170, number: '94%', label: 'SATISFACCIÓN', desc: 'Porcentaje de recomendación de los alumnos.', color: '#F5F5F4', bg: '#1E1E1E', accent: '#EBC844' });
+      // Card 1
+      addElement('stat', { x: 30, y: 140, w: 280, h: 220, number: '94%', label: 'SATISFACCIÓN', desc: 'Porcentaje de recomendación de los alumnos.', color: '#F5F5F4', bg: '#1E1E1E', accent: '#EBC844' });
       
-      // Card 2 (Alert/Critical Card, solid Coral background, white text)
-      addElement('stat', { x: 300, y: 140, w: 250, h: 170, number: '1.2x', label: 'CRECIMIENTO', desc: 'Incremento interanual en la demanda corporativa.', color: '#F5F5F4', bg: '#E74C3C', accent: '#F5F5F4' });
+      // Card 2
+      addElement('stat', { x: 340, y: 140, w: 280, h: 220, number: '1.2x', label: 'CRECIMIENTO', desc: 'Incremento interanual en la demanda corporativa.', color: '#F5F5F4', bg: '#E74C3C', accent: '#F5F5F4' });
       
-      // Card 3 (Regular dark card, Sky-blue text accent)
-      addElement('stat', { x: 30, y: 330, w: 250, h: 170, number: '#10', label: 'RANKING MUNDIAL', desc: 'Máster en Inteligencia Artificial aplicada.', color: '#F5F5F4', bg: '#1E1E1E', accent: '#3498DB' });
+      // Card 3
+      addElement('stat', { x: 30, y: 390, w: 280, h: 220, number: '#10', label: 'RANKING MUNDIAL', desc: 'Máster en Inteligencia Artificial aplicada.', color: '#F5F5F4', bg: '#1E1E1E', accent: '#3498DB' });
       
-      // Card 4 (Regular dark card, Emerald text accent)
-      addElement('stat', { x: 300, y: 330, w: 250, h: 170, number: '98%', label: 'EMPLEABILIDAD', desc: 'Alumnos que acceden al mercado laboral.', color: '#F5F5F4', bg: '#1E1E1E', accent: '#2ECC71' });
+      // Card 4
+      addElement('stat', { x: 340, y: 390, w: 280, h: 220, number: '98%', label: 'EMPLEABILIDAD', desc: 'Alumnos que acceden al mercado laboral.', color: '#F5F5F4', bg: '#1E1E1E', accent: '#2ECC71' });
       
       addElement('logo', { x: canvasW-180, y: canvasH-80, w: 140, h: 54, color: '#808080', accent: '#1E1E1E' });
       break;
@@ -2433,23 +2485,23 @@ function loadTemplate(name) {
     case 'list':
       setBg('#0E0E0E', null);
       addElement('heading', { x: 30, y: 40, w: canvasW-60, h: 60, text: 'PROGRAMA ACADÉMICO', fontSize: 36, color: '#F5F5F4' });
-      addElement('stat', { x: 30, y: 130, w: 220, h: 180, number: '500h', label: 'DURACIÓN TOTAL', desc: 'Formación teórico-práctica con proyectos reales en empresas.', color: '#F5F5F4', bg: '#1E1E1E', accent: '#3498DB' });
-      addElement('bulletlist', { x: 270, y: 130, w: 290, h: 220, items: ['Módulo 1: Fundamentos de IA y Machine Learning', 'Módulo 2: Redes Neuronales Profundas', 'Módulo 3: Procesamiento del Lenguaje Natural', 'Módulo 4: Creación de Agentes Inteligentes', 'Módulo 5: Casos de Negocio e Implementación'], color: '#F5F5F4', bg: '#1E1E1E' });
-      addElement('divider', { x: 30, y: 380, w: canvasW-60, h: 2, color: 'rgba(255,255,255,0.08)' });
-      addElement('body', { x: 30, y: 400, w: canvasW-60, h: 60, text: 'ENAE International Business School · Escuela Europea de Negocios de Excelencia.', fontSize: 13, color: '#808080' });
+      addElement('stat', { x: 30, y: 130, w: 240, h: 220, number: '500h', label: 'DURACIÓN TOTAL', desc: 'Formación teórico-práctica con proyectos reales en empresas.', color: '#F5F5F4', bg: '#1E1E1E', accent: '#3498DB' });
+      addElement('bulletlist', { x: 300, y: 130, w: 420, h: 260, items: ['Módulo 1: Fundamentos de IA y Machine Learning', 'Módulo 2: Redes Neuronales Profundas', 'Módulo 3: Procesamiento del Lenguaje Natural', 'Módulo 4: Creación de Agentes Inteligentes', 'Módulo 5: Casos de Negocio e Implementación'], color: '#F5F5F4', bg: '#1E1E1E' });
+      addElement('divider', { x: 30, y: 430, w: canvasW-60, h: 2, color: 'rgba(255,255,255,0.08)' });
+      addElement('body', { x: 30, y: 450, w: canvasW-60, h: 60, text: 'ENAE International Business School · Escuela Europea de Negocios de Excelencia.', fontSize: 13, color: '#808080' });
       break;
 
     case 'progress3':
       setBg('#0E0E0E', null);
       addElement('heading', { x: 30, y: 40, w: canvasW-60, h: 60, text: 'MÉTRICAS CLAVE', fontSize: 36, color: '#F5F5F4' });
       addElement('subheading', { x: 30, y: 100, w: canvasW-60, h: 30, text: 'Resultados de aprendizaje y satisfacción general', fontSize: 16, color: '#808080' });
-      addElement('progress', { x: 30, y: 150, w: canvasW-60, h: 230, items: [['Dominio de LLMs y Agentes', 92], ['Aplicación práctica empresarial', 88], ['Satisfacción con el profesorado', 96], ['Tasa de recomendación directa', 94]], color: '#F5F5F4', bg: '#1E1E1E', accent: '#3498DB' });
+      addElement('progress', { x: 30, y: 150, w: canvasW-60, h: 320, items: [['Dominio de LLMs y Agentes', 92], ['Aplicación práctica empresarial', 88], ['Satisfacción con el profesorado', 96], ['Tasa de recomendación directa', 94]], color: '#F5F5F4', bg: '#1E1E1E', accent: '#3498DB' });
       addElement('logo', { x: canvasW-180, y: canvasH-80, w: 140, h: 54, color: '#808080' });
       break;
 
     case 'quote':
       setBg('#0E0E0E', null);
-      addElement('quote', { x: 40, y: 120, w: canvasW-80, h: 220, text: 'La inteligencia artificial no reemplazará a los directivos, pero los directivos que utilicen inteligencia artificial reemplazarán a los que no la utilicen.', author: '— ENAE International Business School', color: '#F5F5F4', bg: '#1E1E1E' });
+      addElement('quote', { x: 40, y: 120, w: canvasW-80, h: 260, text: 'La inteligencia artificial no reemplazará a los directivos, pero los directivos que utilicen inteligencia artificial reemplazarán a los que no la utilicen.', author: '— ENAE International Business School', color: '#F5F5F4', bg: '#1E1E1E' });
       addElement('logo', { x: canvasW/2-70, y: canvasH-120, w: 140, h: 54, color: '#808080' });
       break;
 
@@ -2460,16 +2512,16 @@ function loadTemplate(name) {
       addElement('heading', { x: 30, y: 125, w: 535, h: 50, text: 'RENDIMIENTO GLOBAL ENAE', fontSize: 32, color: '#F5F5F4' });
       
       // Main Stat Card
-      addElement('stat', { x: 30, y: 190, w: 250, h: 180, number: '+18.4%', label: 'CRECIMIENTO ANUAL', desc: 'Incremento acumulado en admisiones del año en curso.', color: '#F5F5F4', bg: '#1E1E1E', accent: '#EBC844' });
+      addElement('stat', { x: 30, y: 190, w: 280, h: 220, number: '+18.4%', label: 'CRECIMIENTO ANUAL', desc: 'Incremento acumulado en admisiones del año en curso.', color: '#F5F5F4', bg: '#1E1E1E', accent: '#EBC844' });
       
       // Bar Chart Card
-      addElement('barchart', { x: 300, y: 190, w: 265, h: 180, title: 'CRECIMIENTO POR TRIMESTRE', items: [['T1', 34], ['T2', 56], ['T3', 78], ['T4', 92]], color: '#F5F5F4', bg: '#1E1E1E', accent: '#EBC844' });
+      addElement('barchart', { x: 340, y: 190, w: 340, h: 220, title: 'CRECIMIENTO POR TRIMESTRE', items: [['T1', 34], ['T2', 56], ['T3', 78], ['T4', 92]], color: '#F5F5F4', bg: '#1E1E1E', accent: '#EBC844' });
       
       // Program Details Table
-      addElement('table', { x: 30, y: 390, w: 535, h: 220, title: 'RENDIMIENTO DE PROGRAMAS AVANZADOS', headers: ['Programa Master', 'Var Anual', 'Matrículas'], rows: [['Dirección Financiera', '+18.66%', '340'], ['IA Avanzada y Big Data', '+24.43%', '230'], ['Marketing Digital', '-2.57%', '185'], ['Dirección General', '+8.90%', '412']], color: '#F5F5F4', bg: '#1E1E1E', accent: '#EBC844' });
+      addElement('table', { x: 30, y: 440, w: 650, h: 280, title: 'RENDIMIENTO DE PROGRAMAS AVANZADOS', headers: ['Programa Master', 'Var Anual', 'Matrículas'], rows: [['Dirección Financiera', '+18.66%', '340'], ['IA Avanzada y Big Data', '+24.43%', '230'], ['Marketing Digital', '-2.57%', '185'], ['Dirección General', '+8.90%', '412']], color: '#F5F5F4', bg: '#1E1E1E', accent: '#EBC844' });
       
       // Subtext body
-      addElement('body', { x: 30, y: 630, w: 535, h: 60, text: 'Datos auditados correspondientes a las matrículas activas del curso académico de la Escuela de Negocios ENAE.', fontSize: 13, color: '#808080' });
+      addElement('body', { x: 30, y: 740, w: 535, h: 60, text: 'Datos auditados correspondientes a las matrículas activas del curso académico de la Escuela de Negocios ENAE.', fontSize: 13, color: '#808080' });
       
       // Footer Logo
       addElement('logo', { x: 425, y: 740, w: 140, h: 54, color: '#808080' });
@@ -2482,16 +2534,16 @@ function loadTemplate(name) {
       addElement('heading', { x: 30, y: 125, w: 535, h: 50, text: 'INFORME DE IMPACTO ESG ENAE', fontSize: 30, color: '#F5F5F4' });
 
       // Score Card (Off-white block on left)
-      addElement('stat', { x: 30, y: 190, w: 180, h: 280, number: '92', label: 'SCORE GLOBAL', desc: 'Calificación ponderada en base a auditoría de impacto ESG institucional.', color: '#0E0E0E', bg: '#F5F5F4', accent: '#2ECC71' });
+      addElement('stat', { x: 30, y: 190, w: 220, h: 320, number: '92', label: 'SCORE GLOBAL', desc: 'Calificación ponderada en base a auditoría de impacto ESG institucional.', color: '#0E0E0E', bg: '#F5F5F4', accent: '#2ECC71' });
       
       // Concentric Gauge donutchart (on right)
-      addElement('donutchart', { x: 230, y: 190, w: 335, h: 280, title: 'DESGLOSE DE CRITERIOS', value: 87, items: [['Calidad Académica', 82, '#EBC844'], ['Impacto Social', 71, '#E74C3C'], ['Gobernanza', 96, '#3498DB']], color: '#F5F5F4', bg: '#1E1E1E' });
+      addElement('donutchart', { x: 280, y: 190, w: 420, h: 320, title: 'DESGLOSE DE CRITERIOS', value: 87, items: [['Calidad Académica', 82, '#EBC844'], ['Impacto Social', 71, '#E74C3C'], ['Gobernanza', 96, '#3498DB']], color: '#F5F5F4', bg: '#1E1E1E' });
       
       // Green progress status bars (Bottom)
-      addElement('progress', { x: 30, y: 490, w: 535, h: 230, items: [['Acreditación Carbono Neutro', 95], ['Programas Verdes Integrados', 80], ['Diversidad e Inclusión de Becas', 90], ['Eficiencia Energética del Campus', 88]], color: '#F5F5F4', bg: '#1E1E1E', accent: '#2ECC71' });
+      addElement('progress', { x: 30, y: 540, w: 670, h: 320, items: [['Acreditación Carbono Neutro', 95], ['Programas Verdes Integrados', 80], ['Diversidad e Inclusión de Becas', 90], ['Eficiencia Energética del Campus', 88]], color: '#F5F5F4', bg: '#1E1E1E', accent: '#2ECC71' });
 
       // Footer Logo
-      addElement('logo', { x: 425, y: 740, w: 140, h: 54, color: '#808080' });
+      addElement('logo', { x: 425, y: 880, w: 140, h: 54, color: '#808080' });
       break;
 
     case 'competence_radar':
@@ -2501,13 +2553,13 @@ function loadTemplate(name) {
       addElement('heading', { x: 30, y: 125, w: 535, h: 50, text: 'RADAR DE COMPETENCIAS DIRECTIVAS', fontSize: 26, color: '#F5F5F4' });
 
       // Radar mesh spider web chart
-      addElement('radarchart', { x: 30, y: 190, w: 535, h: 360, title: 'PERFIL EJECUTIVO VS. PROMEDIO DE LA INDUSTRIA', items: [['DETERMINADO', 85, 70], ['VALIENTE', 80, 50], ['EMPATICO', 60, 45], ['SIN MIEDO', 85, 60], ['AUDAZ', 75, 55], ['SOLIDARIO', 70, 50], ['SENSIBLE', 50, 40], ['INDEPENDIENTE', 90, 65]], color: '#F5F5F4', bg: '#1E1E1E' });
+      addElement('radarchart', { x: 30, y: 190, w: 600, h: 460, title: 'PERFIL EJECUTIVO VS. PROMEDIO DE LA INDUSTRIA', items: [['DETERMINADO', 85, 70], ['VALIENTE', 80, 50], ['EMPATICO', 60, 45], ['SIN MIEDO', 85, 60], ['AUDAZ', 75, 55], ['SOLIDARIO', 70, 50], ['SENSIBLE', 50, 40], ['INDEPENDIENTE', 90, 65]], color: '#F5F5F4', bg: '#1E1E1E' });
 
       // Explanation sidebar
-      addElement('bulletlist', { x: 30, y: 570, w: 535, h: 140, items: ['Perfil ENAE (Polígono Azul): Representa el desarrollo de habilidades tras completar el Máster.', 'Perfil Promedio (Polígono Coral): Media obtenida en directivos de control.', 'Ejes analizados: 8 áreas clave de liderazgo estratégico.'], color: '#F5F5F4', bg: '#1E1E1E' });
+      addElement('bulletlist', { x: 30, y: 670, w: 600, h: 180, items: ['Perfil ENAE (Polígono Azul): Representa el desarrollo de habilidades tras completar el Máster.', 'Perfil Promedio (Polígono Coral): Media obtenida en directivos de control.', 'Ejes analizados: 8 áreas clave de liderazgo estratégico.'], color: '#F5F5F4', bg: '#1E1E1E' });
 
       // Footer Logo
-      addElement('logo', { x: 425, y: 740, w: 140, h: 54, color: '#808080' });
+      addElement('logo', { x: 425, y: 870, w: 140, h: 54, color: '#808080' });
       break;
   }
   refreshLayers();
