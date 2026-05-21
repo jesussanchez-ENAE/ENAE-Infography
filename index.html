@@ -1190,7 +1190,7 @@
   </div>
   <div class="topbar-title">Infographic Builder · Brand Edition</div>
   <div style="display:flex; gap:12px; align-items:center;">
-    <button class="el-btn" style="padding: 8px 16px; background:linear-gradient(135deg, var(--enae-red) 0%, #ff4b60 100%); color:#fff; border-radius:6px; border:none; box-shadow:0 4px 12px rgba(184, 29, 51, 0.4); font-weight:700; display:flex; align-items:center; gap:8px; cursor:pointer" onclick="document.getElementById('config-overlay').classList.add('show')"><span class="material-symbols-outlined" style="font-size:18px;">auto_awesome</span> Configurar IA</button>
+    <button class="el-btn" style="padding: 8px 16px; background:linear-gradient(135deg, var(--enae-red) 0%, #ff4b60 100%); color:#fff; border-radius:6px; border:none; box-shadow:0 4px 12px rgba(184, 29, 51, 0.4); font-weight:700; display:flex; align-items:center; gap:8px; cursor:pointer; white-space:nowrap; flex-shrink:0" onclick="document.getElementById('config-overlay').classList.add('show')"><span class="material-symbols-outlined" style="font-size:18px;">auto_awesome</span> Configurar IA</button>
   </div>
 </div>
 
@@ -2064,21 +2064,24 @@ function renderProps(id) {
 
   // Position & size
   html += `
-  <div style="font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--enae-red);margin-bottom:8px;padding-bottom:4px;border-bottom:1px solid #333">Posición & Tamaño</div>
-  <div class="prop-row-2">
-    <div class="prop-row"><label class="prop-label">X</label><input class="prop-input" type="number" value="${Math.round(el.x)}" onchange="updateProp(${id},'x',+this.value);moveTo(${id})"></div>
-    <div class="prop-row"><label class="prop-label">Y</label><input class="prop-input" type="number" value="${Math.round(el.y)}" onchange="updateProp(${id},'y',+this.value);moveTo(${id})"></div>
-  </div>
-  <div class="prop-row-2">
-    <div class="prop-row"><label class="prop-label">W</label><input class="prop-input" type="number" value="${Math.round(el.w)}" onchange="updateProp(${id},'w',+this.value);rerender(${id})"></div>
-    <div class="prop-row"><label class="prop-label">H</label><input class="prop-input" type="number" value="${Math.round(el.h)}" onchange="updateProp(${id},'h',+this.value);rerender(${id})"></div>
-  </div>
-  <div class="prop-row"><label class="prop-label">Opacidad ${el.opacity||100}%</label>
-    <input type="range" min="0" max="100" value="${el.opacity||100}" oninput="updateProp(${id},'opacity',+this.value);rerender(${id});this.previousElementSibling.textContent='Opacidad '+this.value+'%'">
+  <div class="section-head" onclick="toggleSection(this)"><span>Posición & Tamaño</span><span class="material-symbols-outlined chevron">expand_more</span></div>
+  <div class="section-content" style="padding-top:8px;">
+    <div class="prop-row-2">
+      <div class="prop-row"><label class="prop-label">X</label><input class="prop-input" type="number" value="${Math.round(el.x)}" onchange="updateProp(${id},'x',+this.value);moveTo(${id})"></div>
+      <div class="prop-row"><label class="prop-label">Y</label><input class="prop-input" type="number" value="${Math.round(el.y)}" onchange="updateProp(${id},'y',+this.value);moveTo(${id})"></div>
+    </div>
+    <div class="prop-row-2">
+      <div class="prop-row"><label class="prop-label">W</label><input class="prop-input" type="number" value="${Math.round(el.w)}" onchange="updateProp(${id},'w',+this.value);rerender(${id})"></div>
+      <div class="prop-row"><label class="prop-label">H</label><input class="prop-input" type="number" value="${Math.round(el.h)}" onchange="updateProp(${id},'h',+this.value);rerender(${id})"></div>
+    </div>
+    <div class="prop-row"><label class="prop-label">Opacidad ${el.opacity||100}%</label>
+      <input type="range" min="0" max="100" value="${el.opacity||100}" oninput="updateProp(${id},'opacity',+this.value);rerender(${id});this.previousElementSibling.textContent='Opacidad '+this.value+'%'">
+    </div>
   </div>`;
 
   // Type-specific props
-  html += `<div style="font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--enae-red);margin:12px 0 8px;padding-bottom:4px;border-bottom:1px solid #333">Contenido</div>`;
+  html += `<div class="section-head" onclick="toggleSection(this)"><span>Contenido & Estilos</span><span class="material-symbols-outlined chevron">expand_more</span></div>
+  <div class="section-content block-list" style="padding-top:8px;">`;
 
   if (['heading','subheading','body','label'].includes(el.type)) {
     html += `
@@ -2300,7 +2303,9 @@ function renderProps(id) {
   }
 
 
-  html += `<button class="prop-delete-btn" onclick="deleteSelected()" style="display:flex;align-items:center;justify-content:center;gap:6px"><span class="material-symbols-outlined" style="font-size:16px">delete</span>Eliminar elemento</button>`;
+  html += `</div>`; // Close the Contenido & Estilos accordion
+
+  html += `<button class="prop-delete-btn" onclick="deleteSelected()" style="display:flex;align-items:center;justify-content:center;gap:6px;margin-top:16px"><span class="material-symbols-outlined" style="font-size:16px">delete</span>Eliminar elemento</button>`;
   p.innerHTML = html;
 }
 
