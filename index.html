@@ -2875,6 +2875,46 @@ async function exportSVG() {
          if (el.number) svgContent += `<text x="${el.w/2 - 10}" y="${el.h/2 + 16}" font-family="'SF UI Display',sans-serif" font-weight="900" font-size="56" fill="${el.color}" text-anchor="end" letter-spacing="-1.5">${escXML(el.number)}</text>`;
          if (el.desc) svgContent += `<text x="${el.w/2 + 5}" y="${el.h/2 + 4}" font-family="'Open Sans',sans-serif" font-weight="500" font-size="13" fill="${el.color}" text-anchor="start" opacity="0.9">${escXML(el.desc)}</text>`;
       }
+    } else if (el.type === 'calendar') {
+      const monthNames = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
+      const date = new Date(el.year, el.month, 1);
+      const daysInMonth = new Date(el.year, el.month + 1, 0).getDate();
+      const firstDay = (date.getDay() + 6) % 7; 
+      const marked = (el.markedDays || '').toString().split(',').map(d => parseInt(d.trim())).filter(d => !isNaN(d));
+
+      svgContent += `<rect width="${el.w}" height="${el.h}" fill="${el.bg}" rx="12"/>`;
+      svgContent += `<text x="${el.w/2}" y="36" font-family="'SF UI Display',sans-serif" font-weight="900" font-size="18" fill="${el.color}" text-anchor="middle" letter-spacing="1" text-transform="uppercase">${monthNames[el.month]} ${el.year}</text>`;
+      
+      const usableW = el.w - 30;
+      const cellW = usableW / 7;
+      const startX = 15;
+      
+      const weekdays = ['L','M','X','J','V','S','D'];
+      for (let i = 0; i < 7; i++) {
+         const cx = startX + (i * cellW) + (cellW / 2);
+         svgContent += `<text x="${cx}" y="65" font-family="'Open Sans',sans-serif" font-weight="700" font-size="12" fill="${el.color}" opacity="0.6" text-anchor="middle">${weekdays[i]}</text>`;
+      }
+      
+      const startY = 85;
+      const totalRows = Math.ceil((daysInMonth + firstDay) / 7);
+      const usableH = el.h - startY - 15;
+      const cellH = usableH / totalRows;
+      
+      for (let i = 1; i <= daysInMonth; i++) {
+        const gridIndex = firstDay + i - 1;
+        const row = Math.floor(gridIndex / 7);
+        const col = gridIndex % 7;
+        
+        const cx = startX + (col * cellW) + (cellW / 2);
+        const cyCenter = startY + (row * cellH) + (cellH / 2);
+        
+        if (marked.includes(i)) {
+           svgContent += `<circle cx="${cx}" cy="${cyCenter}" r="12" fill="${el.accent}"/>`;
+           svgContent += `<text x="${cx}" y="${cyCenter + 5}" font-family="'Open Sans',sans-serif" font-weight="700" font-size="14" fill="${el.bg}" text-anchor="middle">${i}</text>`;
+        } else {
+           svgContent += `<text x="${cx}" y="${cyCenter + 5}" font-family="'Open Sans',sans-serif" font-weight="400" font-size="14" fill="${el.color}" text-anchor="middle">${i}</text>`;
+        }
+      }
     } else {
       // Fallback: Rasterize complex elements like charts into the SVG
       const node = document.getElementById('el-' + el.id);
