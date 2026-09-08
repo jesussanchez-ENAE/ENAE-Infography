@@ -1637,6 +1637,8 @@ function renderElement(el) {
     width:${el.w}px; height:${el.h}px;
     opacity:${(el.opacity||100)/100};
     z-index:${el.z||1};
+    transform: scale(${el.scale || 1});
+    transform-origin: top left;
   `;
   wrapper.innerHTML = buildHTML(el);
 
@@ -2184,6 +2186,9 @@ function renderProps(id) {
     </div>
     <div class="prop-row"><label class="prop-label">Opacidad ${el.opacity||100}%</label>
       <input type="range" min="0" max="100" value="${el.opacity||100}" oninput="updateProp(${id},'opacity',+this.value);rerender(${id});this.previousElementSibling.textContent='Opacidad '+this.value+'%'">
+    </div>
+    <div class="prop-row"><label class="prop-label">Escala ${(el.scale||1).toFixed(2)}x</label>
+      <input type="range" min="0.1" max="5" step="0.05" value="${el.scale||1}" oninput="updateProp(${id},'scale',+this.value);rerender(${id});this.previousElementSibling.textContent='Escala '+Number(this.value).toFixed(2)+'x'">
     </div>
   </div>`;
 
@@ -2808,7 +2813,8 @@ async function exportSVG() {
   for (let i = 0; i < elements.length; i++) {
     const el = elements[i];
     const op = (el.opacity||100)/100;
-    svgContent += `<g transform="translate(${el.x},${el.y})" opacity="${op}">`;
+    const scale = el.scale || 1;
+    svgContent += `<g transform="translate(${el.x},${el.y}) scale(${scale})" opacity="${op}">`;
     if (['rect','circle'].includes(el.type)) {
       const rx = el.type === 'circle' ? Math.min(el.w,el.h)/2 : 3;
       svgContent += `<rect width="${el.w}" height="${el.h}" fill="${el.bg}" rx="${rx}"/>`;
@@ -2920,6 +2926,8 @@ async function exportSVG() {
       const node = document.getElementById('el-' + el.id);
       if (node) {
         node.classList.remove('selected', 'el-selected-ring');
+        const oldTransform = node.style.transform;
+        node.style.transform = 'none';
         try {
           const canvas = await html2canvas(node, { scale: 2, useCORS: true, backgroundColor: null });
           const dataUrl = canvas.toDataURL('image/png');
@@ -2927,6 +2935,7 @@ async function exportSVG() {
         } catch (e) {
           console.error("html2canvas error", e);
         }
+        node.style.transform = oldTransform;
       }
     }
     svgContent += `</g>`;
