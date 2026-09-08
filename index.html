@@ -1191,6 +1191,13 @@
   </div>
   <div class="topbar-title">Infographic Builder · Brand Edition</div>
   <div style="display:flex; gap:12px; align-items:center;">
+    <div style="display:flex; gap:4px; margin-right:12px; border-right:1px solid rgba(255,255,255,0.1); padding-right:12px;">
+      <button class="el-btn" style="padding: 8px; background:rgba(255,255,255,0.05); color:#fff; border-radius:6px; border:1px solid rgba(255,255,255,0.1); display:flex; align-items:center; justify-content:center; cursor:pointer;" onclick="undo()" title="Deshacer (Ctrl+Z)"><span class="material-symbols-outlined" style="font-size:16px;">undo</span></button>
+      <button class="el-btn" style="padding: 8px; background:rgba(255,255,255,0.05); color:#fff; border-radius:6px; border:1px solid rgba(255,255,255,0.1); display:flex; align-items:center; justify-content:center; cursor:pointer;" onclick="redo()" title="Rehacer (Ctrl+Y)"><span class="material-symbols-outlined" style="font-size:16px;">redo</span></button>
+    </div>
+    <input type="file" id="file-import" style="display:none" accept=".json" onchange="importProject(event)">
+    <button class="el-btn" style="padding: 8px 16px; background:rgba(255,255,255,0.05); color:#fff; border-radius:6px; border:1px solid rgba(255,255,255,0.1); font-weight:600; display:flex; align-items:center; gap:6px; cursor:pointer; white-space:nowrap;" onclick="document.getElementById('file-import').click()"><span class="material-symbols-outlined" style="font-size:16px;">folder_open</span> Cargar</button>
+    <button class="el-btn" style="padding: 8px 16px; background:rgba(255,255,255,0.05); color:#fff; border-radius:6px; border:1px solid rgba(255,255,255,0.1); font-weight:600; display:flex; align-items:center; gap:6px; cursor:pointer; white-space:nowrap;" onclick="exportProject()"><span class="material-symbols-outlined" style="font-size:16px;">save</span> Guardar</button>
     <button class="el-btn" style="padding: 8px 16px; background:linear-gradient(135deg, var(--enae-red) 0%, #ff4b60 100%); color:#fff; border-radius:6px; border:none; box-shadow:0 4px 12px rgba(184, 29, 51, 0.4); font-weight:700; display:flex; align-items:center; gap:8px; cursor:pointer; white-space:nowrap; flex-shrink:0" onclick="document.getElementById('config-overlay').classList.add('show')"><span class="material-symbols-outlined" style="font-size:18px;">auto_awesome</span> Configurar IA</button>
   </div>
 </div>
@@ -1542,12 +1549,16 @@ function applyFormat() {
   inf.style.width  = canvasW + 'px';
   inf.style.height = canvasH + 'px';
   updateWatermark();
+  if (typeof autoSave === 'function') autoSave();
+  if (typeof saveHistoryState === 'function') saveHistoryState(true);
 }
 function setBg(color, swatchEl) {
   canvasBg = color;
   document.getElementById('infographic').style.background = color;
   document.querySelectorAll('.color-swatch').forEach(s => s.classList.remove('selected'));
   if (swatchEl) swatchEl.classList.add('selected');
+  if (typeof autoSave === 'function') autoSave();
+  if (typeof saveHistoryState === 'function') saveHistoryState(true);
 }
 function toggleWatermark() {
   updateWatermark();
@@ -1619,6 +1630,8 @@ function addElement(type, overrides = {}) {
   renderElement(el);
   selectElement(el.id);
   refreshLayers();
+  if (typeof autoSave === 'function') autoSave();
+  if (typeof saveHistoryState === 'function') saveHistoryState(true);
 }
 
 // ============================================================
@@ -2112,12 +2125,18 @@ document.addEventListener('mousemove', (e) => {
 });
 
 document.addEventListener('mouseup', () => {
-  if (dragging) { dragging = false; dragEl = null; }
+  let changed = false;
+  if (dragging) { dragging = false; dragEl = null; changed = true; }
   if (resizing) {
     resizing = false;
     const el = elements.find(x => x.id === resizeEl);
     if (el) renderElement(el); // re-render to fix proportions
     resizeEl = null;
+    changed = true;
+  }
+  if (changed) {
+    if (typeof autoSave === 'function') autoSave();
+    if (typeof saveHistoryState === 'function') saveHistoryState(true);
   }
 });
 
@@ -2160,6 +2179,8 @@ function deleteSelected() {
   selectedId = null;
   document.getElementById('props-content').innerHTML = '<p class="props-empty">Elemento eliminado.</p>';
   refreshLayers();
+  if (typeof autoSave === 'function') autoSave();
+  if (typeof saveHistoryState === 'function') saveHistoryState(true);
 }
 
 // ============================================================
@@ -3217,6 +3238,218 @@ Si fallas en estas reglas la aplicación crasheará.`;
     btn.style.opacity = 1;
   }
 }
+}
+
+// ============================================================
+//  CONSERVATIVE SAVING SYSTEM (MVP PERSISTENCE)
+// ============================================================
+
+// 1. Export Project to JSON File
+function exportProject() {
+  const projectData = {
+    canvasBg,
+    canvasW,
+    canvasH,
+    elements,
+    timestamp: new Date().toISOString()
+  };
+  const blob = new Blob([JSON.stringify(projectData, null, 2)], { type: 'application/json' });
+  const a = document.createElement('a');
+  a.download = `enae-infografia-${new Date().getTime()}.json`;
+  a.href = URL.createObjectURL(blob);
+  a.click();
+}
+
+// 2. Import Project from JSON File
+function importProject(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    try {
+      const data = JSON.parse(e.target.result);
+      if (data.elements) {
+        elements = data.elements;
+        if (data.canvasBg) {
+          canvasBg = data.canvasBg;
+          document.getElementById('bg-custom').value = canvasBg;
+        }
+        if (data.canvasW && data.canvasH) {
+          canvasW = data.canvasW;
+          canvasH = data.canvasH;
+          const inf = document.getElementById('infographic');
+          inf.style.width = canvasW + 'px';
+          inf.style.height = canvasH + 'px';
+        }
+        document.getElementById('infographic').innerHTML = ''; // Clear canvas
+        chartInstances = {}; // Reset charts
+        elements.forEach(el => renderElement(el)); // Re-render all
+        refreshLayers();
+        deselectAll();
+        document.getElementById('infographic').style.background = canvasBg;
+        alert('Proyecto cargado correctamente.');
+      }
+    } catch (err) {
+      alert('Error al leer el archivo. Asegúrate de que es un proyecto válido.');
+    }
+  };
+  reader.readAsText(file);
+  event.target.value = ''; // Reset input
+}
+
+// ============================================================
+//  UNDO / REDO SYSTEM
+// ============================================================
+let historyStack = [];
+let historyIndex = -1;
+let historyTimeout = null;
+let isRestoringHistory = false;
+
+function saveHistoryState(immediate = false) {
+  if (isRestoringHistory) return;
+  if (historyTimeout) clearTimeout(historyTimeout);
+  
+  const save = () => {
+    const state = JSON.stringify({
+      elements,
+      canvasBg,
+      canvasW,
+      canvasH
+    });
+
+    if (historyIndex >= 0 && historyStack[historyIndex] === state) return;
+
+    if (historyIndex < historyStack.length - 1) {
+      historyStack = historyStack.slice(0, historyIndex + 1);
+    }
+    
+    historyStack.push(state);
+    if (historyStack.length > 50) historyStack.shift();
+    else historyIndex++;
+  };
+
+  if (immediate) save();
+  else historyTimeout = setTimeout(save, 300);
+}
+
+function undo() {
+  if (historyIndex > 0) {
+    historyIndex--;
+    restoreHistoryState(historyStack[historyIndex]);
+  }
+}
+
+function redo() {
+  if (historyIndex < historyStack.length - 1) {
+    historyIndex++;
+    restoreHistoryState(historyStack[historyIndex]);
+  }
+}
+
+function restoreHistoryState(stateJson) {
+  if (!stateJson) return;
+  isRestoringHistory = true;
+  const data = JSON.parse(stateJson);
+  elements = JSON.parse(JSON.stringify(data.elements)); // deep clone back
+  canvasBg = data.canvasBg;
+  canvasW = data.canvasW;
+  canvasH = data.canvasH;
+  
+  document.getElementById('bg-custom').value = canvasBg;
+  document.getElementById('infographic').style.background = canvasBg;
+  const inf = document.getElementById('infographic');
+  inf.style.width = canvasW + 'px';
+  inf.style.height = canvasH + 'px';
+  
+  inf.innerHTML = '';
+  chartInstances = {};
+  elements.forEach(el => renderElement(el));
+  refreshLayers();
+  
+  if (selectedId && !elements.find(e => e.id === selectedId)) {
+    deselectAll();
+  } else if (selectedId) {
+    selectElement(selectedId);
+  }
+  
+  autoSave();
+  isRestoringHistory = false;
+}
+
+// Listen for Ctrl+Z and Ctrl+Y / Ctrl+Shift+Z
+document.addEventListener('keydown', (e) => {
+  if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return; // Don't intercept typing
+  if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'z') {
+    e.preventDefault();
+    if (e.shiftKey) redo();
+    else undo();
+  }
+  if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'y') {
+    e.preventDefault();
+    redo();
+  }
+});
+
+// 3. Auto-save to LocalStorage
+function autoSave() {
+  const projectData = {
+    canvasBg,
+    canvasW,
+    canvasH,
+    elements
+  };
+  localStorage.setItem('enae_infography_autosave', JSON.stringify(projectData));
+}
+
+// Hook autoSave and history into rerender so it saves whenever something changes
+const originalRerender = rerender;
+rerender = function(id) {
+  originalRerender(id);
+  autoSave();
+  saveHistoryState();
+};
+
+const originalMoveTo = moveTo;
+moveTo = function(id) {
+  originalMoveTo(id);
+  autoSave();
+  saveHistoryState();
+};
+
+// 4. Load Auto-save on Start
+window.addEventListener('DOMContentLoaded', () => {
+  const saved = localStorage.getItem('enae_infography_autosave');
+  if (saved) {
+    try {
+      const data = JSON.parse(saved);
+      if (data.elements && data.elements.length > 0) {
+        if (confirm('Se ha encontrado un diseño guardado automáticamente. ¿Deseas restaurarlo?')) {
+          elements = data.elements;
+          if (data.canvasBg) {
+             canvasBg = data.canvasBg;
+             document.getElementById('bg-custom').value = canvasBg;
+             document.getElementById('infographic').style.background = canvasBg;
+          }
+          if (data.canvasW && data.canvasH) {
+            canvasW = data.canvasW;
+            canvasH = data.canvasH;
+            const inf = document.getElementById('infographic');
+            inf.style.width = canvasW + 'px';
+            inf.style.height = canvasH + 'px';
+          }
+          document.getElementById('infographic').innerHTML = '';
+          elements.forEach(el => renderElement(el));
+          refreshLayers();
+        } else {
+          localStorage.removeItem('enae_infography_autosave');
+        }
+      }
+    } catch(e) {
+      console.error('Error parsing autosave', e);
+    }
+  }
+  setTimeout(() => saveHistoryState(true), 100);
+});
 </script>
 </body>
 </html>
