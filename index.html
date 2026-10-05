@@ -2053,7 +2053,22 @@ function buildHTML(el) {
       const firstDay = (date.getDay() + 6) % 7; // Lunes = 0
       const monthNames = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
       
-      const marked = (el.markedDays || '').toString().split(',').map(d => parseInt(d.trim())).filter(d => !isNaN(d));
+      const eventGroups = [];
+      const lines = (el.events || '').split('\n');
+      for (const line of lines) {
+         if (!line.trim()) continue;
+         const parts = line.split(':');
+         if (parts.length >= 2) {
+             const days = parts[0].split(',').map(d => parseInt(d.trim())).filter(d => !isNaN(d));
+             const color = parts[1].trim();
+             const label = parts.length > 2 ? parts[2].trim() : '';
+             eventGroups.push({days, color, label});
+         }
+      }
+      if (eventGroups.length === 0 && el.markedDays) {
+         const marked = (el.markedDays || '').toString().split(',').map(d => parseInt(d.trim())).filter(d => !isNaN(d));
+         eventGroups.push({days: marked, color: el.accent || '#EBC844', label: ''});
+      }
       
       let html = `<div style="width:100%; height:100%; background:${el.bg}; border-radius:12px; padding:15px; box-sizing:border-box; color:${el.color}; display:flex; flex-direction:column; box-shadow: 0 4px 15px rgba(0,0,0,0.05); font-family:var(--font-sans);">`;
       html += `<div style="text-align:center; font-family:var(--font-display); font-weight:900; font-size:18px; text-transform:uppercase; margin-bottom:15px; letter-spacing:1px;">${monthNames[el.month]} ${el.year}</div>`;
@@ -2068,14 +2083,25 @@ function buildHTML(el) {
         html += `<div></div>`;
       }
       for (let i = 1; i <= daysInMonth; i++) {
-        const isMarked = marked.includes(i);
-        if (isMarked) {
-          html += `<div style="display:flex; align-items:center; justify-content:center;"><div style="width:24px; height:24px; background:${el.accent}; color:${el.bg}; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:700;">${i}</div></div>`;
+        const group = eventGroups.find(g => g.days.includes(i));
+        if (group) {
+          html += `<div style="display:flex; align-items:center; justify-content:center;"><div style="width:24px; height:24px; background:${group.color}; color:${el.bg}; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:700;">${i}</div></div>`;
         } else {
           html += `<div style="display:flex; align-items:center; justify-content:center;">${i}</div>`;
         }
       }
-      html += `</div></div>`;
+      html += `</div>`;
+      
+      const legendGroups = eventGroups.filter(g => g.label);
+      if (legendGroups.length > 0) {
+         html += `<div style="display:flex; flex-wrap:wrap; gap:10px; margin-top:12px; font-size:11px; font-weight:600;">`;
+         for (const group of legendGroups) {
+             html += `<div style="display:flex; align-items:center; gap:4px;"><div style="width:10px; height:10px; border-radius:50%; background:${group.color};"></div><div style="opacity:0.8">${group.label}</div></div>`;
+         }
+         html += `</div>`;
+      }
+      
+      html += `</div>`;
       return html;
     }
 
@@ -2393,11 +2419,13 @@ function renderProps(id) {
       </select>
     </div>
     <div class="prop-row"><label class="prop-label">Año</label><input class="prop-input" type="number" value="${el.year||''}" oninput="updateProp(${id},'year',parseInt(this.value));rerender(${id})"></div>
-    <div class="prop-row"><label class="prop-label">Días marcados</label><input class="prop-input" type="text" value="${el.markedDays||''}" placeholder="Ej: 1, 5, 12" oninput="updateProp(${id},'markedDays',this.value);rerender(${id})"></div>
-    <div style="font-size:10px; color:#aaa; margin-bottom:10px;">Separa los números con comas.</div>
+    <div class="prop-row" style="flex-direction:column; align-items:flex-start">
+      <label class="prop-label">Leyenda y Días Marcados</label>
+      <textarea class="prop-input" style="width:100%; height:80px; resize:vertical; font-family:monospace; font-size:11px" oninput="updateProp(${id},'events',this.value);rerender(${id})" placeholder="Días : Color : Etiqueta\nEj: 1,5,12 : #EBC844 : Festivos\nEj: 15,16 : #E74C3C : Exámenes">${el.events !== undefined ? el.events : (el.markedDays ? el.markedDays + ' : ' + (el.accent||'#EBC844') : '')}</textarea>
+    </div>
+    <div style="font-size:10px; color:#aaa; margin-bottom:10px;">Formato por línea: <b>Días : #HexColor : Etiqueta</b></div>
     <div class="prop-row"><label class="prop-label">Color del texto</label><input type="color" class="prop-color-input" value="${toHex(el.color)}" oninput="updateProp(${id},'color',this.value);rerender(${id})"></div>
     <div class="prop-row"><label class="prop-label">Color de fondo</label><input type="color" class="prop-color-input" value="${toHex(el.bg)}" oninput="updateProp(${id},'bg',this.value);rerender(${id})"></div>
-    <div class="prop-row"><label class="prop-label">Color días marcados</label><input type="color" class="prop-color-input" value="${toHex(el.accent)}" oninput="updateProp(${id},'accent',this.value);rerender(${id})"></div>
     `;
   }
 
@@ -2512,6 +2540,7 @@ function renderProps(id) {
   html += `</div>`; // Close the Contenido & Estilos accordion
 
   html += `<button class="prop-delete-btn" onclick="deleteSelected()" style="display:flex;align-items:center;justify-content:center;gap:6px;margin-top:16px"><span class="material-symbols-outlined" style="font-size:16px">delete</span>Eliminar elemento</button>`;
+  html += `<button id="btn-copy-svg" class="ct-btn" style="width:100%; display:flex; align-items:center; justify-content:center; gap:6px; margin-top:8px; padding:8px; background:rgba(255,255,255,0.05); color:#fff; border:1px solid rgba(255,255,255,0.1); border-radius:4px; font-weight:600; cursor:pointer" onclick="copySelectedAsSVG()"><span class="material-symbols-outlined" style="font-size:16px">content_copy</span>Copiar como SVG</button>`;
   p.innerHTML = html;
 }
 
@@ -2907,7 +2936,22 @@ async function exportSVG() {
       const date = new Date(el.year, el.month, 1);
       const daysInMonth = new Date(el.year, el.month + 1, 0).getDate();
       const firstDay = (date.getDay() + 6) % 7; 
-      const marked = (el.markedDays || '').toString().split(',').map(d => parseInt(d.trim())).filter(d => !isNaN(d));
+      const eventGroups = [];
+      const lines = (el.events || '').split('\n');
+      for (const line of lines) {
+         if (!line.trim()) continue;
+         const parts = line.split(':');
+         if (parts.length >= 2) {
+             const days = parts[0].split(',').map(d => parseInt(d.trim())).filter(d => !isNaN(d));
+             const color = parts[1].trim();
+             const label = parts.length > 2 ? parts[2].trim() : '';
+             eventGroups.push({days, color, label});
+         }
+      }
+      if (eventGroups.length === 0 && el.markedDays) {
+         const marked = (el.markedDays || '').toString().split(',').map(d => parseInt(d.trim())).filter(d => !isNaN(d));
+         eventGroups.push({days: marked, color: el.accent || '#EBC844', label: ''});
+      }
 
       svgContent += `<rect width="${el.w}" height="${el.h}" fill="${el.bg}" rx="12"/>`;
       svgContent += `<text x="${el.w/2}" y="36" font-family="'SF UI Display',sans-serif" font-weight="900" font-size="18" fill="${el.color}" text-anchor="middle" letter-spacing="1" text-transform="uppercase">${monthNames[el.month]} ${el.year}</text>`;
@@ -2922,9 +2966,12 @@ async function exportSVG() {
          svgContent += `<text x="${cx}" y="65" font-family="'Open Sans',sans-serif" font-weight="700" font-size="12" fill="${el.color}" opacity="0.6" text-anchor="middle">${weekdays[i]}</text>`;
       }
       
+      const legendGroups = eventGroups.filter(g => g.label);
+      const legendHeight = legendGroups.length > 0 ? 25 : 0;
+
       const startY = 85;
       const totalRows = Math.ceil((daysInMonth + firstDay) / 7);
-      const usableH = el.h - startY - 15;
+      const usableH = el.h - startY - 15 - legendHeight;
       const cellH = usableH / totalRows;
       
       for (let i = 1; i <= daysInMonth; i++) {
@@ -2935,12 +2982,23 @@ async function exportSVG() {
         const cx = startX + (col * cellW) + (cellW / 2);
         const cyCenter = startY + (row * cellH) + (cellH / 2);
         
-        if (marked.includes(i)) {
-           svgContent += `<circle cx="${cx}" cy="${cyCenter}" r="12" fill="${el.accent}"/>`;
+        const group = eventGroups.find(g => g.days.includes(i));
+        if (group) {
+           svgContent += `<circle cx="${cx}" cy="${cyCenter}" r="12" fill="${group.color}"/>`;
            svgContent += `<text x="${cx}" y="${cyCenter + 5}" font-family="'Open Sans',sans-serif" font-weight="700" font-size="14" fill="${el.bg}" text-anchor="middle">${i}</text>`;
         } else {
            svgContent += `<text x="${cx}" y="${cyCenter + 5}" font-family="'Open Sans',sans-serif" font-weight="400" font-size="14" fill="${el.color}" text-anchor="middle">${i}</text>`;
         }
+      }
+
+      if (legendGroups.length > 0) {
+         const legendY = el.h - 15;
+         let currentX = 15;
+         for (const group of legendGroups) {
+            svgContent += `<circle cx="${currentX + 5}" cy="${legendY - 4}" r="5" fill="${group.color}"/>`;
+            svgContent += `<text x="${currentX + 14}" y="${legendY}" font-family="'Open Sans',sans-serif" font-weight="600" font-size="11" fill="${el.color}" opacity="0.8">${escXML(group.label)}</text>`;
+            currentX += 20 + (group.label.length * 6.5) + 10; // rough width estimation
+         }
       }
     } else {
       // Fallback: Rasterize complex elements like charts into the SVG
@@ -3294,6 +3352,79 @@ function importProject(event) {
   };
   reader.readAsText(file);
   event.target.value = ''; // Reset input
+}
+
+// ============================================================
+//  COPY TO CLIPBOARD (ILLUSTRATOR)
+// ============================================================
+async function copySelectedAsSVG() {
+  if (selectedId === null) {
+      alert('Selecciona un elemento primero');
+      return;
+  }
+  const elId = selectedId;
+  const el = elements.find(x => x.id === elId);
+  if (!el) return;
+
+  const btn = document.getElementById('btn-copy-svg');
+  let oldHtml = '';
+  if (btn) {
+    oldHtml = btn.innerHTML;
+    btn.innerHTML = '<span class="material-symbols-outlined" style="font-size:14px">hourglass_empty</span> Copiando...';
+  }
+  
+  const oldX = el.x, oldY = el.y;
+  el.x = 0; el.y = 0;
+  
+  const allElements = elements;
+  elements = [el];
+  
+  const oldBg = canvasBg;
+  canvasBg = 'transparent'; 
+  
+  const inf = document.getElementById('infographic');
+  const oldW = inf.style.width, oldH = inf.style.height;
+  const scaleW = el.w * (el.scale||1);
+  const scaleH = el.h * (el.scale||1);
+  inf.style.width = scaleW + 'px';
+  inf.style.height = scaleH + 'px';
+  
+  const oldCreateElement = document.createElement;
+  let capturedBlob = null;
+  document.createElement = function(tag) {
+     if (tag === 'a') return { click: () => {} };
+     return oldCreateElement.call(document, tag);
+  };
+  const oldURL = URL.createObjectURL;
+  URL.createObjectURL = function(blob) {
+     capturedBlob = blob;
+     return '';
+  };
+  
+  await exportSVG();
+  
+  document.createElement = oldCreateElement;
+  URL.createObjectURL = oldURL;
+  elements = allElements;
+  el.x = oldX; el.y = oldY;
+  canvasBg = oldBg;
+  inf.style.width = oldW; inf.style.height = oldH;
+  
+  selectElement(elId); // re-select
+  
+  if (capturedBlob) {
+     const text = await capturedBlob.text();
+     const rectTag = `<rect width="${scaleW}" height="${scaleH}" fill="transparent"/>`;
+     let finalSvg = text.replace(rectTag, '');
+     try {
+       await navigator.clipboard.writeText(finalSvg);
+       alert('SVG copiado al portapapeles. Ya puedes pegarlo directamente en Illustrator o InDesign.');
+     } catch(e) {
+       alert('Tu navegador ha bloqueado la copia al portapapeles o no está soportado. Error: ' + e.message);
+     }
+  }
+  
+  if (btn) btn.innerHTML = oldHtml;
 }
 
 // ============================================================
